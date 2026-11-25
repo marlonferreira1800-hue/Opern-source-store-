@@ -44,41 +44,29 @@ fn curated_repos() -> Vec<String> {
 }
 
 pub fn http_client(token: Option<&str>) -> Client {
-    let mut builder = Client::builder()
-        .user_agent("open-source-store/0.1 (https://github.com/marlonferreira1800-hue/Opern-source-store-)")
-        .timeout(Duration::from_secs(30));
-    if let Some(t) = token {
-        builder = builder.default_headers({
-            let mut h = reqwest::header::HeaderMap::new();
-            h.insert(
-                reqwest::header::AUTHORIZATION,
-                reqwest::header::HeaderValue::from_str(&format!("Bearer {t}")).unwrap(),
-            );
-            h.insert(
-                reqwest::header::ACCEPT,
-                reqwest::header::HeaderValue::from_static("application/vnd.github+json"),
-            );
-            h.insert(
-                "X-GitHub-Api-Version",
-                reqwest::header::HeaderValue::from_static("2022-11-28"),
-            );
-            h
-        });
-    } else {
-        builder = builder.default_headers({
-            let mut h = reqwest::header::HeaderMap::new();
-            h.insert(
-                reqwest::header::ACCEPT,
-                reqwest::header::HeaderValue::from_static("application/vnd.github+json"),
-            );
-            h.insert(
-                "X-GitHub-Api-Version",
-                reqwest::header::HeaderValue::from_static("2022-11-28"),
-            );
-            h
-        });
+    let mut headers = reqwest::header::HeaderMap::new();
+    headers.insert(
+        reqwest::header::ACCEPT,
+        reqwest::header::HeaderValue::from_static("application/vnd.github+json"),
+    );
+    headers.insert(
+        "X-GitHub-Api-Version",
+        reqwest::header::HeaderValue::from_static("2022-11-28"),
+    );
+    if let Some(t) = token.map(str::trim).filter(|t| !t.is_empty()) {
+        match reqwest::header::HeaderValue::from_str(&format!("Bearer {t}")) {
+            Ok(val) => {
+                headers.insert(reqwest::header::AUTHORIZATION, val);
+            }
+            Err(e) => log::warn!("Token do GitHub inválido ignorado: {e}"),
+        }
     }
-    builder.build().expect("failed to build http client")
+    Client::builder()
+        .user_agent("open-source-store/0.1 (https://github.com/marlonferreira1800-hue/Opern-source-store-)")
+        .timeout(Duration::from_secs(30))
+        .default_headers(headers)
+        .build()
+        .expect("failed to build http client")
 }
 
 async fn fetch_repo(client: &Client, full_name: &str) -> Result<GhRepo> {
@@ -95,6 +83,32 @@ async fn fetch_latest_release(client: &Client, full_name: &str) -> Result<Option
     }
     let release = resp.error_for_status()?.json::<GhRelease>().await?;
     Ok(Some(release))
+}
+
+/// Mapeia tópicos e descrição do repositório para uma das categorias da loja.
+fn infer_category(repo: &GhRepo) -> String {
+    let mut haystack = repo.topics.join(" ").to_lowercase();
+    if let Some(desc) = &repo.description {
+        haystack.push(' ');
+        haystack.push_str(&desc.to_lowercase());
+    }
+    let rules: [(&str, &[&str]); 9] = [
+        ("Security", &["password", "security", "privacy", "encryption", "vpn", "auth", "vault", "keepass"]),
+        ("Games", &["game", "gaming", "emulator", "godot", "bevy", "engine", "minecraft"]),
+        ("Multimedia", &["video", "audio", "music", "media", "player", "stream", "obs", "ffmpeg", "podcast"]),
+        ("Graphics", &["image", "photo", "design", "draw", "whiteboard", "diagram", "3d", "cad", "svg", "canvas", "excalidraw", "tldraw"]),
+        ("Internet", &["browser", "mail", "email", "chat", "messenger", "torrent", "download", "http", "proxy", "remote-desktop", "desk"]),
+        ("Office", &["note", "notes", "markdown", "pdf", "spreadsheet", "office", "knowledge", "wiki", "notion", "joplin"]),
+        ("Science", &["science", "research", "math", "physics", "bio", "ml", "ai", "data"]),
+        ("Development", &["ide", "editor", "code", "git", "api", "database", "sql", "compiler", "rust", "typescript", "python", "devtools", "terminal", "shell"]),
+        ("Utilities", &["utility", "utilities", "cli", "monitor", "launcher", "clipboard", "backup", "sync", "file-manager", "system"]),
+    ];
+    for (cat, keywords) in rules {
+        if keywords.iter().any(|k| haystack.contains(k)) {
+            return cat.to_string();
+        }
+    }
+    "Other".to_string()
 }
 
 /// Monta o objeto App a partir do repo + release, escolhendo o asset da plataforma atual.
@@ -117,7 +131,7 @@ fn build_app(repo: &GhRepo, release: Option<&GhRelease>, category_hint: &str) ->
     let category = if !category_hint.is_empty() {
         category_hint.to_string()
     } else {
-        repo.topics.first().cloned().unwrap_or_else(|| "Other".to_string())
+        infer_category(repo)
     };
 
     let (download_url, file_name, size_bytes, sha256) = match &asset {
@@ -218,26 +232,45 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
     let limit = if token.is_some() { repos.len() } else { repos.len().min(25) };
     log::info!("catalog: buscando {} de {} repos no GitHub", limit, repos.len());
 
-    let mut apps = Vec::new();
-    let mut online_ok = false;
-    for full_name in &repos[..limit] {
-        match fetch_repo(&client, full_name).await {
-            Ok(repo) => {
-                online_ok = true;
-                // sempre verifica os requisitos: famoso (estrelas) e ativo (push recente)
-                if !is_famous_and_active(&repo) {
-                    log::debug!("catalog: descartado {} (não atende critérios de fama/atividade)", full_name);
-                    continue;
-                }
-                let release = fetch_latest_release(&client, full_name).await.ok().flatten();
-                // Ignorar repos sem release com binário para a plataforma atual
-                if release.as_ref().map(|r| choose_asset(&r.assets).is_some()).unwrap_or(false) {
-                    apps.push(build_app(&repo, release.as_ref(), ""));
-                } else {
-                    log::debug!("catalog: pulando {} (sem asset para esta plataforma)", full_name);
+    use futures::stream::{self, StreamExt};
+    // Cada item retorna (online_ok, Option<App>)
+    let results: Vec<(bool, Option<App>)> = stream::iter(repos[..limit].iter().cloned())
+        .map(|full_name| {
+            let client = Arc::clone(&client);
+            async move {
+                match fetch_repo(&client, &full_name).await {
+                    Ok(repo) => {
+                        if !is_famous_and_active(&repo) {
+                            log::debug!("catalog: descartado {} (não atende critérios de fama/atividade)", full_name);
+                            return (true, None);
+                        }
+                        let release = fetch_latest_release(&client, &full_name).await.ok().flatten();
+                        if release.as_ref().map(|r| choose_asset(&r.assets).is_some()).unwrap_or(false) {
+                            (true, Some(build_app(&repo, release.as_ref(), "")))
+                        } else {
+                            log::debug!("catalog: pulando {} (sem asset para esta plataforma)", full_name);
+                            (true, None)
+                        }
+                    }
+                    Err(e) => {
+                        log::warn!("catalog: falha ao buscar {full_name}: {e}");
+                        (false, None)
+                    }
                 }
             }
-            Err(e) => log::warn!("catalog: falha ao buscar {full_name}: {e}"),
+        })
+        .buffer_unordered(8)
+        .collect()
+        .await;
+
+    let mut online_ok = false;
+    let mut apps = Vec::new();
+    for (ok, maybe_app) in results {
+        if ok {
+            online_ok = true;
+        }
+        if let Some(app) = maybe_app {
+            apps.push(app);
         }
     }
 
@@ -257,11 +290,20 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
     Ok((apps, false, false))
 }
 
+/// Busca um único repositório ("owner/repo") + release mais recente no GitHub.
+pub async fn fetch_single_app(full_name: &str, token: Option<&str>) -> Result<App> {
+    let client = http_client(token);
+    let repo = fetch_repo(&client, full_name).await?;
+    let release = fetch_latest_release(&client, full_name).await?;
+    Ok(build_app(&repo, release.as_ref(), ""))
+}
+
 /// Busca ao vivo no GitHub por repositórios (qualidade menor, cobre qualquer app).
 pub async fn search_github(query: &str, token: Option<&str>, page: u32) -> Result<Vec<App>> {
-    let client = http_client(token);
+    use futures::stream::{self, StreamExt};
+    let client = Arc::new(http_client(token));
     let q = format!(
-        "{query} in:name,description,readme fork:true archived:false"
+        "{query} in:name,description,readme fork:false archived:false"
     );
     let url = format!(
         "https://api.github.com/search/repositories?q={}&sort=stars&order=desc&per_page=20&page={}",
@@ -271,19 +313,30 @@ pub async fn search_github(query: &str, token: Option<&str>, page: u32) -> Resul
     let search = client.get(&url).send().await?.error_for_status()?.json::<GhSearch>().await?;
     log::info!("search: '{}' -> {} resultados", query, search.total_count);
 
-    let client = Arc::new(client);
-    let mut apps = Vec::new();
-    for repo in search.items.into_iter().take(20) {
-        // mesma regra da loja: só entra se for famoso e ativo
-        if !is_famous_and_active(&repo) {
-            continue;
-        }
-        if let Ok(Some(release)) = fetch_latest_release(&client, &repo.full_name).await {
-            if choose_asset(&release.assets).is_some() {
-                apps.push(build_app(&repo, Some(&release), ""));
+    let candidates: Vec<GhRepo> = search
+        .items
+        .into_iter()
+        .take(20)
+        .filter(is_famous_and_active)
+        .collect();
+
+    let apps: Vec<App> = stream::iter(candidates)
+        .map(|repo| {
+            let client = Arc::clone(&client);
+            async move {
+                if let Ok(Some(release)) = fetch_latest_release(&client, &repo.full_name).await {
+                    if choose_asset(&release.assets).is_some() {
+                        return Some(build_app(&repo, Some(&release), ""));
+                    }
+                }
+                None
             }
-        }
-    }
+        })
+        .buffer_unordered(8)
+        .filter_map(|x| async move { x })
+        .collect()
+        .await;
+
     Ok(apps)
 }
 
@@ -340,6 +393,18 @@ mod tests {
     #[test]
     fn sem_data_de_push_nao_entra() {
         assert!(!is_famous_and_active(&repo(500_000, None)));
+    }
+
+    #[test]
+    fn token_invalido_nao_causa_panic() {
+        let _ = http_client(Some("token\ncom\rquebra"));
+    }
+
+    #[test]
+    fn infere_categoria_correta() {
+        let mut r = repo(5000, None);
+        r.topics = vec!["rust".into(), "terminal".into()];
+        assert_eq!(infer_category(&r), "Development");
     }
 }
 

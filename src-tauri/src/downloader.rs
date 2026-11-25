@@ -77,7 +77,7 @@ pub async fn download_app(
     let mut downloaded: u64 = 0;
     let mut stream = resp.bytes_stream();
 
-    while let Some(chunk) = stream.next().await {
+    while let Some(chunk_res) = stream.next().await {
         // verifica cancelamento
         if *rx_cancel.borrow() {
             let _ = std::fs::remove_file(&file_path);
@@ -89,7 +89,15 @@ pub async fn download_app(
                 file_path: None,
             });
         }
-        let chunk = chunk?;
+        let chunk = match chunk_res {
+            Ok(c) => c,
+            Err(e) => {
+                let _ = std::fs::remove_file(&file_path);
+                downloads.lock().await.remove(&app.id);
+                emit_progress(&app.id, &app.file_name, downloaded, total, "falha de rede");
+                return Err(e.into());
+            }
+        };
         file.write_all(&chunk)?;
         hasher.update(&chunk);
         downloaded += chunk.len() as u64;
@@ -140,9 +148,14 @@ pub async fn cancel_download(downloads: DownloadState, app_id: &str) -> bool {
     }
 }
 
-/// Gera um caminho único caso o arquivo já exista.
+/// Gera um caminho único caso o arquivo já exista, sanitizando o nome para impedir path traversal.
 fn unique_path(dir: &std::path::Path, file_name: &str) -> PathBuf {
-    let path = dir.join(file_name);
+    let safe_name = std::path::Path::new(file_name)
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .filter(|s| !s.is_empty() && s != "." && s != "..")
+        .unwrap_or_else(|| "download.bin".to_string());
+    let path = dir.join(&safe_name);
     if !path.exists() {
         return path;
     }
@@ -160,6 +173,19 @@ fn unique_path(dir: &std::path::Path, file_name: &str) -> PathBuf {
         }
     }
     path
+}
+
+#[cfg(test)]
+mod tests {
+    use super::unique_path;
+
+    #[test]
+    fn unique_path_impede_traversal() {
+        let dir = std::env::temp_dir().join("oss_test_dir");
+        let p = unique_path(&dir, "../../evil.exe");
+        assert_eq!(p.parent().unwrap(), dir.as_path());
+        assert_eq!(p.file_name().unwrap().to_str().unwrap(), "evil.exe");
+    }
 }
 
 

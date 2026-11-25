@@ -1,10 +1,16 @@
 // Open Source Store - frontend (webview Tauri)
-// Todo o backend (catálogo GitHub, downloads, instalação) é Rust via call().
+// Todo o backend (catálogo GitHub, downloads, instalação) é Rust via invoke().
 // Fora do app (navegador puro em localhost:1420) cai no modo demo via fetch direto na API.
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 
 const isTauri = !!window.__TAURI_INTERNALS__;
+
+const DEMO_CATEGORIES = [
+    { name: 'Development' }, { name: 'Utilities' }, { name: 'Internet' },
+    { name: 'Multimedia' }, { name: 'Graphics' }, { name: 'Office' },
+    { name: 'Security' }, { name: 'Games' }, { name: 'Science' }, { name: 'Other' },
+];
 
 // Camada única de chamada: no app usa os comandos Rust; no navegador usa a API do GitHub direto.
 async function call(cmd, args = {}) {
@@ -14,37 +20,59 @@ async function call(cmd, args = {}) {
 
 async function webCall(cmd, args) {
     if (cmd === 'get_catalog' || cmd === 'search_apps') {
+        const since = new Date(Date.now() - 180 * 86400_000).toISOString().slice(0, 10);
         const q = args.query
-            ? `${args.query} stars:>=1000 pushed:>=2026-05-25 fork:false archived:false in:name,description,readme`
-            : 'stars:>=2000 pushed:>=2026-05-25 fork:false archived:false -awesome -tutorial -course -books -roadmap -interview -primer -handbook -notes -checklist -learning -algorithms in:name,description';
-        const r = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=30`,
-            { headers: { 'Accept': 'application/vnd.github+json' } });
+            ? `${args.query} stars:>=1000 pushed:>=${since} fork:false archived:false in:name,description,readme`
+            : `stars:>=2000 pushed:>=${since} fork:false archived:false -awesome -tutorial -course -books -roadmap -interview -primer -handbook -notes -checklist -learning -algorithms in:name,description`;
+        const r = await fetch(
+            `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=30`,
+            { headers: { Accept: 'application/vnd.github+json' } }
+        );
         if (!r.ok) throw new Error(`GitHub API HTTP ${r.status} (limite de requisições atingido?)`);
         const j = await r.json();
-        const apps = (j.items || []).map(it => ({
-            id: it.full_name, name: it.name, tagline: it.description || '', description: it.description || '',
-            category: (it.topics && it.topics[0]) || 'Other', author: it.owner.login, version: '',
-            license: it.license ? it.license.spdx_id : 'Unknown', stars: it.stargazers_count,
-            pushed_at: it.pushed_at || '', downloads: 0, icon_url: it.owner.avatar_url,
-            github_url: it.html_url, homepage: it.homepage || '', release_url: it.html_url + '/releases',
-            download_url: '', file_name: '', size_bytes: 0, tags: it.topics || [],
-            installed: false, installed_version: null, has_update: false, installed_path: null,
+        const items = (j.items || []).map(it => ({
+            id: it.full_name,
+            name: it.name,
+            tagline: it.description || '',
+            description: it.description || '',
+            category: (it.topics && it.topics[0]) || 'Other',
+            author: it.owner?.login || '',
+            version: '',
+            license: it.license ? it.license.spdx_id : 'Unknown',
+            stars: it.stargazers_count || 0,
+            pushed_at: it.pushed_at || '',
+            downloads: 0,
+            icon_url: it.owner?.avatar_url || '',
+            github_url: it.html_url || '',
+            homepage: it.homepage || '',
+            release_url: (it.html_url || '') + '/releases',
+            download_url: '',
+            file_name: '',
+            size_bytes: 0,
+            tags: it.topics || [],
+            installed: false,
+            installed_version: null,
+            has_update: false,
+            installed_path: null,
         }));
-        return { apps, total: apps.length, from_cache: false, offline: false, fetched_at: new Date().toISOString() };
+        return { apps: items, total: items.length, from_cache: false, offline: false, fetched_at: new Date().toISOString() };
     }
-    if (cmd === 'get_categories') return [];
-    if (cmd === 'get_apps_to_update') return { apps: [], total: 0, from_cache: false, offline: false, fetched_at: '' };
-    if (cmd === 'open_url') { window.open(args.url, '_blank'); return; }
+    if (cmd === 'get_categories') return DEMO_CATEGORIES;
+    if (cmd === 'get_installed' || cmd === 'get_apps_to_update') {
+        return { apps: [], total: 0, from_cache: false, offline: false, fetched_at: '' };
+    }
+    if (cmd === 'open_url') { window.open(args.url, '_blank', 'noopener,noreferrer'); return; }
     throw new Error('Disponível apenas no app desktop (abra com npm run tauri:dev)');
 }
 
 // ---------- estado global ----------
-let apps = [];              // catálogo completo
-let installedIds = new Set();
+let catalogApps = [];       // catálogo principal curado
+let apps = [];              // lista exibida no momento (catálogo ou busca)
+let installedApps = [];     // apps instalados (inclui instalados via busca)
 let currentFilter = 'all';
 let currentSort = 'name_asc';
 let currentSearch = '';
-let downloading = {};       // app_id -> { percent }
+let downloading = {};       // app_id -> DownloadProgress
 
 // ---------- elementos ----------
 const appsGrid = document.getElementById('apps-grid');
@@ -67,6 +95,25 @@ const modalOverlay = document.getElementById('modal-overlay');
 const sidebarCategories = document.getElementById('sidebar-categories');
 
 // ---------- utils ----------
+function esc(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function safeUrl(url) {
+    if (!url) return '';
+    try {
+        const u = new URL(url);
+        return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
+    } catch {
+        return '';
+    }
+}
+
 function formatBytes(bytes) {
     if (!bytes) return 'tamanho desconhecido';
     const mb = bytes / (1024 * 1024);
@@ -81,49 +128,63 @@ function showStatus(msg, ms = 4000) {
     showStatus._t = setTimeout(() => statusBar.classList.add('hidden'), ms);
 }
 
-function stars(n) {
-    return '★'.repeat(Math.min(5, Math.round(n / 2000 > 5 ? 5 : Math.max(1, n / 20000))));
-}
-
 // ---------- init ----------
 async function init() {
+    bindDelegatedEvents();
     try {
-        await Promise.all([loadCatalog(false), loadCategories(), loadDownloadsPath()]);
+        await Promise.all([loadCatalog(false), loadInstalled(), loadCategories(), loadDownloadsPath()]);
         renderAll();
         updateAllButton();
 
-        if (!isTauri) showStatus('Modo navegador (demo): catálogo direto do GitHub. Para instalar apps, abra pelo desktop: npm run tauri:dev', 10000);
+        if (!isTauri) {
+            showStatus('Modo navegador (demo): catálogo direto do GitHub. Para instalar apps, abra pelo desktop: npm run tauri:dev', 10000);
+        }
 
         // progresso real de download vindo do Rust
-        if (isTauri) await listen('download-progress', (event) => {
-            const p = event.payload;
-            downloading[p.app_id] = p;
-            updateDownloadModal(p);
-            if (p.status === 'concluído' || p.status === 'cancelado' || p.status.startsWith('falha')) {
-                setTimeout(async () => {
-                    closeDownloadModal();
-                    await loadCatalog(false);
-                    renderAll();
-                    updateAllButton();
-                }, 1200);
-            }
-            renderAll();
-        });
+        if (isTauri) {
+            await listen('download-progress', (event) => {
+                const p = event.payload;
+                downloading[p.app_id] = p;
+                updateDownloadModal(p);
+                if (p.status === 'concluído' || p.status === 'cancelado' || p.status.startsWith('falha')) {
+                    setTimeout(async () => {
+                        closeDownloadModal();
+                        await Promise.all([loadCatalog(false), loadInstalled()]);
+                        renderAll();
+                        updateAllButton();
+                    }, 1200);
+                }
+                renderAll();
+            });
+        }
 
         console.log('Open Source Store (Rust/Tauri) inicializado');
     } catch (error) {
         console.error('Falha ao inicializar:', error);
-        appsGrid.innerHTML = `<div class="no-results"><p>Erro ao carregar: ${error}</p></div>`;
+        appsGrid.innerHTML = `<div class="no-results"><p>Erro ao carregar: ${esc(error?.message || error)}</p></div>`;
     }
 }
 
 async function loadCatalog(forceRefresh) {
     const res = await call('get_catalog', { forceRefresh });
-    apps = res.apps || [];
-    installedIds = new Set(apps.filter(a => a.installed).map(a => a.id));
-    if (res.offline) showStatus('API do GitHub indisponível (limite de requisições ou sem rede). Modo offline: abra o menu ☰ → Configurações e cole seu token do GitHub para carregar tudo.', 12000);
-    else if (res.from_cache) showStatus('Catálogo carregado do cache local');
-    else showStatus(`Catálogo atualizado do GitHub: ${res.total} apps`);
+    catalogApps = res.apps || [];
+    apps = [...catalogApps];
+    if (res.offline) {
+        showStatus('API do GitHub indisponível (limite de requisições ou sem rede). Modo offline: abra o menu ☰ → Configurações e cole seu token do GitHub para carregar tudo.', 12000);
+    } else if (res.from_cache) {
+        showStatus('Catálogo carregado do cache local');
+    } else {
+        showStatus(`Catálogo atualizado do GitHub: ${res.total} apps`);
+    }
+}
+
+async function loadInstalled() {
+    try {
+        const res = await call('get_installed');
+        installedApps = res.apps || [];
+    } catch {
+        installedApps = catalogApps.filter(a => a.installed);
+    }
 }
 
 async function loadCategories() {
@@ -131,8 +192,8 @@ async function loadCategories() {
         const cats = await call('get_categories');
         sidebarCategories.innerHTML = (cats || []).map(c => `
             <div class="sidebar-category">
-                <a href="#" class="sidebar-link" onclick="filterByCategory('${c.name}')">
-                    <span>${c.name}</span>
+                <a href="#" class="sidebar-link" data-action="filter-category" data-category="${esc(c.name)}">
+                    <span>${esc(c.name)}</span>
                 </a>
             </div>
         `).join('');
@@ -143,17 +204,17 @@ async function loadDownloadsPath() {
     try {
         const p = await call('get_downloads_path');
         document.getElementById('downloads-path').textContent = 'Downloads salvos em: ' + p;
-    } catch (e) { /* fora do Tauri (navegador) */ }
+    } catch { /* fora do Tauri (navegador) */ }
 }
 
 async function refreshCatalog() {
     showStatus('Buscando no GitHub...');
     try {
-        await loadCatalog(true);
+        await Promise.all([loadCatalog(true), loadInstalled()]);
         renderAll();
         updateAllButton();
     } catch (e) {
-        showStatus('Erro ao atualizar: ' + e);
+        showStatus('Erro ao atualizar: ' + (e?.message || e));
     }
 }
 
@@ -164,13 +225,26 @@ function onSearchKey(e) {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
         const q = searchInput.value.trim();
-        if (q.length >= 3) searchGitHub(); else { loadCatalog(false).then(renderAll); }
+        if (q.length >= 3) {
+            searchGitHub();
+        } else if (q.length === 0) {
+            apps = [...catalogApps];
+            currentFilter = 'all';
+            storeTitle.textContent = 'NÃO INSTALADOS';
+            renderAll();
+        }
     }, 600);
 }
 
 async function searchGitHub() {
     const q = searchInput.value.trim();
-    if (!q) return;
+    if (!q) {
+        apps = [...catalogApps];
+        currentFilter = 'all';
+        storeTitle.textContent = 'NÃO INSTALADOS';
+        renderAll();
+        return;
+    }
     showStatus(`Buscando "${q}" no GitHub...`);
     try {
         const res = await call('search_apps', { query: q });
@@ -181,25 +255,40 @@ async function searchGitHub() {
         updateAllButton();
         showStatus(`${res.total} resultados para "${q}"`);
     } catch (e) {
-        showStatus('Erro na busca: ' + e);
+        showStatus('Erro na busca: ' + (e?.message || e));
     }
 }
 
 // ---------- filtros ----------
-function filterByCategory(cat) { currentFilter = cat; currentSearch = ''; searchInput.value = ''; storeTitle.textContent = cat.toUpperCase(); renderAll(); toggleMenu(); }
-function showAllApps() { currentFilter = 'all'; currentSearch = ''; searchInput.value = ''; storeTitle.textContent = 'NÃO INSTALADOS'; renderAll(); toggleMenu(); }
-function showInstalled() { currentFilter = 'installed'; storeTitle.textContent = 'INSTALADOS'; renderAll(); toggleMenu(); }
-function showUpdates() { currentFilter = 'updates'; storeTitle.textContent = 'ATUALIZAÇÕES DISPONÍVEIS'; renderAll(); toggleMenu(); }
+function restoreCatalogView() {
+    apps = [...catalogApps];
+}
+function filterByCategory(cat) { restoreCatalogView(); currentFilter = cat; currentSearch = ''; searchInput.value = ''; storeTitle.textContent = cat.toUpperCase(); renderAll(); toggleMenu(); }
+function showAllApps() { restoreCatalogView(); currentFilter = 'all'; currentSearch = ''; searchInput.value = ''; storeTitle.textContent = 'NÃO INSTALADOS'; renderAll(); toggleMenu(); }
+function showInstalled() { restoreCatalogView(); currentFilter = 'installed'; storeTitle.textContent = 'INSTALADOS'; renderAll(); toggleMenu(); }
+function showUpdates() { restoreCatalogView(); currentFilter = 'updates'; storeTitle.textContent = 'ATUALIZAÇÕES DISPONÍVEIS'; renderAll(); toggleMenu(); }
 
 function sortApps() { currentSort = sortSelect.value; renderAll(); }
 
 // ---------- render ----------
 function filteredApps() {
-    let list = [...apps];
-    if (currentFilter === 'installed') list = list.filter(a => a.installed);
-    else if (currentFilter === 'updates') list = list.filter(a => a.has_update);
-    else if (currentFilter !== 'all') list = list.filter(a => (a.category || '').toLowerCase() === currentFilter.toLowerCase() || (a.tags || []).map(t => t.toLowerCase()).includes(currentFilter.toLowerCase()));
-    else list = list.filter(a => !a.installed);
+    let list = currentFilter === 'installed'
+        ? (installedApps.length > 0 ? [...installedApps] : apps.filter(a => a.installed))
+        : [...apps];
+
+    if (currentFilter === 'installed') {
+        list = list.filter(a => a.installed);
+    } else if (currentFilter === 'updates') {
+        list = list.filter(a => a.has_update);
+    } else if (currentFilter !== 'all') {
+        const target = currentFilter.toLowerCase();
+        list = list.filter(a =>
+            (a.category || '').toLowerCase() === target ||
+            (a.tags || []).some(t => t.toLowerCase() === target)
+        );
+    } else {
+        list = list.filter(a => !a.installed);
+    }
 
     if (currentSearch) {
         const q = currentSearch.toLowerCase();
@@ -227,45 +316,48 @@ function filteredApps() {
 
 function appCardHtml(app) {
     const dl = downloading[app.id];
-    const isDl = !!dl && dl.status === 'baixando';
+    const isDl = !!dl && (dl.status === 'baixando' || dl.status === 'iniciando');
+    const idAttr = esc(app.id);
+    const ghHref = esc(safeUrl(app.github_url));
+
     let actionBtn;
     if (isDl) {
         actionBtn = `<button class="btn btn-secondary btn-small" disabled>${Math.round(dl.percent)}%</button>`;
     } else if (app.installed && app.has_update) {
-        actionBtn = `<button class="btn btn-primary btn-small" onclick="event.stopPropagation(); downloadApp('${app.id}')">ATUALIZAR ${app.version}</button>`;
+        actionBtn = `<button class="btn btn-primary btn-small" data-action="download" data-app-id="${idAttr}">ATUALIZAR ${esc(app.version)}</button>`;
     } else if (app.installed) {
-        actionBtn = `<button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openInstalled('${app.id}')">ABRIR</button>`;
+        actionBtn = `<button class="btn btn-secondary btn-small" data-action="open-installed" data-app-id="${idAttr}">ABRIR</button>`;
     } else if (!app.download_url) {
-        actionBtn = `<button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openGitHub('${app.github_url}')">VER NO GITHUB</button>`;
+        actionBtn = `<button class="btn btn-secondary btn-small" data-action="open-url" data-url="${ghHref}">VER NO GITHUB</button>`;
     } else {
-        actionBtn = `<button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); downloadApp('${app.id}')">INSTALAR</button>`;
+        actionBtn = `<button class="btn btn-secondary btn-small" data-action="download" data-app-id="${idAttr}">INSTALAR</button>`;
     }
 
     return `
-        <div class="app-card ${app.has_update ? 'has-update' : ''}" onclick="openAppDetail('${app.id}')">
+        <div class="app-card ${app.has_update ? 'has-update' : ''}" data-action="detail" data-app-id="${idAttr}">
             <div class="app-card-top">
-                <span class="app-version">${app.version ? 'V' + app.version : 'sem release'}</span>
-                <button class="btn btn-icon github-btn" title="Ver no GitHub" onclick="event.stopPropagation(); openGitHub('${app.github_url}')">GH &#8599;</button>
+                <span class="app-version">${app.version ? 'V' + esc(app.version) : 'sem release'}</span>
+                <button class="btn btn-icon github-btn" title="Ver no GitHub" data-action="open-url" data-url="${ghHref}">GH &#8599;</button>
             </div>
             <div class="app-card-header">
-                <img src="${app.icon_url}" alt="${app.name}" class="app-icon" loading="lazy" onerror="this.src='assets/icons/app_default.png'" />
+                <img src="${esc(safeUrl(app.icon_url) || 'assets/icons/app_default.png')}" alt="${esc(app.name)}" class="app-icon" loading="lazy" onerror="this.src='assets/icons/app_default.png'" />
                 <div>
-                    <div class="app-name">${app.name}</div>
-                    <div class="app-author">por ${app.author} &bull; ${app.license}</div>
+                    <div class="app-name">${esc(app.name)}</div>
+                    <div class="app-author">por ${esc(app.author)} &bull; ${esc(app.license)}</div>
                 </div>
             </div>
-            <div class="app-tagline">${app.tagline || ''}</div>
+            <div class="app-tagline">${esc(app.tagline || '')}</div>
             <div class="app-meta">
-                <span title="Estrelas no GitHub">★ ${app.stars.toLocaleString('pt-BR')}</span>
-                <span title="Downloads da release">&#8595; ${app.downloads.toLocaleString('pt-BR')}</span>
-                <span title="Última atividade no GitHub">&#128197; ${app.pushed_at ? app.pushed_at.slice(0, 10) : '-'}</span>
+                <span title="Estrelas no GitHub">★ ${(app.stars || 0).toLocaleString('pt-BR')}</span>
+                <span title="Downloads da release">&#8595; ${(app.downloads || 0).toLocaleString('pt-BR')}</span>
+                <span title="Última atividade no GitHub">&#128197; ${app.pushed_at ? esc(app.pushed_at.slice(0, 10)) : '-'}</span>
                 <span>${formatBytes(app.size_bytes)}</span>
             </div>
-            ${app.has_update ? `<div class="update-badge">ATUALIZAÇÃO DISPONÍVEL: ${app.installed_version} → ${app.version}</div>` : ''}
+            ${app.has_update ? `<div class="update-badge">ATUALIZAÇÃO DISPONÍVEL: ${esc(app.installed_version)} → ${esc(app.version)}</div>` : ''}
             <div class="app-actions">
                 ${actionBtn}
-                ${app.installed ? `<button class="btn btn-icon" title="Desinstalar" onclick="event.stopPropagation(); uninstallApp('${app.id}')">&#128465;</button>` : ''}
-                <button class="btn btn-icon" title="Detalhes" onclick="event.stopPropagation(); openAppDetail('${app.id}')">&#8505;</button>
+                ${app.installed ? `<button class="btn btn-icon" title="Desinstalar" data-action="uninstall" data-app-id="${idAttr}">&#128465;</button>` : ''}
+                <button class="btn btn-icon" title="Detalhes" data-action="detail" data-app-id="${idAttr}">&#8505;</button>
             </div>
         </div>
     `;
@@ -273,14 +365,12 @@ function appCardHtml(app) {
 
 function renderAll() {
     const list = filteredApps();
-    const installed = apps.filter(a => a.installed);
+    const installed = installedApps.length > 0 ? installedApps : catalogApps.filter(a => a.installed);
 
     // seção instalados
     if (installed.length > 0 && currentFilter !== 'installed') {
         sectionInstalled.classList.remove('hidden');
         installedGrid.innerHTML = installed.map(appCardHtml).join('');
-    } else if (currentFilter === 'installed') {
-        sectionInstalled.classList.add('hidden');
     } else {
         sectionInstalled.classList.add('hidden');
     }
@@ -307,29 +397,41 @@ async function updateAll() {
         const updates = res.apps || [];
         if (updates.length === 0) { showStatus('Nenhum aplicativo para atualizar'); return; }
         for (const app of updates) await downloadApp(app.id);
-    } catch (e) { showStatus('Erro: ' + e); }
+    } catch (e) { showStatus('Erro: ' + (e?.message || e)); }
 }
 
 // ---------- ações ----------
+function findApp(appId) {
+    return apps.find(a => a.id === appId)
+        || catalogApps.find(a => a.id === appId)
+        || installedApps.find(a => a.id === appId);
+}
+
 async function downloadApp(appId) {
     try {
-        const app = apps.find(a => a.id === appId);
+        const app = findApp(appId);
         downloadTitle.textContent = `Baixando ${app ? app.name : appId}...`;
         downloadStatus.textContent = 'Iniciando download...';
         downloadInfo.textContent = '';
         progressFill.style.width = '0%';
         downloadModal.classList.remove('hidden');
         modalOverlay.classList.remove('hidden');
-        await call('download_app', { appId });
-        // a conclusão chega pelo evento download-progress
+        const res = await call('download_app', { appId });
+        if (res && res.success === false) {
+            downloadStatus.textContent = res.message || 'Falha no download';
+        }
     } catch (e) {
-        downloadStatus.textContent = 'Erro: ' + e;
+        downloadStatus.textContent = 'Erro: ' + (e?.message || e);
     }
 }
 
 async function cancelDownload() {
-    const active = Object.keys(downloading).find(id => downloading[id].status === 'baixando');
-    if (active) { try { await call('cancel_download', { appId: active }); } catch (e) {} }
+    const active = Object.keys(downloading).find(id =>
+        downloading[id].status === 'baixando' || downloading[id].status === 'iniciando'
+    );
+    if (active) {
+        try { await call('cancel_download', { appId: active }); } catch { /* noop */ }
+    }
     closeDownloadModal();
 }
 
@@ -354,7 +456,7 @@ function closeDownloadModal() {
 
 async function openInstalled(appId) {
     try { await call('open_installed', { appId }); showStatus('Abrindo aplicativo...'); }
-    catch (e) { showStatus('Erro ao abrir: ' + e); }
+    catch (e) { showStatus('Erro ao abrir: ' + (e?.message || e)); }
 }
 
 async function uninstallApp(appId) {
@@ -362,48 +464,57 @@ async function uninstallApp(appId) {
     try {
         await call('uninstall_app', { appId });
         showStatus('Aplicativo desinstalado');
-        await loadCatalog(false);
+        await Promise.all([loadCatalog(false), loadInstalled()]);
         renderAll();
         updateAllButton();
-    } catch (e) { showStatus('Erro: ' + e); }
+    } catch (e) { showStatus('Erro: ' + (e?.message || e)); }
 }
 
-function openGitHub(url) { call('open_url', { url }).catch(console.error); }
+function openGitHub(url) {
+    const safe = safeUrl(url);
+    if (!safe) return;
+    call('open_url', { url: safe }).catch(console.error);
+}
 
 async function openAppDetail(appId) {
-    const app = apps.find(a => a.id === appId);
+    const app = findApp(appId);
     if (!app) return;
     const dl = downloading[appId];
+    const idAttr = esc(app.id);
+    const ghHref = esc(safeUrl(app.github_url));
+    const homeHref = esc(safeUrl(app.homepage));
+    const descHtml = esc(app.description || '').replace(/\n/g, '<br>');
+
     appDetailContent.innerHTML = `
         <div class="app-detail-header">
-            <img src="${app.icon_url}" alt="${app.name}" class="app-detail-icon" onerror="this.src='assets/icons/app_default.png'" />
+            <img src="${esc(safeUrl(app.icon_url) || 'assets/icons/app_default.png')}" alt="${esc(app.name)}" class="app-detail-icon" onerror="this.src='assets/icons/app_default.png'" />
             <div class="app-detail-info">
-                <h1 class="app-detail-name">${app.name}</h1>
-                <p class="app-detail-tagline">${app.tagline || ''}</p>
+                <h1 class="app-detail-name">${esc(app.name)}</h1>
+                <p class="app-detail-tagline">${esc(app.tagline || '')}</p>
                 <div class="app-detail-meta">
-                    <div class="meta-item"><span class="meta-label">Versão</span><span class="meta-value">${app.version || '-'}</span></div>
+                    <div class="meta-item"><span class="meta-label">Versão</span><span class="meta-value">${esc(app.version || '-')}</span></div>
                     <div class="meta-item"><span class="meta-label">Tamanho</span><span class="meta-value">${formatBytes(app.size_bytes)}</span></div>
-                    <div class="meta-item"><span class="meta-label">Licença</span><span class="meta-value">${app.license}</span></div>
-                    <div class="meta-item"><span class="meta-label">Autor</span><span class="meta-value">${app.author}</span></div>
-                    <div class="meta-item"><span class="meta-label">★ Estrelas</span><span class="meta-value">${app.stars.toLocaleString('pt-BR')}</span></div>
-                    <div class="meta-item"><span class="meta-label">Última atividade</span><span class="meta-value">${app.pushed_at ? app.pushed_at.slice(0, 10) : '-'}</span></div>
-                    <div class="meta-item"><span class="meta-label">Categoria</span><span class="meta-value">${app.category}</span></div>
+                    <div class="meta-item"><span class="meta-label">Licença</span><span class="meta-value">${esc(app.license)}</span></div>
+                    <div class="meta-item"><span class="meta-label">Autor</span><span class="meta-value">${esc(app.author)}</span></div>
+                    <div class="meta-item"><span class="meta-label">★ Estrelas</span><span class="meta-value">${(app.stars || 0).toLocaleString('pt-BR')}</span></div>
+                    <div class="meta-item"><span class="meta-label">Última atividade</span><span class="meta-value">${app.pushed_at ? esc(app.pushed_at.slice(0, 10)) : '-'}</span></div>
+                    <div class="meta-item"><span class="meta-label">Categoria</span><span class="meta-value">${esc(app.category)}</span></div>
                 </div>
                 <div class="app-actions">
                     ${app.installed
-                        ? `<button class="btn btn-secondary" onclick="openInstalled('${app.id}')">ABRIR</button>
-                           ${app.has_update ? `<button class="btn btn-primary" onclick="downloadApp('${app.id}')">ATUALIZAR PARA ${app.version}</button>` : ''}
-                           <button class="btn btn-text" onclick="uninstallApp('${app.id}')">Desinstalar</button>`
+                        ? `<button class="btn btn-secondary" data-action="open-installed" data-app-id="${idAttr}">ABRIR</button>
+                           ${app.has_update ? `<button class="btn btn-primary" data-action="download" data-app-id="${idAttr}">ATUALIZAR PARA ${esc(app.version)}</button>` : ''}
+                           <button class="btn btn-text" data-action="uninstall" data-app-id="${idAttr}">Desinstalar</button>`
                         : app.download_url
-                            ? `<button class="btn btn-primary" onclick="downloadApp('${app.id}')">${dl && dl.status === 'baixando' ? Math.round(dl.percent) + '%' : 'INSTALAR'}</button>`
-                            : `<button class="btn btn-primary" onclick="openGitHub('${app.github_url}')">VER NO GITHUB (sem binário para esta plataforma)</button>`}
-                    <button class="btn btn-secondary" onclick="openGitHub('${app.github_url}')">ABRIR NO GITHUB</button>
-                    ${app.homepage ? `<button class="btn btn-secondary" onclick="openGitHub('${app.homepage}')">SITE OFICIAL</button>` : ''}
+                            ? `<button class="btn btn-primary" data-action="download" data-app-id="${idAttr}">${dl && dl.status === 'baixando' ? Math.round(dl.percent) + '%' : 'INSTALAR'}</button>`
+                            : `<button class="btn btn-primary" data-action="open-url" data-url="${ghHref}">VER NO GITHUB (sem binário para esta plataforma)</button>`}
+                    <button class="btn btn-secondary" data-action="open-url" data-url="${ghHref}">ABRIR NO GITHUB</button>
+                    ${homeHref ? `<button class="btn btn-secondary" data-action="open-url" data-url="${homeHref}">SITE OFICIAL</button>` : ''}
                 </div>
             </div>
         </div>
-        <div class="app-detail-description">${(app.description || '').replace(/\n/g, '<br>')}</div>
-        ${app.tags && app.tags.length ? `<div class="app-tags">${app.tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>` : ''}
+        <div class="app-detail-description">${descHtml}</div>
+        ${app.tags && app.tags.length ? `<div class="app-tags">${app.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join('')}</div>` : ''}
     `;
     appDetailModal.classList.remove('hidden');
     modalOverlay.classList.remove('hidden');
@@ -419,9 +530,56 @@ function closeAllModals() { closeDetailModal(); closeDownloadModal(); }
 
 async function saveToken() {
     const t = document.getElementById('github-token-input').value;
-    try { await call('save_github_token', { token: t }); showStatus('Token salvo. Atualizando catálogo...'); await loadCatalog(true); renderAll(); }
-    catch (e) { showStatus('Erro ao salvar token: ' + e); }
+    try {
+        await call('save_github_token', { token: t });
+        showStatus('Token salvo. Atualizando catálogo...');
+        await Promise.all([loadCatalog(true), loadInstalled()]);
+        renderAll();
+    } catch (e) { showStatus('Erro ao salvar token: ' + (e?.message || e)); }
 }
+
+function bindDelegatedEvents() {
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest('[data-action]');
+        if (!el) return;
+        const action = el.dataset.action;
+        if (action === 'filter-category') {
+            e.preventDefault();
+            filterByCategory(el.dataset.category);
+            return;
+        }
+        e.stopPropagation();
+        const appId = el.dataset.appId;
+        if (action === 'download') downloadApp(appId);
+        else if (action === 'open-installed') openInstalled(appId);
+        else if (action === 'uninstall') uninstallApp(appId);
+        else if (action === 'detail') openAppDetail(appId);
+        else if (action === 'open-url') openGitHub(el.dataset.url);
+    });
+}
+
+// Expõe handlers chamados pelos atributos inline de web/index.html (módulo ES não cria globais)
+Object.assign(window, {
+    updateAll,
+    refreshCatalog,
+    sortApps,
+    onSearchKey,
+    searchGitHub,
+    toggleMenu,
+    showAllApps,
+    showInstalled,
+    showUpdates,
+    filterByCategory,
+    closeDetailModal,
+    cancelDownload,
+    closeAllModals,
+    saveToken,
+    openAppDetail,
+    downloadApp,
+    openInstalled,
+    uninstallApp,
+    openGitHub,
+});
 
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllModals(); });
 document.addEventListener('DOMContentLoaded', init);
