@@ -1,0 +1,190 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/store/app_card.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/icons/github.png" id="2"]
+[ext_resource type="Font" path="res://assets/fonts/Inter-Regular.ttf" id="3"]
+[ext_resource type="Font" path="res://assets/fonts/Inter-Bold.ttf" id="4"]
+[ext_resource type="Font" path="res://assets/fonts/Inter-Medium.ttf" id="5"]
+
+[node name="AppCard" type="PanelContainer"]
+constant_right = 1.0
+constant_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/height = 180
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+custom_constants/margin_left = 10
+custom_constants/margin_top = 10
+custom_constants/margin_right = 10
+custom_constants/margin_bottom = 10
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HeaderHBox" type="HBoxContainer" parent="VBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/margin_bottom = 5
+
+[node name="AppIcon" parent="HeaderHBox" type="TextureRect"]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+custom_constants/margin_right = 10
+size_flags_horizontal = 0
+size_flags_vertical = 3
+size = Vector2( 48, 48 )
+
+[node name="VersionBadge" parent="HeaderHBox" type="Label"]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+custom_constants/margin_top = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+text = "V0.6.1"
+label_settings/font = ExtResource( 5 )
+label_settings/font_size = 10
+label_settings/font_color = Color( 0.7, 0.7, 0.7 )
+horizontal_alignment = 0
+valign = 1
+
+[node name="Spacer1" parent="HeaderHBox" type="Control"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GitHubBtn" parent="HeaderHBox" type="Button"]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+size_flags_horizontal = 0
+size_flags_vertical = 3
+text = "GITHUB"
+label_settings/font = ExtResource( 5 )
+label_settings/font_size = 10
+label_settings/font_color = Color( 0.6, 0.6, 0.6 )
+flat = true
+
+[node name="AppName" parent="VBoxContainer" type="Label"]
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/margin_bottom = 3
+text = "Craft Anything"
+label_settings/font = ExtResource( 4 )
+label_settings/font_size = 14
+label_settings/font_color = Color( 1, 1, 1 )
+horizontal_alignment = 0
+
+[node name="AppTagline" parent="VBoxContainer" type="Label"]
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/margin_bottom = 5
+text = "Descubra como qualquer software funciona..."
+label_settings/font = ExtResource( 3 )
+label_settings/font_size = 12
+label_settings/font_color = Color( 0.7, 0.7, 0.7 )
+horizontal_alignment = 0
+autowrap = true
+
+[node name="AppDescription" parent="VBoxContainer" type="Label"]
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/margin_bottom = 8
+text = "See how any website, app or game works, then build your own."
+label_settings/font = ExtResource( 3 )
+label_settings/font_size = 11
+label_settings/font_color = Color( 0.5, 0.5, 0.5 )
+horizontal_alignment = 0
+visible = false
+
+[node name="InfoLabel" parent="VBoxContainer" type="Label"]
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/margin_bottom = 5
+text = "Última atualização: 11 de nov. de 2026"
+label_settings/font = ExtResource( 3 )
+label_settings/font_size = 10
+label_settings/font_color = Color( 0.5, 0.5, 0.5 )
+horizontal_alignment = 0
+
+[node name="DownloadSize" parent="VBoxContainer" type="Label"]
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/margin_bottom = 8
+text = "Tamanho do download: 67 MB"
+label_settings/font = ExtResource( 3 )
+label_settings/font_size = 10
+label_settings/font_color = Color( 0.5, 0.5, 0.5 )
+horizontal_alignment = 0
+
+[node name="ActionHBox" type="HBoxContainer" parent="VBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="OpenBtn" parent="ActionHBox" type="Button"]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "ABRIR"
+label_settings/font = ExtResource( 5 )
+label_settings/font_size = 12
+flat = false
+
+[node name="MoreBtn" parent="ActionHBox" type="Button"]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+custom_constants/margin_left = 5
+size_flags_horizontal = 0
+size_flags_vertical = 3
+text = "..."
+label_settings/font = ExtResource( 4 )
+label_settings/font_size = 16
+flat = true
+
+[node name="UpdateBtn" parent="ActionHBox" type="Button"]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+custom_constants/margin_left = 5
+size_flags_horizontal = 0
+size_flags_vertical = 3
+text = "ATUALIZAR"
+label_settings/font = ExtResource( 5 )
+label_settings/font_size = 10
+flat = false
+visible = false
+
+[node name="InstallBtn" parent="ActionHBox" type="Button"]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "DISPONÍVEL PARA INSTALAR"
+label_settings/font = ExtResource( 5 )
+label_settings/font_size = 10
+flat = true
+visible = false

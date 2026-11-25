@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/store/main_store.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/top_bar.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/nav_bar.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/store/store_content.tscn" id="4"]
+
+[node name="MainStore" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="TopBar" parent="." type="Control" instance=ExtResource( 2 )]
+
+[node name="NavBar" parent="." type="Control" instance=ExtResource( 3 )]
+
+[node name="StoreContent" parent="." type="Control" instance=ExtResource( 4 )]
