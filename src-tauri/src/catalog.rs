@@ -298,7 +298,7 @@ pub fn http_client(token: Option<&str>) -> Client {
     }
     Client::builder()
         .user_agent(
-            "open-source-store/0.1 (https://github.com/marlonferreira1800-hue/Opern-source-store-)",
+            "open-source-store/0.1 (https://github.com/marlonferreira1800-hue/open-source-store)",
         )
         .timeout(Duration::from_secs(30))
         .default_headers(headers)

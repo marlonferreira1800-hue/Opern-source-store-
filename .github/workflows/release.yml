@@ -65,6 +65,6 @@ jobs:
         with:
           tagName: ${{ github.ref_name || inputs.tag }}
           releaseName: "Open Source Store ${{ github.ref_name || inputs.tag }}"
-          releaseBody: "Histórico completo de mudanças: [CHANGELOG.md](https://github.com/marlonferreira1800-hue/Opern-source-store-/blob/main/CHANGELOG.md)"
+          releaseBody: "Histórico completo de mudanças: [CHANGELOG.md](https://github.com/marlonferreira1800-hue/open-source-store/blob/main/CHANGELOG.md)"
           releaseDraft: false
           prerelease: false

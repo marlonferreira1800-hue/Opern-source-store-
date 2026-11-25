@@ -13,7 +13,7 @@
 
 Use o reporte privado do GitHub (Private Vulnerability Reporting, habilitado neste repositório):
 
-https://github.com/marlonferreira1800-hue/Opern-source-store-/security/advisories/new
+https://github.com/marlonferreira1800-hue/open-source-store/security/advisories/new
 
 O que incluir:
 

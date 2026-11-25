@@ -1,10 +1,10 @@
 # Open Source Store
 
-[![CI](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/ci.yml/badge.svg)](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/ci.yml)
-[![Pages](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/pages.yml/badge.svg)](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/pages.yml)
-[![Release](https://img.shields.io/github/v/release/marlonferreira1800-hue/Opern-source-store-)](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases/latest)
-[![Licença](https://img.shields.io/github/license/marlonferreira1800-hue/Opern-source-store-)](LICENSE)
-[![Web](https://img.shields.io/website?url=https%3A%2F%2Fmarlonferreira1800-hue.github.io%2FOpern-source-store-%2F&label=web)](https://marlonferreira1800-hue.github.io/Opern-source-store-/)
+[![CI](https://github.com/marlonferreira1800-hue/open-source-store/actions/workflows/ci.yml/badge.svg)](https://github.com/marlonferreira1800-hue/open-source-store/actions/workflows/ci.yml)
+[![Pages](https://github.com/marlonferreira1800-hue/open-source-store/actions/workflows/pages.yml/badge.svg)](https://github.com/marlonferreira1800-hue/open-source-store/actions/workflows/pages.yml)
+[![Release](https://img.shields.io/github/v/release/marlonferreira1800-hue/open-source-store)](https://github.com/marlonferreira1800-hue/open-source-store/releases/latest)
+[![Licença](https://img.shields.io/github/license/marlonferreira1800-hue/open-source-store)](LICENSE)
+[![Web](https://img.shields.io/website?url=https%3A%2F%2Fmarlonferreira1800-hue.github.io%2Fopen-source-store%2F&label=web)](https://marlonferreira1800-hue.github.io/open-source-store/)
 
 Uma loja centralizada de aplicativos **open source** (app store alternativa): em vez de procurar repositório por repositório no GitHub, você busca, instala e atualiza tudo de um só lugar.
 
@@ -12,17 +12,17 @@ Uma loja centralizada de aplicativos **open source** (app store alternativa): em
 
 ## Download
 
-Baixe o instalador na página de [Releases](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases/latest):
+Baixe o instalador na página de [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases/latest):
 
 | Plataforma | Arquivo |
 |---|---|
-| Windows (x64) | [`Open.Source.Store_0.1.0_x64-setup.exe`](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases/download/v0.1.0/Open.Source.Store_0.1.0_x64-setup.exe) (2,2 MB) |
+| Windows (x64) | [`Open.Source.Store_0.1.0_x64-setup.exe`](https://github.com/marlonferreira1800-hue/open-source-store/releases/download/v0.1.0/Open.Source.Store_0.1.0_x64-setup.exe) (2,2 MB) |
 
-O histórico completo de versões e suas mudanças está em [`CHANGELOG.md`](CHANGELOG.md) e na página de [Releases](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases).
+O histórico completo de versões e suas mudanças está em [`CHANGELOG.md`](CHANGELOG.md) e na página de [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases).
 
 ## Versão Web (sem instalar nada)
 
-Abra direto no navegador: **https://marlonferreira1800-hue.github.io/Opern-source-store-/**
+Abra direto no navegador: **https://marlonferreira1800-hue.github.io/open-source-store/**
 
 Publicada automaticamente no **GitHub Pages** a cada push na `main` (workflow [`pages.yml`](.github/workflows/pages.yml)). No modo web, o catálogo e a busca ao vivo funcionam direto pela **API pública do GitHub** — sem baixar o app desktop. Instalar/atualizar apps continua exigindo o [app desktop](#download), e a interface avisa quando um recurso é exclusivo do desktop.
 

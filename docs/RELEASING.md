@@ -21,8 +21,8 @@
 
 | Canal | URL | Atualização |
 |---|---|---|
-| Release (desktop) | `github.com/marlonferreira1800-hue/Opern-source-store-/releases` | automática via tag `v*` |
-| Versão web | `marlonferreira1800-hue.github.io/Opern-source-store-/` | automática a cada push na `main` (workflow `pages.yml`) |
+| Release (desktop) | `github.com/marlonferreira1800-hue/open-source-store/releases` | automática via tag `v*` |
+| Versão web | `marlonferreira1800-hue.github.io/open-source-store/` | automática a cada push na `main` (workflow `pages.yml`) |
 
 ## Notas
 
