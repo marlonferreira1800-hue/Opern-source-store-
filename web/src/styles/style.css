@@ -808,3 +808,55 @@ body {
     margin-top: var(--spacing-sm);
     word-break: break-all;
 }
+
+.app-card-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.trust-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+}
+
+.trust-high {
+    color: #34d399;
+    background-color: rgba(52, 211, 153, 0.12);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.trust-med {
+    color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.12);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.security-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: var(--spacing-md);
+}
+
+.security-flag {
+    font-size: var(--font-size-xs);
+    color: #34d399;
+    background-color: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.security-warning {
+    font-size: var(--font-size-xs);
+    color: var(--accent-warning);
+    background-color: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--spacing-md);
+}

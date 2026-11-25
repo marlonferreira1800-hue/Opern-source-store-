@@ -3,7 +3,7 @@ export const state = {
     apps: [],
     installedApps: [],
     currentFilter: 'all',
-    currentSort: 'name_asc',
+    currentSort: 'trust',
     currentSearch: '',
     downloading: {},
 };
@@ -56,12 +56,13 @@ export function getFilteredApps() {
 
     list.sort((a, b) => {
         switch (state.currentSort) {
+            case 'trust': return (b.trust_score || 0) - (a.trust_score || 0) || (b.stars || 0) - (a.stars || 0);
             case 'name_asc': return a.name.localeCompare(b.name);
             case 'name_desc': return b.name.localeCompare(a.name);
             case 'stars': return b.stars - a.stars;
             case 'downloads': return b.downloads - a.downloads;
             case 'recent': return (b.published_at || b.pushed_at || '').localeCompare(a.published_at || a.pushed_at || '');
-            default: return a.name.localeCompare(b.name);
+            default: return (b.trust_score || 0) - (a.trust_score || 0);
         }
     });
     return list;

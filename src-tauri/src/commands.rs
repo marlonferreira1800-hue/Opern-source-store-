@@ -104,6 +104,12 @@ pub async fn download_app(
             .await
             .map_err(|e| format!("Falha ao obter dados do app {app_id}: {e}"))?,
     };
+    if catalog::is_blocked_repo_id(&app.id) {
+        return Err(format!(
+            "Download bloqueado pela política de segurança da loja: {}",
+            app.id
+        ));
+    }
     catalog::apply_local_state(std::slice::from_mut(&mut app), &state.store);
 
     downloader::download_app(app_handle, &state.store, app, Arc::clone(&state.downloads))
@@ -157,6 +163,9 @@ pub async fn get_installed(state: State<'_, AppState>) -> Result<CatalogResponse
                 sha256: None,
                 published_at: rec.installed_at.clone(),
                 tags: vec![],
+                trust_score: 0,
+                security_flags: vec![],
+                warnings: vec![],
                 installed: true,
                 installed_version: Some(rec.version),
                 has_update: false,

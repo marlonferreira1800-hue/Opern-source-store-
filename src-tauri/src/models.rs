@@ -32,6 +32,15 @@ pub struct App {
     pub sha256: Option<String>,
     pub published_at: String,
     pub tags: Vec<String>,
+    /// Índice de segurança e confiabilidade (0-100)
+    #[serde(default)]
+    pub trust_score: u8,
+    /// Selos positivos de verificação (ex: "osi-license", "sha256-verified")
+    #[serde(default)]
+    pub security_flags: Vec<String>,
+    /// Alertas informativos (ex: "no-sha256-digest")
+    #[serde(default)]
+    pub warnings: Vec<String>,
     // ---- estado local ----
     pub installed: bool,
     pub installed_version: Option<String>,
@@ -69,6 +78,10 @@ pub struct GhRelease {
     pub body: Option<String>,
     pub html_url: String,
     pub published_at: Option<String>,
+    #[serde(default)]
+    pub draft: bool,
+    #[serde(default)]
+    pub prerelease: bool,
     pub assets: Vec<GhAsset>,
 }
 
@@ -82,9 +95,28 @@ pub struct GhRepo {
     pub homepage: Option<String>,
     pub stargazers_count: u64,
     pub pushed_at: Option<String>,
+    #[serde(default)]
+    pub created_at: Option<String>,
+    #[serde(default)]
+    pub fork: bool,
+    #[serde(default)]
+    pub archived: bool,
+    #[serde(default)]
+    pub disabled: bool,
     pub topics: Vec<String>,
     pub license: Option<GhLicense>,
     pub owner: GhOwner,
+}
+
+/// Entrada pré-validada no snapshot de seed (`data/catalog-seed.json`).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SeedEntry {
+    pub category: String,
+    pub trust_score: u8,
+    #[serde(default)]
+    pub security_flags: Vec<String>,
+    pub repo: GhRepo,
+    pub release: GhRelease,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

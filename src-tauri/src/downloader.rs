@@ -7,8 +7,25 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::{watch, Mutex};
 
+use crate::catalog;
 use crate::models::{App, DownloadProgress, DownloadResponse};
 use crate::store::Store;
+
+/// Garante que a URL usa HTTPS e pertence ao domínio oficial do GitHub/CDN de releases.
+fn is_safe_redirect_url(url: &reqwest::Url) -> bool {
+    if url.scheme() != "https" {
+        return false;
+    }
+    match url.host_str().map(|h| h.to_ascii_lowercase()) {
+        Some(host) => {
+            host == "github.com"
+                || host.ends_with(".github.com")
+                || host == "githubusercontent.com"
+                || host.ends_with(".githubusercontent.com")
+        }
+        None => false,
+    }
+}
 
 /// Estado dos downloads em andamento (app_id -> canal de cancelamento).
 pub type DownloadState = Arc<Mutex<HashMap<String, watch::Sender<bool>>>>;
@@ -32,6 +49,15 @@ pub async fn download_app(
             message:
                 "Nenhum binário disponível para esta plataforma. Veja o repositório no GitHub."
                     .into(),
+            file_path: None,
+        });
+    }
+
+    if !catalog::is_allowed_download_url(&app.download_url) {
+        return Ok(DownloadResponse {
+            success: false,
+            message: "URL de download bloqueada pela política de segurança (host não confiável)."
+                .into(),
             file_path: None,
         });
     }
@@ -75,6 +101,15 @@ pub async fn download_app(
 
     let client = reqwest::Client::builder()
         .user_agent("open-source-store/0.1")
+        .redirect(reqwest::redirect::Policy::custom(|attempt| {
+            if attempt.previous().len() > 8 {
+                attempt.error("Excesso de redirecionamentos")
+            } else if is_safe_redirect_url(attempt.url()) {
+                attempt.follow()
+            } else {
+                attempt.error("Redirecionamento bloqueado para domínio externo ao GitHub")
+            }
+        }))
         .build()?;
     let resp = client.get(&app.download_url).send().await?;
     if !resp.status().is_success() {

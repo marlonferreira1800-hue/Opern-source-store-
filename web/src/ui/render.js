@@ -52,10 +52,19 @@ function appCardHtml(app) {
         actionBtn = `<button class="btn btn-secondary btn-small" data-action="download" data-app-id="${idAttr}">INSTALAR</button>`;
     }
 
+    const hasSha = Boolean(app.sha256) || (app.security_flags || []).includes('sha256-verified');
+    const score = Number(app.trust_score || 0);
+    const trustBadge = score > 0
+        ? `<span class="trust-badge ${score >= 75 ? 'trust-high' : 'trust-med'}" title="Índice de Segurança e Qualidade (0-100)">&#128737; ${score}/100${hasSha ? ' &bull; SHA256' : ''}</span>`
+        : '';
+
     return `
         <div class="app-card ${app.has_update ? 'has-update' : ''}" data-action="detail" data-app-id="${idAttr}">
             <div class="app-card-top">
-                <span class="app-version">${app.version ? 'V' + esc(app.version) : 'sem release'}</span>
+                <div class="app-card-badges">
+                    <span class="app-version">${app.version ? 'V' + esc(app.version) : 'sem release'}</span>
+                    ${trustBadge}
+                </div>
                 <button class="btn btn-icon github-btn" title="Ver no GitHub" data-action="open-url" data-url="${ghHref}">GH &#8599;</button>
             </div>
             <div class="app-card-header">
@@ -117,6 +126,23 @@ export function renderAppDetail(app) {
     const homeHref = esc(safeUrl(app.homepage));
     const descHtml = esc(app.description || '').replace(/\n/g, '<br>');
 
+    const flagLabels = {
+        'osi-license': 'Licença OSI',
+        'sha256-verified': 'SHA-256 Verificado',
+        'security-policy': 'SECURITY.md',
+        'verified-org': 'Organização',
+        'mature-repo': 'Projeto Maduro',
+    };
+    const warningLabels = {
+        'no-sha256-digest': 'A release atual não fornece checksum SHA-256 nativo; verifique no repositório oficial antes de executar.',
+    };
+    const flagsHtml = (app.security_flags || []).length
+        ? `<div class="security-flags">${app.security_flags.map(f => `<span class="security-flag">&#10003; ${esc(flagLabels[f] || f)}</span>`).join('')}</div>`
+        : '';
+    const warningsHtml = (app.warnings || []).length
+        ? `<div class="security-warning">&#9888; ${app.warnings.map(w => esc(warningLabels[w] || w)).join(' ')}</div>`
+        : '';
+
     dom.appDetailContent.innerHTML = `
         <div class="app-detail-header">
             <img src="${esc(safeUrl(app.icon_url) || DEFAULT_ICON)}" alt="${esc(app.name)}" class="app-detail-icon" data-fallback="${DEFAULT_ICON}" />
@@ -127,11 +153,15 @@ export function renderAppDetail(app) {
                     <div class="meta-item"><span class="meta-label">Versão</span><span class="meta-value">${esc(app.version || '-')}</span></div>
                     <div class="meta-item"><span class="meta-label">Tamanho</span><span class="meta-value">${formatBytes(app.size_bytes)}</span></div>
                     <div class="meta-item"><span class="meta-label">Licença</span><span class="meta-value">${esc(app.license)}</span></div>
+                    <div class="meta-item"><span class="meta-label">Segurança</span><span class="meta-value">${app.trust_score ? esc(app.trust_score + '/100') : '-'}</span></div>
+                    <div class="meta-item"><span class="meta-label">Integridade</span><span class="meta-value">${app.sha256 ? 'SHA-256 OK' : ((app.security_flags || []).includes('sha256-verified') ? 'Checksum na release' : 'Não informado')}</span></div>
                     <div class="meta-item"><span class="meta-label">Autor</span><span class="meta-value">${esc(app.author)}</span></div>
                     <div class="meta-item"><span class="meta-label">★ Estrelas</span><span class="meta-value">${(app.stars || 0).toLocaleString('pt-BR')}</span></div>
                     <div class="meta-item"><span class="meta-label">Última atividade</span><span class="meta-value">${app.pushed_at ? esc(app.pushed_at.slice(0, 10)) : '-'}</span></div>
                     <div class="meta-item"><span class="meta-label">Categoria</span><span class="meta-value">${esc(app.category)}</span></div>
                 </div>
+                ${flagsHtml}
+                ${warningsHtml}
                 <div class="app-actions">
                     ${app.installed
                         ? `<button class="btn btn-secondary" data-action="open-installed" data-app-id="${idAttr}">ABRIR</button>
