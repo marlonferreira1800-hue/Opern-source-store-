@@ -14,6 +14,12 @@ Baixe o instalador na página de [Releases](https://github.com/marlonferreira180
 
 O histórico completo de versões e suas mudanças está em [`CHANGELOG.md`](CHANGELOG.md) e na página de [Releases](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases).
 
+## Versão Web (sem instalar nada)
+
+Abra direto no navegador: **https://marlonferreira1800-hue.github.io/Opern-source-store-/**
+
+Publicada automaticamente no **GitHub Pages** a cada push na `main` (workflow [`pages.yml`](.github/workflows/pages.yml)). No modo web, o catálogo e a busca ao vivo funcionam direto pela **API pública do GitHub** — sem baixar o app desktop. Instalar/atualizar apps continua exigindo o [app desktop](#download), e a interface avisa quando um recurso é exclusivo do desktop.
+
 ## Como funciona
 
 1. O backend Rust consulta a **API do GitHub** (`/repos/{owner}/{repo}` + `/releases/latest`) para os repositórios curados em [`data/curated.json`](data/curated.json).

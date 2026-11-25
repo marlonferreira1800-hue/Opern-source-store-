@@ -6,6 +6,9 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e ca
 
 ## [NãoLançado]
 
+### Adicionado
+- **Versão web no GitHub Pages** — https://marlonferreira1800-hue.github.io/Opern-source-store-/ — publicada automaticamente a cada push na `main` pelo workflow `.github/workflows/pages.yml` (build Vite para `dist/` + `actions/deploy-pages`). No navegador, catálogo e busca ao vivo funcionam via API pública do GitHub, sem instalar o app desktop; instalar apps segue exclusivo do desktop
+
 ## [0.1.0] - 2026-11-25
 
 Primeira versão pública — loja desktop de aplicativos open source com backend 100% Rust (Tauri 2.0).
