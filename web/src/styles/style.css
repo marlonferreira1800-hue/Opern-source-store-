@@ -1,4 +1,4 @@
-/* ===== ASCLEPIO — OPEN SOURCE STORE — BRUTALIST DARK GRID ===== */
+/* ===== ASCLEPIO — OPEN SOURCE STORE — ORGANIC DARK THEME ===== */
 
 *,
 *::before,
@@ -6,21 +6,21 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    border-radius: 0;
+    border-radius: var(--radius);
 }
 
 :root {
     /* Surfaces */
-    --bg-canvas: #09090b;
-    --bg-surface: #111114;
-    --bg-hover: #17171b;
-    --bg-elevated: #141418;
-    --bg-update: #1b1018;
-    --bg-update-hover: #231420;
+    --bg-canvas: #0a0d0b;
+    --bg-surface: #121612;
+    --bg-hover: #1a201a;
+    --bg-elevated: #161b16;
+    --bg-update: #1d1216;
+    --bg-update-hover: #261a22;
 
     /* Borders */
-    --border-hairline: #242429;
-    --border-strong: #3a3a42;
+    --border-hairline: #252b25;
+    --border-strong: #3d443c;
 
     /* Text */
     --text-primary: #f4f4f5;
@@ -30,8 +30,8 @@
 
     /* Contrast & Accents */
     --contrast-bg: #ffffff;
-    --contrast-fg: #09090b;
-    --accent-brand: #22d3ee;
+    --contrast-fg: #0a0d0b;
+    --accent-brand: #a3e635;
     --accent-magenta: #e14d9f;
     --accent-amber: #f59e0b;
     --accent-blue: #3b82f6;
@@ -41,13 +41,13 @@
     --accent-red: #ef4444;
 
     /* Typography */
-    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-ui: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
     /* Layout */
     --header-row1-h: 44px;
     --header-row2-h: 56px;
-    --radius: 0px;
+    --radius: 10px;
 }
 
 html,

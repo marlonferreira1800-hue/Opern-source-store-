@@ -16,7 +16,7 @@ Baixe o instalador na página de [Releases](https://github.com/marlonferreira180
 
 | Plataforma | Arquivo |
 |---|---|
-| Windows (x64) | [`Open.Source.Store_0.1.0_x64-setup.exe`](https://github.com/marlonferreira1800-hue/open-source-store/releases/download/v0.1.0/Open.Source.Store_0.1.0_x64-setup.exe) (2,2 MB) |
+| Windows (x64) | [`Asclepio_0.1.2_x64-setup.exe`](https://github.com/marlonferreira1800-hue/open-source-store/releases/download/v0.1.2/Asclepio_0.1.2_x64-setup.exe) (2,3 MB) |
 
 O histórico completo de versões e suas mudanças está em [`CHANGELOG.md`](CHANGELOG.md) e na página de [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases).
 

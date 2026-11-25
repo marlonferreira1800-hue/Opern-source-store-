@@ -4,6 +4,18 @@ Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e cada versão tem uma **tag** no git e uma página de **Release** no GitHub com o instalador anexado para download.
 
+## [0.1.2] - 2026-11-25
+
+### Alterado
+- **Identidade visual própria** — o tema base copiado ("brutalist dark grid") agora é "organic dark": cantos arredondados (`--radius: 10px`), destaque lima `#a3e635` (antes ciano `#22d3ee`), fonte **Space Grotesk** (antes Inter) e fundo verde-escuro próprio — visualmente distinto do projeto de origem
+- Rodapé do app exibe a versão correta (`v0.1.2`)
+
+### Adicionado
+- **`NOTICE`** com atribuição: interface baseada no [ArtCraft Launcher](https://github.com/storytold/craft-launcher) (Copyright (c) 2026 ArtCraft Team, MIT/Apache-2.0); nome e marcas ArtCraft não são usados neste projeto
+
+### Corrigido
+- Tabela de download no README atualizada para o instalador `Asclepio_0.1.2_x64-setup.exe` da release v0.1.2
+
 ## [0.1.1] - 2026-11-25
 
 ### Adicionado
@@ -64,5 +76,6 @@ Primeira versão pública — loja desktop de aplicativos open source com backen
 2. Ao publicar uma versão, criamos a tag (ex.: `v0.1.0`) e uma **Release no GitHub** com as notas desta seção.
 3. O instalador (`.exe`/`.msi` para Windows, `.AppImage`/`.deb` para Linux, `.dmg` para macOS) é anexado como **asset** da Release — baixe em [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases).
 
+[0.1.2]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.2
 [0.1.1]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.1
 [0.1.0]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.0
