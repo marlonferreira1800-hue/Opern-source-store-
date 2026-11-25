@@ -10,6 +10,12 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e ca
 - **Versão web no GitHub Pages** — https://marlonferreira1800-hue.github.io/Opern-source-store-/ — publicada automaticamente a cada push na `main` pelo workflow `.github/workflows/pages.yml` (build Vite para `dist/` + `actions/deploy-pages`). No navegador, catálogo e busca ao vivo funcionam via API pública do GitHub, sem instalar o app desktop; instalar apps segue exclusivo do desktop
 - **Descoberta/destaque no GitHub**: 20 topics no repositório, descrição com palavras-chave de busca, **Discussions** habilitado (6 categorias padrão + post de boas-vindas), imagem de social preview em `.github/social-preview.png`, badges no README (CI, Pages, release, licença, web)
 - **Comunidade e segurança**: `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), `.github/SECURITY.md` + **Private Vulnerability Reporting** habilitado, `.github/FUNDING.yml` (botão de sponsoring), contact links em `.github/ISSUE_TEMPLATE/config.yml` (Discussions, web, releases, reporte privado)
+- **Release automático do desktop**: workflow `.github/workflows/release.yml` (`tauri-action`) compila Windows/Linux/macOS e cria a GitHub Release com os instaladores anexados ao dar push numa tag `v*` — processo documentado em `docs/RELEASING.md`
+- **Proteção da branch `main`**: exige os checks `Frontend Build` e `Rust Check & Tests` (CI) antes de merge, com resolução de conversas obrigatória; sem force-push e sem deleção da branch
+- **Dependabot configurado** (`.github/dependabot.yml`, atualização semanal de npm e cargo com PRs automáticos) e labels personalizadas: `rust`, `tauri`, `frontend`, `web`, `catalog`, `ci`, `release`
+
+### Segurança
+- Alerta Dependabot #9 (`glib`, medium, transitivo via GTK apenas no Linux, sem versão corrigida disponível) dispensado como risco tolerável; o `dependabot.yml` reabre o alerta automaticamente quando surgir correção
 
 ## [0.1.0] - 2026-11-25
 
