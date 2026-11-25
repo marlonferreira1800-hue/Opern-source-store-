@@ -162,8 +162,41 @@ fn build_app(repo: &GhRepo, release: Option<&GhRelease>, category_hint: &str) ->
     }
 }
 
+/// Monta um app mínimo a partir de "owner/repo" (fallback offline, sem dados da API).
+fn offline_app(full_name: &str) -> App {
+    let (owner, name) = full_name.split_once('/').unwrap_or(("", full_name));
+    App {
+        id: full_name.to_string(),
+        name: name.to_string(),
+        tagline: format!("{full_name} — catálogo offline (sem detalhes da API)"),
+        description: String::new(),
+        category: "Other".into(),
+        author: owner.to_string(),
+        version: String::new(),
+        license: "Unknown".into(),
+        stars: 0,
+        pushed_at: String::new(),
+        downloads: 0,
+        icon_url: format!("https://avatars.githubusercontent.com/{owner}?v=4"),
+        github_url: format!("https://github.com/{full_name}"),
+        homepage: String::new(),
+        release_url: format!("https://github.com/{full_name}/releases"),
+        download_url: String::new(),
+        file_name: String::new(),
+        size_bytes: 0,
+        sha256: None,
+        published_at: String::new(),
+        tags: vec![],
+        installed: false,
+        installed_version: None,
+        has_update: false,
+        installed_path: None,
+    }
+}
+
 /// Busca o catálogo: usa cache local se fresco (< 30 min), senão busca na API do GitHub.
-pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bool) -> Result<(Vec<App>, bool)> {
+/// Se a API falhar (rate limit/rede), cai no fallback offline com os repos curados.
+pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bool) -> Result<(Vec<App>, bool, bool)> {
     const TTL_SECS: i64 = 30 * 60;
 
     if !force_refresh {
@@ -173,19 +206,24 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
                 .unwrap_or_else(|_| chrono::DateTime::<chrono::Utc>::from_timestamp(0, 0).unwrap());
             if chrono::Utc::now().signed_duration_since(fetched).num_seconds() < TTL_SECS {
                 log::info!("catalog: usando cache local ({} apps)", cache.apps.len());
-                return Ok((cache.apps, true));
+                return Ok((cache.apps, true, false));
             }
         }
     }
 
     let client = Arc::new(http_client(token));
     let repos = curated_repos();
-    log::info!("catalog: buscando {} repos no GitHub", repos.len());
+    // Sem token a API permite só 60 req/h por IP: limita a 25 repos (2 req cada) para não estourar.
+    // Com token (5000 req/h) busca todos.
+    let limit = if token.is_some() { repos.len() } else { repos.len().min(25) };
+    log::info!("catalog: buscando {} de {} repos no GitHub", limit, repos.len());
 
     let mut apps = Vec::new();
-    for full_name in &repos {
+    let mut online_ok = false;
+    for full_name in &repos[..limit] {
         match fetch_repo(&client, full_name).await {
             Ok(repo) => {
+                online_ok = true;
                 // sempre verifica os requisitos: famoso (estrelas) e ativo (push recente)
                 if !is_famous_and_active(&repo) {
                     log::debug!("catalog: descartado {} (não atende critérios de fama/atividade)", full_name);
@@ -203,13 +241,20 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
         }
     }
 
+    // Fallback offline: se nada veio da API (rate limit, sem rede), lista os curados com dados mínimos
+    if !online_ok {
+        log::warn!("catalog: API do GitHub indisponível (rate limit/rede). Usando fallback offline.");
+        let apps = repos.iter().map(|r| offline_app(r)).collect::<Vec<_>>();
+        return Ok((apps, false, true));
+    }
+
     // Ordenar por estrelas
     apps.sort_by(|a, b| b.stars.cmp(&a.stars));
 
     if !apps.is_empty() {
         store.save_catalog_cache(&apps)?;
     }
-    Ok((apps, false))
+    Ok((apps, false, false))
 }
 
 /// Busca ao vivo no GitHub por repositórios (qualidade menor, cobre qualquer app).

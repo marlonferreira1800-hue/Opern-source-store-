@@ -23,13 +23,14 @@ pub async fn get_catalog(
     force_refresh: Option<bool>,
 ) -> Result<CatalogResponse, String> {
     let force = force_refresh.unwrap_or(false);
-    let (mut apps, from_cache) = catalog::fetch_catalog(&state.store, token(&state).as_deref(), force)
+    let (mut apps, from_cache, offline) = catalog::fetch_catalog(&state.store, token(&state).as_deref(), force)
         .await
         .map_err(|e| e.to_string())?;
     catalog::apply_local_state(&mut apps, &state.store);
     Ok(CatalogResponse {
         total: apps.len(),
         from_cache,
+        offline,
         fetched_at: chrono::Utc::now().to_rfc3339(),
         apps,
     })
@@ -48,6 +49,7 @@ pub async fn search_apps(
     Ok(CatalogResponse {
         total: apps.len(),
         from_cache: false,
+        offline: false,
         fetched_at: chrono::Utc::now().to_rfc3339(),
         apps,
     })
@@ -111,6 +113,7 @@ pub async fn get_installed(state: State<'_, AppState>) -> Result<CatalogResponse
     Ok(CatalogResponse {
         total: installed.len(),
         from_cache: true,
+        offline: false,
         fetched_at: chrono::Utc::now().to_rfc3339(),
         apps: installed,
     })
@@ -126,6 +129,7 @@ pub async fn get_apps_to_update(state: State<'_, AppState>) -> Result<CatalogRes
     Ok(CatalogResponse {
         total: updates.len(),
         from_cache: true,
+        offline: false,
         fetched_at: chrono::Utc::now().to_rfc3339(),
         apps: updates,
     })

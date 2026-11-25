@@ -84,7 +84,8 @@ async function loadCatalog(forceRefresh) {
     const res = await invoke('get_catalog', { forceRefresh });
     apps = res.apps || [];
     installedIds = new Set(apps.filter(a => a.installed).map(a => a.id));
-    if (res.from_cache) showStatus('Catálogo carregado do cache local');
+    if (res.offline) showStatus('API do GitHub indisponível (limite de requisições ou sem rede). Modo offline: abra o menu ☰ → Configurações e cole seu token do GitHub para carregar tudo.', 12000);
+    else if (res.from_cache) showStatus('Catálogo carregado do cache local');
     else showStatus(`Catálogo atualizado do GitHub: ${res.total} apps`);
 }
 
@@ -197,6 +198,8 @@ function appCardHtml(app) {
         actionBtn = `<button class="btn btn-primary btn-small" onclick="event.stopPropagation(); downloadApp('${app.id}')">ATUALIZAR ${app.version}</button>`;
     } else if (app.installed) {
         actionBtn = `<button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openInstalled('${app.id}')">ABRIR</button>`;
+    } else if (!app.download_url) {
+        actionBtn = `<button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openGitHub('${app.github_url}')">VER NO GITHUB</button>`;
     } else {
         actionBtn = `<button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); downloadApp('${app.id}')">INSTALAR</button>`;
     }
@@ -354,7 +357,9 @@ async function openAppDetail(appId) {
                         ? `<button class="btn btn-secondary" onclick="openInstalled('${app.id}')">ABRIR</button>
                            ${app.has_update ? `<button class="btn btn-primary" onclick="downloadApp('${app.id}')">ATUALIZAR PARA ${app.version}</button>` : ''}
                            <button class="btn btn-text" onclick="uninstallApp('${app.id}')">Desinstalar</button>`
-                        : `<button class="btn btn-primary" onclick="downloadApp('${app.id}')">${dl && dl.status === 'baixando' ? Math.round(dl.percent) + '%' : 'INSTALAR'}</button>`}
+                        : app.download_url
+                            ? `<button class="btn btn-primary" onclick="downloadApp('${app.id}')">${dl && dl.status === 'baixando' ? Math.round(dl.percent) + '%' : 'INSTALAR'}</button>`
+                            : `<button class="btn btn-primary" onclick="openGitHub('${app.github_url}')">VER NO GITHUB (sem binário para esta plataforma)</button>`}
                     <button class="btn btn-secondary" onclick="openGitHub('${app.github_url}')">ABRIR NO GITHUB</button>
                     ${app.homepage ? `<button class="btn btn-secondary" onclick="openGitHub('${app.homepage}')">SITE OFICIAL</button>` : ''}
                 </div>

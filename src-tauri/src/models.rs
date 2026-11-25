@@ -45,6 +45,9 @@ pub struct CatalogResponse {
     pub apps: Vec<App>,
     pub total: usize,
     pub from_cache: bool,
+    /// true quando a API do GitHub falhou (rate limit/rede) e servimos dados básicos offline
+    #[serde(default)]
+    pub offline: bool,
     pub fetched_at: String,
 }
 
