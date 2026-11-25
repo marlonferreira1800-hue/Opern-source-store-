@@ -1,6 +1,5 @@
 // Import Tauri API
-import { invoke } from '@tauri-apps/api';
-import { open } from '@tauri-apps/api/shell';
+import { invoke } from '@tauri-apps/api/core';
 
 // Global state
 let apps = [];
@@ -429,7 +428,7 @@ function closeDownloadModal() {
 // Open GitHub URL
 function openGitHub(url) {
     if (url) {
-        open(url);
+        invoke('open_url', { url });
     }
 }
 
