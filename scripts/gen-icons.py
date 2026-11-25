@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Gera icon.png (256), icon.ico (multi-tamanho: 16/32/48/64/128/256) e
-app_default.png (128) da logo Asclepio.
+app_default.png (128) da logo OpenStore (prateleira de apps + seta de download).
 Sem dependências externas: monta PNG/BMP/ICO manualmente com zlib/struct.
 
 Uso:
@@ -10,31 +10,16 @@ import os
 import struct
 import zlib
 
-CYAN = (34, 211, 238)
-BLUE = (56, 189, 248)
-PURPLE = (139, 92, 246)
-DARK = (9, 9, 11)
-BORDER = (38, 38, 46)
-BG_IN = (23, 23, 30)
-BG_OUT = (9, 9, 11)
+LIME = (163, 230, 53)       # #a3e635 — destaque do tema
+LIME_DARK = (63, 98, 18)    # #3f6212
+DARK = (10, 13, 11)         # #0a0d0b
+BORDER = (28, 34, 27)       # #1c221b
+BG_IN = (18, 22, 18)        # #121612
+BG_OUT = (10, 13, 11)       # #0a0d0b
 
 
 def lerp(a, b, t):
     return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
-
-
-def lerp_stops(stops, t):
-    t = max(0.0, min(1.0, t))
-    for i in range(len(stops) - 1):
-        p0, c0 = stops[i]
-        p1, c1 = stops[i + 1]
-        if p0 <= t <= p1:
-            f = 0 if p1 == p0 else (t - p0) / (p1 - p0)
-            return lerp(c0, c1, f)
-    return stops[-1][1]
-
-
-SNAKE_STOPS = [(0.0, CYAN), (0.45, BLUE), (1.0, PURPLE)]
 
 
 def chunk(tipo, data):
@@ -106,10 +91,6 @@ def inside_rr(x, y, x0, y0, x1, y1, r):
     return (x - cx) ** 2 + (y - cy) ** 2 < r * r
 
 
-def inside_circle(x, y, cx, cy, r):
-    return (x - cx) ** 2 + (y - cy) ** 2 < r * r
-
-
 def set_px(buf, s, x, y, color, alpha=255):
     if 0 <= x < s and 0 <= y < s:
         i = (y * s + x) * 4
@@ -146,19 +127,21 @@ def rr_fill(buf, s, x0, y0, x1, y1, r, color_fn):
                 set_px(buf, s, xx, yy, color_fn(xx + 0.5, yy + 0.5))
 
 
-def bezier(p0, c0, c1, p1, t):
-    u = 1 - t
-    x = u**3 * p0[0] + 3 * u * u * t * c0[0] + 3 * u * t * t * c1[0] + t**3 * p1[0]
-    y = u**3 * p0[1] + 3 * u * u * t * c0[1] + 3 * u * t * t * c1[1] + t**3 * p1[1]
-    return x, y
-
-
-SNAKE_SEGS = [
-    ((318, 118), (226, 128), (196, 168), (250, 196)),
-    ((250, 196), (322, 232), (336, 262), (258, 288)),
-    ((258, 288), (186, 312), (190, 356), (254, 376)),
-    ((254, 376), (300, 390), (336, 398), (352, 412)),
-]
+def tri_fill(buf, s, ax, ay, bx, by, cx, cy, color):
+    minx = int(min(ax, bx, cx))
+    maxx = int(max(ax, bx, cx)) + 1
+    miny = int(min(ay, by, cy))
+    maxy = int(max(ay, by, cy)) + 1
+    d = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy)
+    if abs(d) < 1e-9:
+        return
+    for y in range(miny, maxy):
+        for x in range(minx, maxx):
+            w0 = ((by - cy) * (x - cx) + (cx - bx) * (y - cy)) / d
+            w1 = ((cy - ay) * (x - cx) + (ax - cx) * (y - cy)) / d
+            w2 = 1.0 - w0 - w1
+            if w0 >= 0 and w1 >= 0 and w2 >= 0:
+                set_px(buf, s, x, y, color)
 
 
 def paint_logo(buf, s):
@@ -181,47 +164,28 @@ def paint_logo(buf, s):
                 set_px(buf, s, x, y, BORDER)
 
     # Ground shadow
-    sh_cx, sh_cy = 256 * k, 440 * k
-    sh_rx, sh_ry = 88 * k, 12 * k
+    sh_cx, sh_cy = 256 * k, 400 * k
+    sh_rx, sh_ry = 150 * k, 13 * k
     for y in range(s):
         for x in range(s):
             e = ((x + 0.5 - sh_cx) / sh_rx) ** 2 + ((y + 0.5 - sh_cy) / sh_ry) ** 2
             if e <= 1.0:
                 set_px(buf, s, x, y, (0, 0, 0), int(115 * (1 - e * 0.5)))
 
-    # Snake body (behind staff): sampled beziers painted as discs with gradient by t
-    total = 0
-    seg_pts = []
-    for seg in SNAKE_SEGS:
-        n = 160
-        pts = [bezier(*seg, i / n) for i in range(n + 1)]
-        seg_pts.append(pts)
-        total += n
-    idx = 0
-    for pts in seg_pts:
-        for (px, py) in pts:
-            t = idx / total
-            idx += 1
-            disc(buf, s, px * k, py * k, 13 * k, lerp_stops(SNAKE_STOPS, t))
+    # Shelf (prateleira)
+    rr_fill(buf, s, 64 * k, 352 * k, 448 * k, 370 * k, 9 * k, lambda px, py: LIME_DARK)
 
-    # Staff with diagonal gradient
-    def staff_color(px, py):
-        return lerp(CYAN, PURPLE, (px + py) / (2.0 * s))
+    # Side apps
+    rr_fill(buf, s, 86 * k, 246 * k, 186 * k, 346 * k, 22 * k, lambda px, py: LIME_DARK)
+    rr_fill(buf, s, 326 * k, 246 * k, 426 * k, 346 * k, 22 * k, lambda px, py: LIME_DARK)
 
-    rr_fill(buf, s, 247 * k, 96 * k, 265 * k, 426 * k, 9 * k, staff_color)
-    disc(buf, s, 256 * k, 82 * k, 24 * k, staff_color(256 * k, 82 * k))
-    rr_fill(buf, s, 234 * k, 416 * k, 278 * k, 430 * k, 7 * k, staff_color)
+    # Center app (destaque)
+    rr_fill(buf, s, 206 * k, 246 * k, 306 * k, 346 * k, 22 * k, lambda px, py: LIME)
 
-    # Head
-    disc(buf, s, 320 * k, 110 * k, 21 * k, PURPLE)
-    disc(buf, s, 312 * k, 103 * k, 4.5 * k, DARK)
-    disc(buf, s, 328 * k, 103 * k, 4.5 * k, DARK)
-    # Forked tongue
-    thick_line(buf, s, 338 * k, 118 * k, 362 * k, 108 * k, 5 * k, CYAN)
-    thick_line(buf, s, 338 * k, 118 * k, 364 * k, 122 * k, 5 * k, CYAN)
-
-    # Terminal cursor tail
-    rr_fill(buf, s, 346 * k, 402 * k, 359 * k, 426 * k, 3 * k, lambda px, py: CYAN)
+    # Download arrow inside the center app (dark)
+    thick_line(buf, s, 256 * k, 266 * k, 256 * k, 300 * k, 12 * k, DARK)
+    tri_fill(buf, s, 234 * k, 296 * k, 278 * k, 296 * k, 256 * k, 324 * k, DARK)
+    rr_fill(buf, s, 232 * k, 330 * k, 280 * k, 338 * k, 4 * k, lambda px, py: DARK)
 
 
 def main():

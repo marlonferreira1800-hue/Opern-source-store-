@@ -4,6 +4,11 @@ Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e cada versão tem uma **tag** no git e uma página de **Release** no GitHub com o instalador anexado para download.
 
+## [Unreleased]
+
+### Alterado
+- **Nome do produto alterado de Asclepio para OpenStore** — `productName`/título da janela em `tauri.conf.json`, `identifier` para `com.marlonferreira.openstore`, título da página web, NOTICE e logo (prateleira de apps com seta de download, cor lima do próprio tema). O instalador Windows passa a ser `OpenStore_<versão>_x64-setup.exe` — nome descritivo que ranqueia melhor em buscas por "open source store" no GitHub
+
 ## [0.1.2] - 2026-11-25
 
 ### Alterado
@@ -14,7 +19,7 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e ca
 - **`NOTICE`** com atribuição: interface baseada no [ArtCraft Launcher](https://github.com/storytold/craft-launcher) (Copyright (c) 2026 ArtCraft Team, MIT/Apache-2.0); nome e marcas ArtCraft não são usados neste projeto
 
 ### Corrigido
-- Tabela de download no README atualizada para o instalador `Asclepio_0.1.2_x64-setup.exe` da release v0.1.2
+- Tabela de download no README atualizada para o instalador `OpenStore_0.1.2_x64-setup.exe` da release v0.1.2
 
 ## [0.1.1] - 2026-11-25
 
