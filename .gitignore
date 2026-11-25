@@ -1,0 +1,38 @@
+# Rust
+/target
+/Cargo.lock
+
+# Node.js
+/node_modules
+/package-lock.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+/dist
+/web/dist
+
+# Tauri
+/src-tauri/target
+/src-tauri/Cargo.lock
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
