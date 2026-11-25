@@ -31,3 +31,10 @@ Thumbs.db
 
 # Downloads
 user://downloads/
+
+# Rust / Tauri
+target/
+src-tauri/target/
+src-tauri/gen/
+node_modules/
+dist/

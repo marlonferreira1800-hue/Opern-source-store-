@@ -1,16 +1,15 @@
 {
   "name": "open-source-store",
   "version": "0.1.0",
-  "description": "A Play Store for open source applications",
+  "description": "A store for open source applications - Rust (Tauri 2.0) backend",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/copy-assets.mjs",
     "preview": "vite preview",
     "tauri": "tauri",
-    "tauri dev": "tauri dev",
-    "tauri build": "tauri build",
-    "tauri lint": "tauri lint"
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0"

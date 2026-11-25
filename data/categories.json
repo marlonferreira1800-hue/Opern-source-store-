@@ -1,62 +1,12 @@
 [
-  {
-    "name": "Educational",
-    "icon": "res://assets/icons/category_education.png",
-    "description": "Aplicativos educativos e de aprendizado"
-  },
-  {
-    "name": "Utilities",
-    "icon": "res://assets/icons/category_utilities.png",
-    "description": "Utilitários e ferramentas"
-  },
-  {
-    "name": "Weather",
-    "icon": "res://assets/icons/category_weather.png",
-    "description": "Aplicativos de clima e previsão do tempo"
-  },
-  {
-    "name": "Health & Fitness",
-    "icon": "res://assets/icons/category_health.png",
-    "description": "Saúde e condicionamento físico"
-  },
-  {
-    "name": "Productivity",
-    "icon": "res://assets/icons/category_productivity.png",
-    "description": "Aplicativos para aumentar a produtividade"
-  },
-  {
-    "name": "Music & Audio",
-    "icon": "res://assets/icons/category_music.png",
-    "description": "Música e aplicativos de áudio"
-  },
-  {
-    "name": "Photography",
-    "icon": "res://assets/icons/category_photo.png",
-    "description": "Fotografia e edição de imagens"
-  },
-  {
-    "name": "Internet",
-    "icon": "res://assets/icons/category_internet.png",
-    "description": "Navegadores e aplicativos da internet"
-  },
-  {
-    "name": "Travel & Local",
-    "icon": "res://assets/icons/category_travel.png",
-    "description": "Viagens, mapas e informações locais"
-  },
-  {
-    "name": "Games",
-    "icon": "res://assets/icons/category_games.png",
-    "description": "Jogos open source"
-  },
-  {
-    "name": "Social",
-    "icon": "res://assets/icons/category_social.png",
-    "description": "Redes sociais e comunicação"
-  },
-  {
-    "name": "Finance",
-    "icon": "res://assets/icons/category_finance.png",
-    "description": "Finanças e gestão de dinheiro"
-  }
+  { "name": "Development", "description": "Editores, IDEs e ferramentas de desenvolvimento" },
+  { "name": "Utilities", "description": "Utilitários e ferramentas de linha de comando" },
+  { "name": "Internet", "description": "Navegadores, clientes de e-mail e comunicação" },
+  { "name": "Multimedia", "description": "Áudio, vídeo e players de mídia" },
+  { "name": "Graphics", "description": "Edição de imagem, desenho e design" },
+  { "name": "Office", "description": "Produtividade, notas e documentos" },
+  { "name": "Security", "description": "Gerenciadores de senhas e privacidade" },
+  { "name": "Games", "description": "Jogos open source" },
+  { "name": "Science", "description": "Ferramentas científicas e de pesquisa" },
+  { "name": "Other", "description": "Outros aplicativos" }
 ]
