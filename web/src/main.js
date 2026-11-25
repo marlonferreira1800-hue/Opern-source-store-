@@ -1,7 +1,42 @@
 // Open Source Store - frontend (webview Tauri)
-// Todo o backend (catálogo GitHub, downloads, instalação) é Rust via invoke().
+// Todo o backend (catálogo GitHub, downloads, instalação) é Rust via call().
+// Fora do app (navegador puro em localhost:1420) cai no modo demo via fetch direto na API.
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
+
+const isTauri = !!window.__TAURI_INTERNALS__;
+
+// Camada única de chamada: no app usa os comandos Rust; no navegador usa a API do GitHub direto.
+async function call(cmd, args = {}) {
+    if (isTauri) return invoke(cmd, args);
+    return webCall(cmd, args);
+}
+
+async function webCall(cmd, args) {
+    if (cmd === 'get_catalog' || cmd === 'search_apps') {
+        const q = args.query
+            ? `${args.query} stars:>=1000 pushed:>=2026-05-25 fork:false archived:false in:name,description,readme`
+            : 'stars:>=2000 pushed:>=2026-05-25 fork:false archived:false -awesome -tutorial -course -books -roadmap -interview -primer -handbook -notes -checklist -learning -algorithms in:name,description';
+        const r = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=30`,
+            { headers: { 'Accept': 'application/vnd.github+json' } });
+        if (!r.ok) throw new Error(`GitHub API HTTP ${r.status} (limite de requisições atingido?)`);
+        const j = await r.json();
+        const apps = (j.items || []).map(it => ({
+            id: it.full_name, name: it.name, tagline: it.description || '', description: it.description || '',
+            category: (it.topics && it.topics[0]) || 'Other', author: it.owner.login, version: '',
+            license: it.license ? it.license.spdx_id : 'Unknown', stars: it.stargazers_count,
+            pushed_at: it.pushed_at || '', downloads: 0, icon_url: it.owner.avatar_url,
+            github_url: it.html_url, homepage: it.homepage || '', release_url: it.html_url + '/releases',
+            download_url: '', file_name: '', size_bytes: 0, tags: it.topics || [],
+            installed: false, installed_version: null, has_update: false, installed_path: null,
+        }));
+        return { apps, total: apps.length, from_cache: false, offline: false, fetched_at: new Date().toISOString() };
+    }
+    if (cmd === 'get_categories') return [];
+    if (cmd === 'get_apps_to_update') return { apps: [], total: 0, from_cache: false, offline: false, fetched_at: '' };
+    if (cmd === 'open_url') { window.open(args.url, '_blank'); return; }
+    throw new Error('Disponível apenas no app desktop (abra com npm run tauri:dev)');
+}
 
 // ---------- estado global ----------
 let apps = [];              // catálogo completo
@@ -57,8 +92,10 @@ async function init() {
         renderAll();
         updateAllButton();
 
+        if (!isTauri) showStatus('Modo navegador (demo): catálogo direto do GitHub. Para instalar apps, abra pelo desktop: npm run tauri:dev', 10000);
+
         // progresso real de download vindo do Rust
-        await listen('download-progress', (event) => {
+        if (isTauri) await listen('download-progress', (event) => {
             const p = event.payload;
             downloading[p.app_id] = p;
             updateDownloadModal(p);
@@ -81,7 +118,7 @@ async function init() {
 }
 
 async function loadCatalog(forceRefresh) {
-    const res = await invoke('get_catalog', { forceRefresh });
+    const res = await call('get_catalog', { forceRefresh });
     apps = res.apps || [];
     installedIds = new Set(apps.filter(a => a.installed).map(a => a.id));
     if (res.offline) showStatus('API do GitHub indisponível (limite de requisições ou sem rede). Modo offline: abra o menu ☰ → Configurações e cole seu token do GitHub para carregar tudo.', 12000);
@@ -91,7 +128,7 @@ async function loadCatalog(forceRefresh) {
 
 async function loadCategories() {
     try {
-        const cats = await invoke('get_categories');
+        const cats = await call('get_categories');
         sidebarCategories.innerHTML = (cats || []).map(c => `
             <div class="sidebar-category">
                 <a href="#" class="sidebar-link" onclick="filterByCategory('${c.name}')">
@@ -104,7 +141,7 @@ async function loadCategories() {
 
 async function loadDownloadsPath() {
     try {
-        const p = await invoke('get_downloads_path');
+        const p = await call('get_downloads_path');
         document.getElementById('downloads-path').textContent = 'Downloads salvos em: ' + p;
     } catch (e) { /* fora do Tauri (navegador) */ }
 }
@@ -136,7 +173,7 @@ async function searchGitHub() {
     if (!q) return;
     showStatus(`Buscando "${q}" no GitHub...`);
     try {
-        const res = await invoke('search_apps', { query: q });
+        const res = await call('search_apps', { query: q });
         apps = res.apps || [];
         currentFilter = 'all';
         storeTitle.textContent = `RESULTADOS PARA "${q.toUpperCase()}" (${res.total})`;
@@ -257,7 +294,7 @@ function renderAll() {
 
 async function updateAllButton() {
     try {
-        const res = await invoke('get_apps_to_update');
+        const res = await call('get_apps_to_update');
         const n = res.total || 0;
         updateCount.textContent = `ATUALIZAR ${n} APLICATIVO${n === 1 ? '' : 'S'}`;
         updateCount.parentElement.disabled = n === 0;
@@ -266,7 +303,7 @@ async function updateAllButton() {
 
 async function updateAll() {
     try {
-        const res = await invoke('get_apps_to_update');
+        const res = await call('get_apps_to_update');
         const updates = res.apps || [];
         if (updates.length === 0) { showStatus('Nenhum aplicativo para atualizar'); return; }
         for (const app of updates) await downloadApp(app.id);
@@ -283,7 +320,7 @@ async function downloadApp(appId) {
         progressFill.style.width = '0%';
         downloadModal.classList.remove('hidden');
         modalOverlay.classList.remove('hidden');
-        await invoke('download_app', { appId });
+        await call('download_app', { appId });
         // a conclusão chega pelo evento download-progress
     } catch (e) {
         downloadStatus.textContent = 'Erro: ' + e;
@@ -292,7 +329,7 @@ async function downloadApp(appId) {
 
 async function cancelDownload() {
     const active = Object.keys(downloading).find(id => downloading[id].status === 'baixando');
-    if (active) { try { await invoke('cancel_download', { appId: active }); } catch (e) {} }
+    if (active) { try { await call('cancel_download', { appId: active }); } catch (e) {} }
     closeDownloadModal();
 }
 
@@ -316,14 +353,14 @@ function closeDownloadModal() {
 }
 
 async function openInstalled(appId) {
-    try { await invoke('open_installed', { appId }); showStatus('Abrindo aplicativo...'); }
+    try { await call('open_installed', { appId }); showStatus('Abrindo aplicativo...'); }
     catch (e) { showStatus('Erro ao abrir: ' + e); }
 }
 
 async function uninstallApp(appId) {
     if (!confirm('Desinstalar este aplicativo? O arquivo baixado será removido.')) return;
     try {
-        await invoke('uninstall_app', { appId });
+        await call('uninstall_app', { appId });
         showStatus('Aplicativo desinstalado');
         await loadCatalog(false);
         renderAll();
@@ -331,7 +368,7 @@ async function uninstallApp(appId) {
     } catch (e) { showStatus('Erro: ' + e); }
 }
 
-function openGitHub(url) { invoke('open_url', { url }).catch(console.error); }
+function openGitHub(url) { call('open_url', { url }).catch(console.error); }
 
 async function openAppDetail(appId) {
     const app = apps.find(a => a.id === appId);
@@ -382,7 +419,7 @@ function closeAllModals() { closeDetailModal(); closeDownloadModal(); }
 
 async function saveToken() {
     const t = document.getElementById('github-token-input').value;
-    try { await invoke('save_github_token', { token: t }); showStatus('Token salvo. Atualizando catálogo...'); await loadCatalog(true); renderAll(); }
+    try { await call('save_github_token', { token: t }); showStatus('Token salvo. Atualizando catálogo...'); await loadCatalog(true); renderAll(); }
     catch (e) { showStatus('Erro ao salvar token: ' + e); }
 }
 
