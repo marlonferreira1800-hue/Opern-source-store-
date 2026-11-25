@@ -5,6 +5,7 @@ export const state = {
     currentFilter: 'all',
     currentSort: 'trust',
     currentSearch: '',
+    viewMode: 'grid',
     downloading: {},
 };
 

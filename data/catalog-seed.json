@@ -15784,5 +15784,1031 @@
         }
       ]
     }
+  },
+  {
+    "category": "Development",
+    "trust_score": 80,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/craft-anything",
+      "name": "craft-anything",
+      "description": "Craft Anything: understand how any software works, and craft your own.",
+      "html_url": "https://github.com/storytold/craft-anything",
+      "homepage": null,
+      "stargazers_count": 43445,
+      "pushed_at": "2026-11-25T12:50:42Z",
+      "created_at": "2026-10-31T14:50:00Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.6.1",
+      "name": "Craft Anything v0.6.1",
+      "body": "## What's Changed\n* Keep Mach-O zero-fill sections out of file-backed section data (R3.12) by @Afloat16 in https://github.com/storytold/craft-anything/pull/1348\n* Read decimal digit separators when filling added SQLite columns (R3.12) by @Afloat16 in https://github.com/storytold/craft-anything/pull/1318\n* Verify Cargo package versions before reporting Rust dependencies (R3.12) by @Afloat16 in https://github.com/storytold/craft-anything/pull/1329\n* Read the Swift standard type SQ as Equatable (R3",
+      "html_url": "https://github.com/storytold/craft-anything/releases/tag/v0.6.1",
+      "published_at": "2026-11-12T01:41:22Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "craft-anything-0.6.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-windows-x64.msi",
+          "size": 58265600,
+          "download_count": 186116,
+          "digest": "sha256:e0d4daf96d657f98efda7348b20d399b183f2411cde00aea0116a685e6af2cdd"
+        },
+        {
+          "name": "craft-anything-0.6.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-windows-x64-portable.zip",
+          "size": 69934191,
+          "download_count": 73262,
+          "digest": "sha256:bd370fbaa2b44dbc13581db5ffd2bf66924ed40e433c7902212aa17ca781de54"
+        },
+        {
+          "name": "craft-anything-0.6.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-windows-arm64.msi",
+          "size": 54849536,
+          "download_count": 3571,
+          "digest": "sha256:81a9dc49b11e142c2b3b2c8ffb2a53c2929696c09b2b83bbbd9d94c656e31c38"
+        },
+        {
+          "name": "craft-anything-0.6.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-macos-universal.dmg",
+          "size": 135621623,
+          "download_count": 64490,
+          "digest": "sha256:bbb777d221a4ffe693323c1b6e625f02e71bfa04d74d32a5d50c4542655ed664"
+        },
+        {
+          "name": "craft-anything-cli-0.6.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-cli-0.6.1-macos-universal.zip",
+          "size": 27891145,
+          "download_count": 10215,
+          "digest": "sha256:ddbae05f52a5526e149f656b0b44cf73a60ad9ec0a33d718f330bf231b988c2f"
+        },
+        {
+          "name": "craft-anything-0.6.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-linux-aarch64.AppImage",
+          "size": 63793672,
+          "download_count": 1322,
+          "digest": "sha256:e1a981f3ff2f2270cb50ceece0f36142db5d8cfe611d53e715f140a6b87083fd"
+        },
+        {
+          "name": "craft-anything-0.6.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-linux-aarch64.deb",
+          "size": 69042168,
+          "download_count": 1750,
+          "digest": "sha256:b5f926e2a85824f9d5646c03ccfcbe4666ac9b55c4093065393b3e2cd4566ae0"
+        },
+        {
+          "name": "craft-anything-0.6.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-linux-aarch64.flatpak",
+          "size": 48025072,
+          "download_count": 807,
+          "digest": "sha256:2334596ae176330c0797087f4137dcbef5366c3578d339e771708cb7bac28478"
+        },
+        {
+          "name": "craft-anything-0.6.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-linux-aarch64.pkg.tar.zst",
+          "size": 52401686,
+          "download_count": 918,
+          "digest": "sha256:48da50da2064aa667e7ac671711d41930c71f4269182eb751ebe0b3184880402"
+        },
+        {
+          "name": "craft-anything-0.6.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-linux-aarch64.rpm",
+          "size": 68398370,
+          "download_count": 964,
+          "digest": "sha256:84d1a8b8bea19b8e0f2cf1fc2041645a38db90ebe3179c7edbd859b9c784e5af"
+        },
+        {
+          "name": "craft-anything-0.6.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-linux-aarch64.tar.gz",
+          "size": 67089499,
+          "download_count": 3745,
+          "digest": "sha256:b4255ac806e2a598b9fc6dba4e8ed2190e49baafd2f68dd7e037f3294e472941"
+        },
+        {
+          "name": "craft-anything-0.6.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/craft-anything/releases/download/v0.6.1/craft-anything-0.6.1-linux-riscv64.deb",
+          "size": 69908440,
+          "download_count": 1126,
+          "digest": "sha256:0cb1dd2258071003263dff9574e5d996ae3fe01f36244fba439d3f5882f9ffa3"
+        }
+      ]
+    }
+  },
+  {
+    "category": "Multimedia",
+    "trust_score": 73,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/effectcraft",
+      "name": "effectcraft",
+      "description": "EffectCraft: An open-source motion graphics and compositing tool written from scratch in pure Rust",
+      "html_url": "https://github.com/storytold/effectcraft",
+      "homepage": "https://getartcraft.com/apps/effectcraft",
+      "stargazers_count": 9224,
+      "pushed_at": "2026-11-25T16:15:38Z",
+      "created_at": "2026-10-01T14:24:46Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [
+        "art",
+        "compositing",
+        "compositing-software",
+        "motion-graphics",
+        "rust"
+      ],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.25.1",
+      "name": "EffectCraft v0.25.1",
+      "body": "## Highlights\n\n- **After Effects compatibility**: .aep import is twice as fast and handles huge or hostile files without stalling, keeps effects it can't map as placeholders, and imports text animator Stroke Opacity and Source Text expressions. Dozens of effect parameters now take After Effects' ranges, and Ball Grid gets every CC Ball Action control.\n- **Media**: video and audio decoding moved to the shared Craft media libraries, with many import fixes (ProRes alpha, MOV timecode and audio edit",
+      "html_url": "https://github.com/storytold/effectcraft/releases/tag/v0.25.1",
+      "published_at": "2026-11-23T21:25:21Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "effectcraft-0.25.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-windows-x64.msi",
+          "size": 70451200,
+          "download_count": 40551,
+          "digest": "sha256:6dc25ea09779707783c64d74c17234f4f937970ccc5193383ba90c39907becf2"
+        },
+        {
+          "name": "effectcraft-0.25.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-windows-x64-portable.zip",
+          "size": 93964264,
+          "download_count": 3498,
+          "digest": "sha256:5bd2918c107962d741cabe8501886c73cb9757d1539d239e4293513edce63bae"
+        },
+        {
+          "name": "effectcraft-0.25.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-windows-arm64.msi",
+          "size": 62664704,
+          "download_count": 521,
+          "digest": "sha256:337502d399b6a11c871398a1a78c357a4850856959c0dea0462e5080df55c635"
+        },
+        {
+          "name": "effectcraft-0.25.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-macos-universal.dmg",
+          "size": 90485479,
+          "download_count": 14755,
+          "digest": "sha256:c54579332a66d8b0f3b9e01d8a712039516eed9f624bde9cefe6d134b3caec28"
+        },
+        {
+          "name": "effectcraft-cli-0.25.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-cli-0.25.1-macos-universal.zip",
+          "size": 85214080,
+          "download_count": 1014,
+          "digest": "sha256:f498e407a82f6ba08067160025301e64723706efc45c963c495a0f7fed78c8ff"
+        },
+        {
+          "name": "effectcraft-0.25.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-linux-aarch64.AppImage",
+          "size": 76823048,
+          "download_count": 340,
+          "digest": "sha256:7ac2fb9ef37a91c7425134f1f0b8eac0791a531934925298ded03da1c87ec6cc"
+        },
+        {
+          "name": "effectcraft-0.25.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-linux-aarch64.deb",
+          "size": 87390440,
+          "download_count": 380,
+          "digest": "sha256:b00f252832557db9d217dd5fb7a664b52482483786a35ab7d6cbf68ac8c72e53"
+        },
+        {
+          "name": "effectcraft-0.25.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-linux-aarch64.flatpak",
+          "size": 50734552,
+          "download_count": 255,
+          "digest": "sha256:99d76498763c020dfccc1ef74265be34d267df6dddbd774dbf38a6dbb448eec6"
+        },
+        {
+          "name": "effectcraft-0.25.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-linux-aarch64.pkg.tar.zst",
+          "size": 58658108,
+          "download_count": 270,
+          "digest": "sha256:39098ebf5d1dbfc6195b228c496ad0f73dfb5b980b9c16bcd1835db7bd99ffae"
+        },
+        {
+          "name": "effectcraft-0.25.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-linux-aarch64.rpm",
+          "size": 86484164,
+          "download_count": 298,
+          "digest": "sha256:73e55b7f039f317a4e25cb01c9f2c6200695b55d722c565f2f8387971dca4192"
+        },
+        {
+          "name": "effectcraft-0.25.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-linux-aarch64.tar.gz",
+          "size": 83370747,
+          "download_count": 395,
+          "digest": "sha256:a4a96c8db77030ab2b2c2418361aebef44edb29794b5c064b3b8c811e9eaa523"
+        },
+        {
+          "name": "effectcraft-0.25.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-linux-riscv64.deb",
+          "size": 88922174,
+          "download_count": 301,
+          "digest": "sha256:ea1a5dcc005c3ad73890079fb833f31ba3b5a7ff03010f39e840770e7188a2b9"
+        }
+      ]
+    }
+  },
+  {
+    "category": "Multimedia",
+    "trust_score": 78,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/filmcraft",
+      "name": "filmcraft",
+      "description": "FilmCraft: An open-source, nonlinear video editor written from scratch in pure Rust",
+      "html_url": "https://github.com/storytold/filmcraft",
+      "homepage": "https://getartcraft.com/apps/filmcraft",
+      "stargazers_count": 19037,
+      "pushed_at": "2026-11-25T19:40:45Z",
+      "created_at": "2026-09-30T13:41:20Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [
+        "art",
+        "rust",
+        "video",
+        "video-editing",
+        "video-editor",
+        "video-processing"
+      ],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.20.1",
+      "name": "FilmCraft v0.20.1",
+      "body": "## What's Changed\n* render: refuse mixer graphs whose latency or compensation delays are absurd by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4225\n* audio-dsp: validate stored remix plans so pieces cannot stack on one output by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4104\n* ci: run Harden-Runner on every job by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4672\n* export: OpenEXR ZIP/ZIPS reuses the deflate hash tables across a frame's chunks ",
+      "html_url": "https://github.com/storytold/filmcraft/releases/tag/v0.20.1",
+      "published_at": "2026-11-12T00:26:09Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "filmcraft-0.20.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-windows-x64.msi",
+          "size": 93388800,
+          "download_count": 281719,
+          "digest": "sha256:165c0f333d995ced16c0b0ebc0b29cc9b7ad358bc812c705659d78e59aa25449"
+        },
+        {
+          "name": "filmcraft-0.20.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-windows-x64-portable.zip",
+          "size": 113447048,
+          "download_count": 24389,
+          "digest": "sha256:bfb00e2089df5f13e6f76aab117a4572a8d005d009c5818989688b140a502710"
+        },
+        {
+          "name": "filmcraft-0.20.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-windows-arm64.msi",
+          "size": 89071616,
+          "download_count": 2844,
+          "digest": "sha256:bf7ff5fea491e3ffd91af251c4b9d916b59c43e860a260561745307c1f4a71da"
+        },
+        {
+          "name": "filmcraft-0.20.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-macos-universal.dmg",
+          "size": 118788917,
+          "download_count": 88630,
+          "digest": "sha256:5722f0f21ca96583ee27dfd88bae23e0a4a6ab87862a6c00082c88c5c759e75e"
+        },
+        {
+          "name": "filmcraft-cli-0.20.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-cli-0.20.1-macos-universal.zip",
+          "size": 100056028,
+          "download_count": 5771,
+          "digest": "sha256:1651d9defb54f853cbd69016428bb9f72a7bf26d56e4755b8e2a79535fd0ac82"
+        },
+        {
+          "name": "filmcraft-0.20.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-aarch64.AppImage",
+          "size": 102885896,
+          "download_count": 1219,
+          "digest": "sha256:487c1750281285de67f68752e1154332b08993c95aee2b4271e4164ec3c33365"
+        },
+        {
+          "name": "filmcraft-0.20.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-aarch64.deb",
+          "size": 110959010,
+          "download_count": 1532,
+          "digest": "sha256:2cd2d9601a80c6496ccdecd289723ab4b98f24159fc9bb524b5b333a8e79dee4"
+        },
+        {
+          "name": "filmcraft-0.20.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-aarch64.flatpak",
+          "size": 78140616,
+          "download_count": 939,
+          "digest": "sha256:ec4393b71707f04ca976c009172f40469557959d58147b7baa0e73fb16aeb760"
+        },
+        {
+          "name": "filmcraft-0.20.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-aarch64.pkg.tar.zst",
+          "size": 86427305,
+          "download_count": 900,
+          "digest": "sha256:03506b023a736dd47f78ecdaabdba039d734650964fb5f74a7bcdb997e0293e6"
+        },
+        {
+          "name": "filmcraft-0.20.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-aarch64.rpm",
+          "size": 110112992,
+          "download_count": 1016,
+          "digest": "sha256:c896707ea158842e32a7aa82a7e3721cde9592688f2a0ba99dcf0d8416de2077"
+        },
+        {
+          "name": "filmcraft-0.20.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-aarch64.tar.gz",
+          "size": 108309163,
+          "download_count": 1469,
+          "digest": "sha256:cdce3d832620c7cf7150e6609fd98ad9702e7d4c57f827aab562e87d816ea13f"
+        },
+        {
+          "name": "filmcraft-0.20.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-riscv64.deb",
+          "size": 108687382,
+          "download_count": 967,
+          "digest": "sha256:990b47657806da9aeed0ccc68d51df49f9e37a3cc471fbf8655b541aedf90f80"
+        }
+      ]
+    }
+  },
+  {
+    "category": "Office",
+    "trust_score": 71,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/wordcraft",
+      "name": "wordcraft",
+      "description": "WordCraft: an open-source, clean-room word processor in pure Rust",
+      "html_url": "https://github.com/storytold/wordcraft",
+      "homepage": "https://getartcraft.com/apps/wordcraft",
+      "stargazers_count": 18575,
+      "pushed_at": "2026-11-25T20:49:02Z",
+      "created_at": "2026-10-07T08:34:24Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.19.1",
+      "name": "WordCraft v0.19.1",
+      "body": "## What's Changed\n* UI: vertical scrollbar track advances one screen (#5853) by @batistalucasv in https://github.com/storytold/wordcraft/pull/5892\n* View: editable Markdown source view for .md files (#5826) by @batistalucasv in https://github.com/storytold/wordcraft/pull/6004\n* Save As: on Linux the file type picked in the save dialog sets the extension (#6180) by @batistalucasv in https://github.com/storytold/wordcraft/pull/6232\n* Clipboard: transfer copied images to system clipboard and preser",
+      "html_url": "https://github.com/storytold/wordcraft/releases/tag/v0.19.1",
+      "published_at": "2026-11-25T19:29:33Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "wordcraft-0.19.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-windows-x64.msi",
+          "size": 103383040,
+          "download_count": 4446,
+          "digest": "sha256:526abab4619d19ee432a834673044dc19f6ee2eac8f0f0bec6e9f6bf06cb7661"
+        },
+        {
+          "name": "wordcraft-0.19.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-windows-x64-portable.zip",
+          "size": 129929601,
+          "download_count": 524,
+          "digest": "sha256:15156fb90ad8d1fee5ba154ff87a76e9c85ebe0d013ffadb6e5ff776ec1ae8f2"
+        },
+        {
+          "name": "wordcraft-0.19.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-windows-arm64.msi",
+          "size": 98803712,
+          "download_count": 90,
+          "digest": "sha256:1884db862730ae46fe4799cf90d593e2a5d47f13798a98905fbbae1c37f7ced9"
+        },
+        {
+          "name": "wordcraft-0.19.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-macos-universal.dmg",
+          "size": 144499906,
+          "download_count": 2430,
+          "digest": "sha256:df13cabf63bb2591045ebf6782c17440e7ecee9556550d6dd2affecd983825b2"
+        },
+        {
+          "name": "wordcraft-cli-0.19.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-cli-0.19.1-macos-universal.zip",
+          "size": 114810446,
+          "download_count": 86,
+          "digest": "sha256:f008db7e1dd3f81a4f9ba65d34358ed4da8e30ebf9191258bef3f7be2cc32c53"
+        },
+        {
+          "name": "wordcraft-0.19.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-linux-aarch64.AppImage",
+          "size": 118135304,
+          "download_count": 54,
+          "digest": "sha256:ef5e893a9394d03136fe887c0563e795a1384289c75f3bf50095b2a0048d208c"
+        },
+        {
+          "name": "wordcraft-0.19.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-linux-aarch64.deb",
+          "size": 128693840,
+          "download_count": 63,
+          "digest": "sha256:b4db4eef71135cb2c516fdfa69c10b1af277384b1b023651b6e2bfbc23c59314"
+        },
+        {
+          "name": "wordcraft-0.19.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-linux-aarch64.flatpak",
+          "size": 85230520,
+          "download_count": 47,
+          "digest": "sha256:161b74647f5cb9550e0ebec377faf0d94f00fd5f74cc2d7976652563ecfeb5d2"
+        },
+        {
+          "name": "wordcraft-0.19.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-linux-aarch64.pkg.tar.zst",
+          "size": 93194932,
+          "download_count": 47,
+          "digest": "sha256:285be80d284f1a38b10fa1e0fc196de2df16569988612a672eb40ee49873153e"
+        },
+        {
+          "name": "wordcraft-0.19.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-linux-aarch64.rpm",
+          "size": 127770000,
+          "download_count": 45,
+          "digest": "sha256:74b046fbd182ead3a8703dcaf04808dd74b2122d7d898b45f11c8da6642fc316"
+        },
+        {
+          "name": "wordcraft-0.19.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-linux-aarch64.tar.gz",
+          "size": 125563455,
+          "download_count": 51,
+          "digest": "sha256:63d8b2e020d241000b565b386cd05bba22d0b97c484b5f11c09cc631e51749ca"
+        },
+        {
+          "name": "wordcraft-0.19.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/wordcraft/releases/download/v0.19.1/wordcraft-0.19.1-linux-riscv64.deb",
+          "size": 130181794,
+          "download_count": 47,
+          "digest": "sha256:e0469aaef4821eb2fe1ff3d9d80b2133e8e2e2f4b6a76a0b5fb9909dcbee79fd"
+        }
+      ]
+    }
+  },
+  {
+    "category": "Graphics",
+    "trust_score": 66,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/anicraft",
+      "name": "anicraft",
+      "description": "AniCraft: An open-source 2D animation editor written from scratch in pure Rust.",
+      "html_url": "https://github.com/storytold/anicraft",
+      "homepage": null,
+      "stargazers_count": 537,
+      "pushed_at": "2026-11-25T16:18:04Z",
+      "created_at": "2026-10-14T17:14:25Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.2.1",
+      "name": "AniCraft v0.2.1",
+      "body": "## What's Changed\n* ci: run Harden-Runner on every job by @dylanmtaylor in https://github.com/storytold/anicraft/pull/162\n* feat(actions): ActionScript small logic: variables, expressions, loops, property reads, enter-frame and keys (M6) by @tanish2k09 in https://github.com/storytold/anicraft/pull/138\n* feat(symbols): 9-slice scaling for symbols (M2) by @tanish2k09 in https://github.com/storytold/anicraft/pull/149\n* feat(doc): colour effects, complete: every style, one exact colour transform (M2",
+      "html_url": "https://github.com/storytold/anicraft/releases/tag/v0.2.1",
+      "published_at": "2026-11-12T01:41:19Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "anicraft-0.2.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-windows-x64.msi",
+          "size": 15982592,
+          "download_count": 81738,
+          "digest": "sha256:835ef10e964ae18169cc65bb5189953f5b4894d9725a31739cd16b2221fe8b92"
+        },
+        {
+          "name": "anicraft-0.2.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-windows-x64-portable.zip",
+          "size": 18965079,
+          "download_count": 6927,
+          "digest": "sha256:cd51c7e2bc81957f7a162596eea564c78fc134acae27ea5c2163f5d617a53ce4"
+        },
+        {
+          "name": "anicraft-0.2.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-windows-arm64.msi",
+          "size": 14434304,
+          "download_count": 766,
+          "digest": "sha256:752ff7b1ef62a594f2caa6e21dbe0ca04e1aca714144b6e375f8f5cbf82b173e"
+        },
+        {
+          "name": "anicraft-0.2.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-macos-universal.dmg",
+          "size": 35683097,
+          "download_count": 22715,
+          "digest": "sha256:e42c864afb704d1e302092f9a903935c2edada1161b336328255de653405b215"
+        },
+        {
+          "name": "anicraft-cli-0.2.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-cli-0.2.1-macos-universal.zip",
+          "size": 9476078,
+          "download_count": 1197,
+          "digest": "sha256:3fb12429aa306bdbb01ba1e1c5ddb69fb7c688f07d16c0e148bbe92c4c5ebb06"
+        },
+        {
+          "name": "anicraft-0.2.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-linux-aarch64.AppImage",
+          "size": 17816072,
+          "download_count": 429,
+          "digest": "sha256:218ec549d301a23524163858dc60bb1584562374e75af55e79f548f147289dff"
+        },
+        {
+          "name": "anicraft-0.2.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-linux-aarch64.deb",
+          "size": 19279928,
+          "download_count": 761,
+          "digest": "sha256:e6f434250596bc1677617c895d2f4719e9bccc7fd60b371b442dd48ad435d5ca"
+        },
+        {
+          "name": "anicraft-0.2.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-linux-aarch64.flatpak",
+          "size": 12676544,
+          "download_count": 356,
+          "digest": "sha256:dc759e5adc10123ff731f90e21087f0fa82b5b57826c62cb6805953b200c243a"
+        },
+        {
+          "name": "anicraft-0.2.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-linux-aarch64.pkg.tar.zst",
+          "size": 11657432,
+          "download_count": 507,
+          "digest": "sha256:8d96dcd2428080513f340dbb83de75c252ee0ad8cb3b6dbca5b8d6a9b9ac3984"
+        },
+        {
+          "name": "anicraft-0.2.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-linux-aarch64.rpm",
+          "size": 19076650,
+          "download_count": 581,
+          "digest": "sha256:0892e1596e6f643d30cdb9abbe6dedf4034d1d585f27553a53f9b9b66b9fbbe2"
+        },
+        {
+          "name": "anicraft-0.2.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-linux-aarch64.tar.gz",
+          "size": 18392152,
+          "download_count": 408,
+          "digest": "sha256:aba2a43b3d96b61905386d738af9d636809de23ddbae1e6cabb473ee79db28ad"
+        },
+        {
+          "name": "anicraft-0.2.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/anicraft/releases/download/v0.2.1/anicraft-0.2.1-linux-riscv64.deb",
+          "size": 19688686,
+          "download_count": 572,
+          "digest": "sha256:815b3be1da254d266abc2a810884529db4b2365ba9085fdc0042bdec8b7ee9aa"
+        }
+      ]
+    }
+  },
+  {
+    "category": "Graphics",
+    "trust_score": 76,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/cadcraft",
+      "name": "cadcraft",
+      "description": "CADCraft: computer-aided design and drafting — an open-source, clean-room CAD application in pure Rust",
+      "html_url": "https://github.com/storytold/cadcraft",
+      "homepage": null,
+      "stargazers_count": 8486,
+      "pushed_at": "2026-11-25T16:15:25Z",
+      "created_at": "2026-10-07T05:22:31Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.20.1",
+      "name": "CADCraft v0.20.1",
+      "body": "## What's Changed\n* Release 0.20.1: repair Flatpak update checks and self-updates by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/3078\n\n\n**Full Changelog**: https://github.com/storytold/cadcraft/compare/v0.20.0...v0.20.1",
+      "html_url": "https://github.com/storytold/cadcraft/releases/tag/v0.20.1",
+      "published_at": "2026-11-12T00:23:37Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "cadcraft-0.20.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-windows-x64.msi",
+          "size": 59478016,
+          "download_count": 191895,
+          "digest": "sha256:a2a179eba42b72f77eb0714fbf5570470a173fb913bc7443dabd536c0f08253c"
+        },
+        {
+          "name": "cadcraft-0.20.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-windows-x64-portable.zip",
+          "size": 74430553,
+          "download_count": 20740,
+          "digest": "sha256:76904b4accff32fbc995adc9bb0137ecd982aa403cf79a281e3f10b48ca14778"
+        },
+        {
+          "name": "cadcraft-0.20.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-windows-arm64.msi",
+          "size": 56156160,
+          "download_count": 2077,
+          "digest": "sha256:57f63a97d952eae240a2633926e53aaa135d67dd0c0ddf846a9785490aa5b471"
+        },
+        {
+          "name": "cadcraft-0.20.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-macos-universal.dmg",
+          "size": 84807713,
+          "download_count": 53863,
+          "digest": "sha256:c9ef1cf02234e6a5e854287a64fe314ad6d53227915c3c6664fa4161e2a1fe70"
+        },
+        {
+          "name": "cadcraft-cli-0.20.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-cli-0.20.1-macos-universal.zip",
+          "size": 62968157,
+          "download_count": 3305,
+          "digest": "sha256:2754055a4f318d028fb9cc7aac0a98987d21c2b5c20f079ca2feb1469f28fb3b"
+        },
+        {
+          "name": "cadcraft-0.20.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-linux-aarch64.AppImage",
+          "size": 68266504,
+          "download_count": 923,
+          "digest": "sha256:9c725b9d8a4d2b09bad06175c51cbba4f95b718b6c70c3de35faa4a007e4a921"
+        },
+        {
+          "name": "cadcraft-0.20.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-linux-aarch64.deb",
+          "size": 74294940,
+          "download_count": 1434,
+          "digest": "sha256:ef72fd132dd5a8b49e186c2be57807a99e93df4b43496148752ce7c50a71bcad"
+        },
+        {
+          "name": "cadcraft-0.20.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-linux-aarch64.flatpak",
+          "size": 49762984,
+          "download_count": 754,
+          "digest": "sha256:890cf97f273ed366ded37640f3c32bebff66a82f1301fa7c846ec1bbc643b3cf"
+        },
+        {
+          "name": "cadcraft-0.20.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-linux-aarch64.pkg.tar.zst",
+          "size": 54812793,
+          "download_count": 768,
+          "digest": "sha256:ced86663a5c1e118d5aaa9a7f2bd0316ac38da112e5d926e56be70aa95b6bb00"
+        },
+        {
+          "name": "cadcraft-0.20.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-linux-aarch64.rpm",
+          "size": 73691262,
+          "download_count": 870,
+          "digest": "sha256:9af94008c55e2fbe9db894cc1a518f1c06607c474a50026c75f0ad378998e44e"
+        },
+        {
+          "name": "cadcraft-0.20.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-linux-aarch64.tar.gz",
+          "size": 72309231,
+          "download_count": 1442,
+          "digest": "sha256:b149db4bdf61d135fcb40ce7361828c75b18d6f3f710e165ca17f30819d23212"
+        },
+        {
+          "name": "cadcraft-0.20.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/cadcraft/releases/download/v0.20.1/cadcraft-0.20.1-linux-riscv64.deb",
+          "size": 74896626,
+          "download_count": 935,
+          "digest": "sha256:4b2f7f39e78a66bb40ad6724dcfcc9ccbf7adfeabcfb02a282c88a703480b45a"
+        }
+      ]
+    }
+  },
+  {
+    "category": "Office",
+    "trust_score": 67,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/deckcraft",
+      "name": "deckcraft",
+      "description": "DeckCraft: presentations and slide shows; an open-source, clean-room presentation app in pure Rust. Part of the ArtCraft Crafting Apps.",
+      "html_url": "https://github.com/storytold/deckcraft",
+      "homepage": "https://getartcraft.com/apps/slidecraft",
+      "stargazers_count": 4969,
+      "pushed_at": "2026-11-25T19:29:37Z",
+      "created_at": "2026-10-07T05:27:21Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.19.1",
+      "name": "DeckCraft v0.19.1",
+      "body": "## What's Changed\n* Video: decode H.264, HEVC, VP9 and AV1 with craft-video by @dylanmtaylor in https://github.com/storytold/deckcraft/pull/2065\n* Decrease Font Size steps down one size at a time from any size (#2059) by @Hamza0101 in https://github.com/storytold/deckcraft/pull/2070\n* Pictures in a placeholder show the layout placeholder's fill (#2068) by @Hamza0101 in https://github.com/storytold/deckcraft/pull/2072\n* Charts: legend entries keep their own text size, weight and colour (#2067) by",
+      "html_url": "https://github.com/storytold/deckcraft/releases/tag/v0.19.1",
+      "published_at": "2026-11-25T19:29:37Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "deckcraft-0.19.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-windows-x64.msi",
+          "size": 84463616,
+          "download_count": 3278,
+          "digest": "sha256:fdaa2672dab8f9bfa7ef31b60d0f28997f8e3c22f779b16aa2ad123ca75b6b40"
+        },
+        {
+          "name": "deckcraft-0.19.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-windows-x64-portable.zip",
+          "size": 106499796,
+          "download_count": 320,
+          "digest": "sha256:f2b46bf227b389c3e5443080b5c5380d70351706cc5137c1be7014e71152d52d"
+        },
+        {
+          "name": "deckcraft-0.19.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-windows-arm64.msi",
+          "size": 81108992,
+          "download_count": 66,
+          "digest": "sha256:b47bef415b2abeb50b4b0294fb823df87b444e85b5096d1e0a194221a856fbf6"
+        },
+        {
+          "name": "deckcraft-0.19.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-macos-universal.dmg",
+          "size": 114480941,
+          "download_count": 1744,
+          "digest": "sha256:a5233f28b031b74edc4a07df2a0068d43b82ccadfdac865f145765d28b2ce746"
+        },
+        {
+          "name": "deckcraft-cli-0.19.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-cli-0.19.1-macos-universal.zip",
+          "size": 96186280,
+          "download_count": 79,
+          "digest": "sha256:1285b14823cd413ee2a666b501f8ba5076ce2ba043938143bc04bf26ec5bf0e8"
+        },
+        {
+          "name": "deckcraft-0.19.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-linux-aarch64.AppImage",
+          "size": 97880584,
+          "download_count": 47,
+          "digest": "sha256:548200b8b1adf79c72860a40abe1c6f2d7f4189a4a9475668873b5732d8c4f00"
+        },
+        {
+          "name": "deckcraft-0.19.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-linux-aarch64.deb",
+          "size": 105834494,
+          "download_count": 52,
+          "digest": "sha256:15636f9fa5e122fdc1aa6fcf41a09324f85de7e0ffdc07f49626f185f8495427"
+        },
+        {
+          "name": "deckcraft-0.19.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-linux-aarch64.flatpak",
+          "size": 70979224,
+          "download_count": 43,
+          "digest": "sha256:c67b95c951f64d9313d2301cb669c695f3f00aaf995746ff765cd3e272ab7f2f"
+        },
+        {
+          "name": "deckcraft-0.19.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-linux-aarch64.pkg.tar.zst",
+          "size": 77431421,
+          "download_count": 44,
+          "digest": "sha256:6a2646db251dd1ef808b4fcb9e0c34907ca38621386576d72e5a0edc3688e3fd"
+        },
+        {
+          "name": "deckcraft-0.19.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-linux-aarch64.rpm",
+          "size": 105268879,
+          "download_count": 45,
+          "digest": "sha256:b7b5b00dd39f115691d99aea7298cee77a67aded9477162f2ba4f6197fed2fb3"
+        },
+        {
+          "name": "deckcraft-0.19.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-linux-aarch64.tar.gz",
+          "size": 103832610,
+          "download_count": 52,
+          "digest": "sha256:20eb8d82847e1a89cfc26eb5b804c8406e66e0c64e2bfc601236f4ad046f6b21"
+        },
+        {
+          "name": "deckcraft-0.19.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/deckcraft/releases/download/v0.19.1/deckcraft-0.19.1-linux-riscv64.deb",
+          "size": 107097668,
+          "download_count": 44,
+          "digest": "sha256:143e462546a7b7988bed5e67a07ddb5943c1b0c0abb3c181e156adc85362d4f2"
+        }
+      ]
+    }
+  },
+  {
+    "category": "Graphics",
+    "trust_score": 71,
+    "security_flags": [
+      "osi-license",
+      "sha256-verified",
+      "verified-org"
+    ],
+    "repo": {
+      "full_name": "storytold/designcraft",
+      "name": "designcraft",
+      "description": "DesignCraft: An open-source page and layout design editor written from scratch in pure Rust",
+      "html_url": "https://github.com/storytold/designcraft",
+      "homepage": "https://getartcraft.com/apps/designcraft",
+      "stargazers_count": 5397,
+      "pushed_at": "2026-11-25T19:48:23Z",
+      "created_at": "2026-10-01T13:13:14Z",
+      "fork": false,
+      "archived": false,
+      "disabled": false,
+      "topics": [
+        "art",
+        "layout",
+        "print",
+        "rust"
+      ],
+      "license": {
+        "spdx_id": "Apache-2.0",
+        "name": "Apache License 2.0"
+      },
+      "owner": {
+        "login": "storytold",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76897702?v=4"
+      }
+    },
+    "release": {
+      "tag_name": "v0.21.1",
+      "name": "DesignCraft v0.21.1",
+      "body": "## Highlights\n\n- **Place**: place several images at once with a loaded place cursor (with thumbnails and a count), drop images straight in, and make a contact sheet with File › Place Contact Sheet…. Images come in at the resolution stored in the file.\n- **Text and layout**: Alpha Channel text wrap follows a transparent image's visible pixels, vertical justification is much more accurate in shaped and grid-aligned frames, and object styles can set paragraph styles and Text Frame General Options.\n",
+      "html_url": "https://github.com/storytold/designcraft/releases/tag/v0.21.1",
+      "published_at": "2026-11-23T20:22:22Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "designcraft-0.21.1-windows-x64.msi",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-windows-x64.msi",
+          "size": 108253184,
+          "download_count": 39288,
+          "digest": "sha256:204c0fdc89fcd101f550b2bbd4bcf22b775939fffb255e0c0be0dbff76a45676"
+        },
+        {
+          "name": "designcraft-0.21.1-windows-x64-portable.zip",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-windows-x64-portable.zip",
+          "size": 139618585,
+          "download_count": 3154,
+          "digest": "sha256:f1eaa551ade4a5494a43fd6b63b5eb3762e89361533752ef2695c9a320bcaf74"
+        },
+        {
+          "name": "designcraft-0.21.1-windows-arm64.msi",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-windows-arm64.msi",
+          "size": 102875136,
+          "download_count": 507,
+          "digest": "sha256:1eabf4ccee3e811fab391594cf45486e8cd22da16135348835f8ac22bf13ce9a"
+        },
+        {
+          "name": "designcraft-0.21.1-macos-universal.dmg",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-macos-universal.dmg",
+          "size": 276940818,
+          "download_count": 18462,
+          "digest": "sha256:9964d13556c7e0f03abf6f4ab20bde8a9d6c9db744d4d3cc6c67753862064f00"
+        },
+        {
+          "name": "designcraft-cli-0.21.1-macos-universal.zip",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-cli-0.21.1-macos-universal.zip",
+          "size": 124288184,
+          "download_count": 678,
+          "digest": "sha256:8148a42e293ba9a83351568ad938410b8868495952679648f7018ad5cd245cf3"
+        },
+        {
+          "name": "designcraft-0.21.1-linux-aarch64.AppImage",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-linux-aarch64.AppImage",
+          "size": 125676040,
+          "download_count": 315,
+          "digest": "sha256:513bef6d184c2e78330d26490be7f7c495504caaf88fa8b61490192a8fb03e79"
+        },
+        {
+          "name": "designcraft-0.21.1-linux-aarch64.deb",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-linux-aarch64.deb",
+          "size": 136679924,
+          "download_count": 391,
+          "digest": "sha256:9902e21d8510402384148e42c91f85a71b1c90724fb2f3c4ccb5f6baa6a8c34a"
+        },
+        {
+          "name": "designcraft-0.21.1-linux-aarch64.flatpak",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-linux-aarch64.flatpak",
+          "size": 89824744,
+          "download_count": 256,
+          "digest": "sha256:1ed0044d0eb4e16794a7315fab801b74fd0b06116ed875e882c2b9d0cd8c3a7e"
+        },
+        {
+          "name": "designcraft-0.21.1-linux-aarch64.pkg.tar.zst",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-linux-aarch64.pkg.tar.zst",
+          "size": 98973847,
+          "download_count": 283,
+          "digest": "sha256:4f44d4007d633dbe668e6d8a15eead371397b334bb3e1a3339dcb7f5c1bff516"
+        },
+        {
+          "name": "designcraft-0.21.1-linux-aarch64.rpm",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-linux-aarch64.rpm",
+          "size": 135712898,
+          "download_count": 316,
+          "digest": "sha256:134cbf3501604ceeaf8e91313f140e4b2b8251b3110695a8f262f01f5a25b92c"
+        },
+        {
+          "name": "designcraft-0.21.1-linux-aarch64.tar.gz",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-linux-aarch64.tar.gz",
+          "size": 133439918,
+          "download_count": 393,
+          "digest": "sha256:0accf303da25b0e1ad2b00a4d812de9207a45fec236c19421d9a404c9d291dd6"
+        },
+        {
+          "name": "designcraft-0.21.1-linux-riscv64.deb",
+          "browser_download_url": "https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-linux-riscv64.deb",
+          "size": 139743562,
+          "download_count": 293,
+          "digest": "sha256:c2dc8f87e0a2cee43bace257c792986bf11595a9963aaf8360e8cc71467194cc"
+        }
+      ]
+    }
   }
 ]

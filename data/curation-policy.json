@@ -207,5 +207,38 @@
     ".nupkg",
     ".deb.sha256"
   ],
-  "manual_allowlist_overrides": []
+  "manual_allowlist_overrides": [
+    {
+      "id": "storytold/craft-anything",
+      "category": "Development"
+    },
+    {
+      "id": "storytold/effectcraft",
+      "category": "Multimedia"
+    },
+    {
+      "id": "storytold/filmcraft",
+      "category": "Multimedia"
+    },
+    {
+      "id": "storytold/wordcraft",
+      "category": "Office"
+    },
+    {
+      "id": "storytold/anicraft",
+      "category": "Graphics"
+    },
+    {
+      "id": "storytold/cadcraft",
+      "category": "Graphics"
+    },
+    {
+      "id": "storytold/deckcraft",
+      "category": "Office"
+    },
+    {
+      "id": "storytold/designcraft",
+      "category": "Graphics"
+    }
+  ]
 }

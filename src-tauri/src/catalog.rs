@@ -959,9 +959,8 @@ pub async fn fetch_catalog(
                     .filter(|a| !is_blocked_repo_id(&a.id))
                     .filter(|a| a.download_url.is_empty() || is_allowed_download_url(&a.download_url))
                     .collect();
-                let min_expected = seed_entries().len() / 2;
                 let has_legacy_zero_score = apps.iter().any(|a| a.trust_score == 0);
-                let is_incomplete = apps.len() < min_expected;
+                let is_incomplete = apps.len() < seed_entries().len();
                 let had_blocked = apps.len() != raw_len;
                 if !apps.is_empty() && !has_legacy_zero_score && !is_incomplete && !had_blocked {
                     log::info!("catalog: usando cache local ({} apps)", apps.len());
@@ -1334,7 +1333,7 @@ mod tests {
     #[test]
     fn carrega_seed_completo_com_100_apps_validos() {
         let entries = seed_entries();
-        assert_eq!(entries.len(), 100);
+        assert!(entries.len() >= 100);
         let on_windows = crate::platform::current_platform().starts_with("windows");
         for entry in entries {
             assert!(
@@ -1349,7 +1348,7 @@ mod tests {
             );
         }
         let apps = load_seed_apps();
-        assert_eq!(apps.len(), 100);
+        assert_eq!(apps.len(), entries.len());
         for app in &apps {
             assert!(!app.id.is_empty());
             assert!(!is_blocked_repo_id(&app.id), "seed bloqueado: {}", app.id);
@@ -1382,7 +1381,7 @@ mod tests {
         let (apps, from_cache, offline) = fetch_catalog(&store, None, false).await.unwrap();
         let _ = std::fs::remove_dir_all(&root);
 
-        assert_eq!(apps.len(), 100);
+        assert_eq!(apps.len(), seed_entries().len());
         assert!(from_cache);
         assert!(!offline);
     }
@@ -1412,11 +1411,11 @@ mod tests {
         let reloaded_cache = store.load_catalog_cache().unwrap().unwrap();
         let _ = std::fs::remove_dir_all(&root);
 
-        assert_eq!(apps.len(), 100);
+        assert_eq!(apps.len(), seed_entries().len());
         assert!(apps.iter().all(|a| a.trust_score > 0));
         assert!(from_cache);
         assert!(!offline);
-        assert_eq!(reloaded_cache.apps.len(), 100);
+        assert_eq!(reloaded_cache.apps.len(), seed_entries().len());
     }
 
     #[test]

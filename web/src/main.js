@@ -108,15 +108,23 @@ function onSearchKey(e) {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
         const q = dom.searchInput.value.trim();
-        if (q.length >= 3) {
-            searchGitHub();
-        } else if (q.length === 0) {
+        if (q.length === 0) {
             state.apps = [...state.catalogApps];
+            state.currentSearch = '';
             state.currentFilter = 'all';
             dom.storeTitle.textContent = 'NÃO INSTALADOS';
             renderAll();
+        } else if (q.length >= 3) {
+            // filter locally first for instant feedback, then search GitHub
+            state.currentSearch = q;
+            renderAll();
+            searchGitHub();
+        } else {
+            // 1-2 chars: local filter only (instant)
+            state.currentSearch = q;
+            renderAll();
         }
-    }, 600);
+    }, 300);
 }
 
 async function searchGitHub() {
@@ -142,48 +150,76 @@ async function searchGitHub() {
     }
 }
 
+function setActiveTab(tab) {
+    const isInstalled = tab === 'installed';
+    dom.tabApps.classList.toggle('active', !isInstalled);
+    dom.tabApps.setAttribute('aria-selected', String(!isInstalled));
+    dom.tabInstalled.classList.toggle('active', isInstalled);
+    dom.tabInstalled.setAttribute('aria-selected', String(isInstalled));
+}
+
+function setViewMode(mode) {
+    state.viewMode = mode === 'list' ? 'list' : 'grid';
+    dom.viewGridBtn.classList.toggle('active', state.viewMode === 'grid');
+    dom.viewListBtn.classList.toggle('active', state.viewMode === 'list');
+    renderAll();
+}
+
+function closeMenuIfOpen() {
+    if (!dom.menuSidebar.classList.contains('hidden')) {
+        toggleMenu();
+    }
+}
+
 function filterByCategory(cat) {
     restoreCatalogView();
     state.currentFilter = cat;
     state.currentSearch = '';
     dom.searchInput.value = '';
     dom.storeTitle.textContent = cat.toUpperCase();
+    setActiveTab('apps');
     renderAll();
-    toggleMenu();
+    closeMenuIfOpen();
 }
 
-function showAllApps() {
+function showAllApps(fromMenu = false) {
     restoreCatalogView();
     state.currentFilter = 'all';
     state.currentSearch = '';
     dom.searchInput.value = '';
     dom.storeTitle.textContent = 'NÃO INSTALADOS';
+    setActiveTab('apps');
     renderAll();
-    toggleMenu();
+    if (fromMenu) closeMenuIfOpen();
 }
 
-function showInstalled() {
+function showInstalled(fromMenu = false) {
     restoreCatalogView();
     state.currentFilter = 'installed';
     dom.storeTitle.textContent = 'INSTALADOS';
+    setActiveTab('installed');
     renderAll();
-    toggleMenu();
+    if (fromMenu) closeMenuIfOpen();
 }
 
 function showUpdates() {
     restoreCatalogView();
     state.currentFilter = 'updates';
     dom.storeTitle.textContent = 'ATUALIZAÇÕES DISPONÍVEIS';
+    setActiveTab('apps');
     renderAll();
-    toggleMenu();
+    closeMenuIfOpen();
 }
 
 async function updateAllButton() {
     try {
         const res = await call('get_apps_to_update');
         const n = res.total || 0;
-        dom.updateCount.textContent = `ATUALIZAR ${n} APLICATIVO${n === 1 ? '' : 'S'}`;
+        dom.updateCount.textContent = `ATUALIZAR TODOS (${n})`;
         dom.updateCount.parentElement.disabled = n === 0;
+        if (dom.notifDot) {
+            dom.notifDot.classList.toggle('hidden', n === 0);
+        }
     } catch (e) {
         console.error(e);
     }
@@ -299,9 +335,12 @@ function bindEvents() {
 
         const appId = el.dataset.appId;
         switch (action) {
+            case 'tab-apps': showAllApps(false); break;
+            case 'tab-installed': showInstalled(false); break;
+            case 'set-view': setViewMode(el.dataset.view); break;
             case 'filter-category': filterByCategory(el.dataset.category); break;
-            case 'show-all-apps': showAllApps(); break;
-            case 'show-installed': showInstalled(); break;
+            case 'show-all-apps': showAllApps(true); break;
+            case 'show-installed': showInstalled(true); break;
             case 'show-updates': showUpdates(); break;
             case 'toggle-menu': toggleMenu(); break;
             case 'update-all': updateAll(); break;

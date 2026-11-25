@@ -1,7 +1,8 @@
-import { esc, formatBytes, safeUrl } from '../utils/format.js';
+import { esc, formatBytes, formatDatePtBr, safeUrl } from '../utils/format.js';
 import { getFilteredApps, getInstalledList, state } from '../state/store.js';
 
 const DEFAULT_ICON = 'assets/icons/app_default.png';
+const ACCENT_PALETTE = ['#8b5cf6', '#6366f1', '#3b82f6', '#06b6d4'];
 
 export const dom = {
     appsGrid: document.getElementById('apps-grid'),
@@ -10,6 +11,11 @@ export const dom = {
     storeTitle: document.getElementById('store-title'),
     searchInput: document.getElementById('search-input'),
     sortSelect: document.getElementById('sort-select'),
+    tabApps: document.getElementById('tab-apps'),
+    tabInstalled: document.getElementById('tab-installed'),
+    viewGridBtn: document.getElementById('view-grid-btn'),
+    viewListBtn: document.getElementById('view-list-btn'),
+    notifDot: document.getElementById('notif-dot'),
     updateCount: document.getElementById('update-count'),
     statusBar: document.getElementById('status-bar'),
     appDetailModal: document.getElementById('app-detail-modal'),
@@ -33,59 +39,92 @@ export function showStatus(msg, ms = 4000) {
     showStatus._timer = setTimeout(() => dom.statusBar.classList.add('hidden'), ms);
 }
 
-function appCardHtml(app) {
+function getCardAccent(app, index = 0) {
+    if (app.has_update) return '#e14d9f';
+    const seed = String(app.category || app.id || '');
+    let hash = index;
+    for (let i = 0; i < seed.length; i++) {
+        hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+    }
+    return ACCENT_PALETTE[hash % ACCENT_PALETTE.length];
+}
+
+function appCardHtml(app, index = 0) {
     const dl = state.downloading[app.id];
     const isDl = Boolean(dl) && (dl.status === 'baixando' || dl.status === 'iniciando');
     const idAttr = esc(app.id);
     const ghHref = esc(safeUrl(app.github_url));
+    const accent = getCardAccent(app, index);
 
-    let actionBtn;
+    const versionHtml = app.has_update
+        ? `<span class="app-version version-upgrade">${esc(app.installed_version || '?')} &#8594; ${esc(app.version || '?')}</span>`
+        : `<span class="app-version">${app.version ? 'V' + esc(app.version) : 'SEM RELEASE'}</span>`;
+
+    const statusPillHtml = app.has_update
+        ? '<span class="status-pill status-pill--update">ATUALIZAÇÃO DISPONÍVEL</span>'
+        : (!app.installed ? '<span class="status-pill status-pill--available">DISPONÍVEL PARA INSTALAR</span>' : '');
+
+    const sizeLine = app.size_bytes > 0
+        ? `<div class="app-meta-line">Tamanho do download: <span class="app-meta-val">${esc(formatBytes(app.size_bytes))}</span></div>`
+        : '';
+
+    const updatedLine = `<div class="app-meta-line">Última atualização: <span class="app-meta-val">${esc(formatDatePtBr(app.pushed_at || app.published_at))}</span></div>`;
+
+    let primaryActionsHtml;
     if (isDl) {
-        actionBtn = `<button class="btn btn-secondary btn-small" disabled>${Math.round(dl.percent)}%</button>`;
+        primaryActionsHtml = `<button class="btn btn-secondary btn-small" disabled>${Math.round(dl.percent)}%</button>`;
     } else if (app.installed && app.has_update) {
-        actionBtn = `<button class="btn btn-primary btn-small" data-action="download" data-app-id="${idAttr}">ATUALIZAR ${esc(app.version)}</button>`;
+        const installedVer = app.installed_version ? ' ' + esc(app.installed_version) : '';
+        primaryActionsHtml = `
+            <button class="btn btn-secondary btn-small" data-action="open-installed" data-app-id="${idAttr}">ABRIR${installedVer}</button>
+            <button class="btn btn-contrast btn-small" data-action="download" data-app-id="${idAttr}">ATUALIZAR</button>
+        `;
     } else if (app.installed) {
-        actionBtn = `<button class="btn btn-secondary btn-small" data-action="open-installed" data-app-id="${idAttr}">ABRIR</button>`;
+        primaryActionsHtml = `<button class="btn btn-secondary btn-small" data-action="open-installed" data-app-id="${idAttr}">ABRIR</button>`;
     } else if (!app.download_url) {
-        actionBtn = `<button class="btn btn-secondary btn-small" data-action="open-url" data-url="${ghHref}">VER NO GITHUB</button>`;
+        primaryActionsHtml = `<button class="btn btn-secondary btn-small" data-action="open-url" data-url="${ghHref}">VER NO GITHUB</button>`;
     } else {
-        actionBtn = `<button class="btn btn-secondary btn-small" data-action="download" data-app-id="${idAttr}">INSTALAR</button>`;
+        primaryActionsHtml = `<button class="btn btn-secondary btn-small" data-action="download" data-app-id="${idAttr}">INSTALAR</button>`;
     }
 
     const hasSha = Boolean(app.sha256) || (app.security_flags || []).includes('sha256-verified');
     const score = Number(app.trust_score || 0);
-    const trustBadge = score > 0
-        ? `<span class="trust-badge ${score >= 75 ? 'trust-high' : 'trust-med'}" title="Índice de Segurança e Qualidade (0-100)">&#128737; ${score}/100${hasSha ? ' &bull; SHA256' : ''}</span>`
-        : '';
+    const trustTitle = score > 0
+        ? `Segurança: ${score}/100${hasSha ? ' • SHA-256' : ''}`
+        : 'Detalhes de segurança';
+
+    const cardClasses = [
+        'app-card',
+        app.installed ? 'is-installed' : '',
+        app.has_update ? 'has-update' : '',
+    ].filter(Boolean).join(' ');
 
     return `
-        <div class="app-card ${app.has_update ? 'has-update' : ''}" data-action="detail" data-app-id="${idAttr}">
+        <div class="${cardClasses}" style="--card-accent: ${accent}" data-action="detail" data-app-id="${idAttr}">
             <div class="app-card-top">
-                <div class="app-card-badges">
-                    <span class="app-version">${app.version ? 'V' + esc(app.version) : 'sem release'}</span>
-                    ${trustBadge}
-                </div>
-                <button class="btn btn-icon github-btn" title="Ver no GitHub" data-action="open-url" data-url="${ghHref}">GH &#8599;</button>
+                ${versionHtml}
+                <button class="github-link-btn" title="Ver no GitHub" data-action="open-url" data-url="${ghHref}">GITHUB &#8599;</button>
             </div>
             <div class="app-card-header">
                 <img src="${esc(safeUrl(app.icon_url) || DEFAULT_ICON)}" alt="${esc(app.name)}" class="app-icon" loading="lazy" data-fallback="${DEFAULT_ICON}" />
-                <div>
+                <div class="app-card-titles">
                     <div class="app-name">${esc(app.name)}</div>
-                    <div class="app-author">por ${esc(app.author)} &bull; ${esc(app.license)}</div>
+                    <span class="author-badge">POR ${esc((app.author || 'DESCONHECIDO').toUpperCase())}</span>
+                    <div class="app-subtitle">${esc(app.tagline || '')}</div>
                 </div>
             </div>
-            <div class="app-tagline">${esc(app.tagline || '')}</div>
-            <div class="app-meta">
-                <span title="Estrelas no GitHub">★ ${(app.stars || 0).toLocaleString('pt-BR')}</span>
-                <span title="Downloads da release">&#8595; ${(app.downloads || 0).toLocaleString('pt-BR')}</span>
-                <span title="Última atividade no GitHub">&#128197; ${app.pushed_at ? esc(app.pushed_at.slice(0, 10)) : '-'}</span>
-                <span>${formatBytes(app.size_bytes)}</span>
+            ${statusPillHtml}
+            <div class="app-meta-block">
+                ${sizeLine}
+                <p class="app-desc">${esc(app.description || app.tagline || '')}</p>
+                ${updatedLine}
             </div>
-            ${app.has_update ? `<div class="update-badge">ATUALIZAÇÃO DISPONÍVEL: ${esc(app.installed_version)} → ${esc(app.version)}</div>` : ''}
             <div class="app-actions">
-                ${actionBtn}
-                ${app.installed ? `<button class="btn btn-icon" title="Desinstalar" data-action="uninstall" data-app-id="${idAttr}">&#128465;</button>` : ''}
-                <button class="btn btn-icon" title="Detalhes" data-action="detail" data-app-id="${idAttr}">&#8505;</button>
+                ${primaryActionsHtml}
+                <button class="square-tool-btn ${score >= 75 ? 'trust-high' : 'trust-med'}" title="${esc(trustTitle)}" data-action="detail" data-app-id="${idAttr}">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </button>
+                <button class="square-tool-btn" title="Detalhes" data-action="detail" data-app-id="${idAttr}">&#8943;</button>
             </div>
         </div>
     `;
@@ -94,6 +133,10 @@ function appCardHtml(app) {
 export function renderAll() {
     const list = getFilteredApps();
     const installed = getInstalledList();
+    const isList = state.viewMode === 'list';
+
+    dom.appsGrid.classList.toggle('apps-grid--list', isList);
+    dom.installedGrid.classList.toggle('apps-grid--list', isList);
 
     if (installed.length > 0 && state.currentFilter !== 'installed') {
         dom.sectionInstalled.classList.remove('hidden');
