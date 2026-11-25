@@ -4,9 +4,10 @@ Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e cada versão tem uma **tag** no git e uma página de **Release** no GitHub com o instalador anexado para download.
 
-## [NãoLançado]
+## [0.1.1] - 2026-11-25
 
 ### Adicionado
+- **Ícone do app multi-tamanho** — `icon.ico` regerado com 16–256 px (entradas BMP + PNG), usado no instalador NSIS, no atalho e na janela — `28f6317`
 - **Versão web no GitHub Pages** — https://marlonferreira1800-hue.github.io/open-source-store/ — publicada automaticamente a cada push na `main` pelo workflow `.github/workflows/pages.yml` (build Vite para `dist/` + `actions/deploy-pages`). No navegador, catálogo e busca ao vivo funcionam via API pública do GitHub, sem instalar o app desktop; instalar apps segue exclusivo do desktop
 - **Descoberta/destaque no GitHub**: 20 topics no repositório, descrição com palavras-chave de busca, **Discussions** habilitado (6 categorias padrão + post de boas-vindas), imagem de social preview em `.github/social-preview.png`, badges no README (CI, Pages, release, licença, web)
 - **Comunidade e segurança**: `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), `.github/SECURITY.md` + **Private Vulnerability Reporting** habilitado, `.github/FUNDING.yml` (botão de sponsoring), contact links em `.github/ISSUE_TEMPLATE/config.yml` (Discussions, web, releases, reporte privado)
@@ -18,6 +19,8 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e ca
 - Alerta Dependabot #9 (`glib`, medium, transitivo via GTK apenas no Linux, sem versão corrigida disponível) dispensado como risco tolerável; o `dependabot.yml` reabre o alerta automaticamente quando surgir correção
 
 ### Alterado
+- **Nome do produto desktop** definido como **Asclepio** (`productName`/título da janela em `tauri.conf.json`) — o instalador Windows passa a ser `Asclepio_0.1.1_x64-setup.exe` — `e3cc160`
+- **UI, estilos e catálogo curado atualizados** (cards, busca, seções de instalados) — `e3cc160`
 - **Repositório renomeado** de `Opern-source-store-` para **`open-source-store`** (nome descritivo, sem typo, melhor para busca no GitHub). Novas URLs: repo `github.com/marlonferreira1800-hue/open-source-store` e web `marlonferreira1800-hue.github.io/open-source-store/` — as URLs antigas redirecionam para as novas
 
 ## [0.1.0] - 2026-11-25
@@ -61,4 +64,5 @@ Primeira versão pública — loja desktop de aplicativos open source com backen
 2. Ao publicar uma versão, criamos a tag (ex.: `v0.1.0`) e uma **Release no GitHub** com as notas desta seção.
 3. O instalador (`.exe`/`.msi` para Windows, `.AppImage`/`.deb` para Linux, `.dmg` para macOS) é anexado como **asset** da Release — baixe em [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases).
 
+[0.1.1]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.1
 [0.1.0]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.0

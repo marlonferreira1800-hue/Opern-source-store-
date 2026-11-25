@@ -1,6 +1,6 @@
 {
   "name": "open-source-store",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A store for open source applications - Rust (Tauri 2.0) backend",
   "type": "module",
   "scripts": {
