@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Gera icon.png (256), icon.ico e app_default.png (128) da logo Asclepio.
-Sem dependências externas: monta o PNG manualmente com zlib.
+"""Gera icon.png (256), icon.ico (multi-tamanho: 16/32/48/64/128/256) e
+app_default.png (128) da logo Asclepio.
+Sem dependências externas: monta PNG/BMP/ICO manualmente com zlib/struct.
 
 Uso:
     python scripts/gen-icons.py
@@ -42,9 +43,7 @@ def chunk(tipo, data):
     return c
 
 
-def make_png(size, paint_fn):
-    buf = bytearray(size * size * 4)
-    paint_fn(buf, size)
+def encode_png(buf, size):
     raw = bytearray()
     for y in range(size):
         raw.append(0)  # filter: none
@@ -58,12 +57,45 @@ def make_png(size, paint_fn):
     )
 
 
-def make_ico(png_bytes, size):
-    # ICONDIR + 1 ICONDIRENTRY + PNG embutido (Windows Vista+ / crate ico do Rust)
-    header = struct.pack("<HHH", 0, 1, 1)
-    w = 0 if size >= 256 else size
-    entry = struct.pack("<BBBBHHII", w, w, 0, 0, 1, 32, len(png_bytes), 6 + 16)
-    return header + entry + png_bytes
+def make_png(size, paint_fn):
+    buf = bytearray(size * size * 4)
+    paint_fn(buf, size)
+    return encode_png(buf, size)
+
+
+def make_bmp_icon(buf, size):
+    # Entrada RT_ICON em BMP 32bpp: BITMAPINFOHEADER com altura dupla,
+    # máscara XOR (BGRA, bottom-up) seguida da máscara AND (1bpp).
+    header = struct.pack("<IiiHHIIiiII", 40, size, size * 2, 1, 32, 0, 0, 0, 0, 0, 0)
+    xor = bytearray()
+    for y in range(size - 1, -1, -1):
+        for x in range(size):
+            i = (y * size + x) * 4
+            xor += bytes((buf[i + 2], buf[i + 1], buf[i], buf[i + 3]))
+    mask_row = (size + 31) // 32 * 4
+    and_mask = bytearray()
+    for y in range(size - 1, -1, -1):
+        row = bytearray(mask_row)
+        for x in range(size):
+            if buf[(y * size + x) * 4 + 3] < 128:
+                row[x // 8] |= 0x80 >> (x % 8)
+        and_mask += row
+    return header + bytes(xor) + bytes(and_mask)
+
+
+def make_ico(entries):
+    # entries: lista de (size, data) — BMP para tamanhos <= 128, PNG para 256
+    # (formato clássico suportado por Windows e pela crate ico do Rust)
+    header = struct.pack("<HHH", 0, 1, len(entries))
+    offset = 6 + 16 * len(entries)
+    directory = b""
+    data = b""
+    for size, blob in entries:
+        w = 0 if size >= 256 else size
+        directory += struct.pack("<BBBBHHII", w, w, 0, 0, 1, 32, len(blob), offset)
+        data += blob
+        offset += len(blob)
+    return header + directory + data
 
 
 def inside_rr(x, y, x0, y0, x1, y1, r):
@@ -194,12 +226,19 @@ def paint_logo(buf, s):
 
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ico_sizes = [16, 32, 48, 64, 128, 256]
+    ico_entries = []
+    for size in ico_sizes:
+        buf = bytearray(size * size * 4)
+        paint_logo(buf, size)
+        blob = encode_png(buf, size) if size >= 256 else make_bmp_icon(buf, size)
+        ico_entries.append((size, blob))
     png256 = make_png(256, paint_logo)
     png128 = make_png(128, paint_logo)
 
     paths = {
         os.path.join(root, "src-tauri", "icons", "icon.png"): png256,
-        os.path.join(root, "src-tauri", "icons", "icon.ico"): make_ico(png256, 256),
+        os.path.join(root, "src-tauri", "icons", "icon.ico"): make_ico(ico_entries),
         os.path.join(root, "src-tauri", "icons", "app_default.png"): png128,
         os.path.join(root, "web", "assets", "icons", "app_default.png"): png128,
     }
