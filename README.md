@@ -4,6 +4,16 @@ Uma loja centralizada de aplicativos **open source**: em vez de procurar reposit
 
 **100% Rust no backend** com [Tauri 2.0](https://tauri.app) e interface modular em Vite + JavaScript vanilla.
 
+## Download
+
+Baixe o instalador na página de [Releases](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases/latest):
+
+| Plataforma | Arquivo |
+|---|---|
+| Windows (x64) | `Open Source Store_0.1.0_x64-setup.exe` |
+
+O histórico completo de versões e suas mudanças está em [`CHANGELOG.md`](CHANGELOG.md) e na página de [Releases](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases).
+
 ## Como funciona
 
 1. O backend Rust consulta a **API do GitHub** (`/repos/{owner}/{repo}` + `/releases/latest`) para os repositórios curados em [`data/curated.json`](data/curated.json).
