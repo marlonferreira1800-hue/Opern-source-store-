@@ -218,6 +218,7 @@ function appCardHtml(app) {
             <div class="app-meta">
                 <span title="Estrelas no GitHub">★ ${app.stars.toLocaleString('pt-BR')}</span>
                 <span title="Downloads da release">&#8595; ${app.downloads.toLocaleString('pt-BR')}</span>
+                <span title="Última atividade no GitHub">&#128197; ${app.pushed_at ? app.pushed_at.slice(0, 10) : '-'}</span>
                 <span>${formatBytes(app.size_bytes)}</span>
             </div>
             ${app.has_update ? `<div class="update-badge">ATUALIZAÇÃO DISPONÍVEL: ${app.installed_version} → ${app.version}</div>` : ''}
@@ -345,6 +346,7 @@ async function openAppDetail(appId) {
                     <div class="meta-item"><span class="meta-label">Licença</span><span class="meta-value">${app.license}</span></div>
                     <div class="meta-item"><span class="meta-label">Autor</span><span class="meta-value">${app.author}</span></div>
                     <div class="meta-item"><span class="meta-label">★ Estrelas</span><span class="meta-value">${app.stars.toLocaleString('pt-BR')}</span></div>
+                    <div class="meta-item"><span class="meta-label">Última atividade</span><span class="meta-value">${app.pushed_at ? app.pushed_at.slice(0, 10) : '-'}</span></div>
                     <div class="meta-item"><span class="meta-label">Categoria</span><span class="meta-value">${app.category}</span></div>
                 </div>
                 <div class="app-actions">

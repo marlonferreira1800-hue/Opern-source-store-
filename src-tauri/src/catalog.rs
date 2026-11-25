@@ -11,6 +11,27 @@ use crate::store::Store;
 /// O usuário também pode buscar qualquer repositório ao vivo.
 const CURATED: &str = include_str!("../../data/curated.json");
 
+/// Critérios para um app entrar na loja: famoso (mínimo de estrelas) e ativo (push recente).
+pub const MIN_STARS: u64 = 1_000;
+pub const MAX_INACTIVE_DAYS: i64 = 365;
+
+/// Verifica se o repositório é famoso o suficiente e está ativo.
+pub fn is_famous_and_active(repo: &GhRepo) -> bool {
+    if repo.stargazers_count < MIN_STARS {
+        return false;
+    }
+    match &repo.pushed_at {
+        Some(p) => match chrono::DateTime::parse_from_rfc3339(p) {
+            Ok(t) => {
+                chrono::Utc::now().signed_duration_since(t.with_timezone(&chrono::Utc)).num_days()
+                    <= MAX_INACTIVE_DAYS
+            }
+            Err(_) => false,
+        },
+        None => false,
+    }
+}
+
 /// Categorias fixas da loja.
 const CATEGORIES: &str = include_str!("../../data/categories.json");
 
@@ -122,6 +143,7 @@ fn build_app(repo: &GhRepo, release: Option<&GhRelease>, category_hint: &str) ->
         version,
         license: repo.license.as_ref().map(|l| l.spdx_id.clone()).unwrap_or_else(|| "Unknown".into()),
         stars: repo.stargazers_count,
+        pushed_at: repo.pushed_at.clone().unwrap_or_default(),
         downloads,
         icon_url: repo.owner.avatar_url.clone(),
         github_url: repo.html_url.clone(),
@@ -164,6 +186,11 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
     for full_name in &repos {
         match fetch_repo(&client, full_name).await {
             Ok(repo) => {
+                // sempre verifica os requisitos: famoso (estrelas) e ativo (push recente)
+                if !is_famous_and_active(&repo) {
+                    log::debug!("catalog: descartado {} (não atende critérios de fama/atividade)", full_name);
+                    continue;
+                }
                 let release = fetch_latest_release(&client, full_name).await.ok().flatten();
                 // Ignorar repos sem release com binário para a plataforma atual
                 if release.as_ref().map(|r| choose_asset(&r.assets).is_some()).unwrap_or(false) {
@@ -202,6 +229,10 @@ pub async fn search_github(query: &str, token: Option<&str>, page: u32) -> Resul
     let client = Arc::new(client);
     let mut apps = Vec::new();
     for repo in search.items.into_iter().take(20) {
+        // mesma regra da loja: só entra se for famoso e ativo
+        if !is_famous_and_active(&repo) {
+            continue;
+        }
         if let Ok(Some(release)) = fetch_latest_release(&client, &repo.full_name).await {
             if choose_asset(&release.assets).is_some() {
                 apps.push(build_app(&repo, Some(&release), ""));
@@ -220,6 +251,51 @@ fn urlencoding_encode(s: &str) -> String {
         }
     }
     out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::models::{GhLicense, GhOwner};
+
+    fn repo(stars: u64, pushed_at: Option<&str>) -> GhRepo {
+        GhRepo {
+            full_name: "a/b".into(),
+            name: "b".into(),
+            description: None,
+            html_url: String::new(),
+            homepage: None,
+            stargazers_count: stars,
+            pushed_at: pushed_at.map(|s| s.to_string()),
+            topics: vec![],
+            license: Some(GhLicense { spdx_id: "MIT".into(), name: "MIT".into() }),
+            owner: GhOwner { login: "a".into(), avatar_url: String::new() },
+        }
+    }
+
+    #[test]
+    fn famoso_e_ativo_entra() {
+        let recent = chrono::Utc::now().to_rfc3339();
+        assert!(is_famous_and_active(&repo(50_000, Some(&recent))));
+    }
+
+    #[test]
+    fn pouco_famoso_nao_entra() {
+        let recent = chrono::Utc::now().to_rfc3339();
+        assert!(!is_famous_and_active(&repo(MIN_STARS - 1, Some(&recent))));
+    }
+
+    #[test]
+    fn inativo_nao_entra() {
+        // push há 2 anos
+        let old = (chrono::Utc::now() - chrono::Duration::days(730)).to_rfc3339();
+        assert!(!is_famous_and_active(&repo(500_000, Some(&old))));
+    }
+
+    #[test]
+    fn sem_data_de_push_nao_entra() {
+        assert!(!is_famous_and_active(&repo(500_000, None)));
+    }
 }
 
 /// Aplica o estado local (instalados) sobre o catálogo.

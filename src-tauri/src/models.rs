@@ -16,6 +16,8 @@ pub struct App {
     pub license: String,
     pub stars: u64,
     pub downloads: u64,
+    /// Data do último push no repositório (ISO 8601) — mede se o projeto está ativo
+    pub pushed_at: String,
     /// Avatar do dono do repositório
     pub icon_url: String,
     pub github_url: String,
@@ -76,6 +78,7 @@ pub struct GhRepo {
     pub html_url: String,
     pub homepage: Option<String>,
     pub stargazers_count: u64,
+    pub pushed_at: Option<String>,
     pub topics: Vec<String>,
     pub license: Option<GhLicense>,
     pub owner: GhOwner,
