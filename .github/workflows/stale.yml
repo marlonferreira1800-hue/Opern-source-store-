@@ -1,0 +1,26 @@
+name: Stale
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Close stale issues and PRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: 'Esta issue está inativa há 60 dias. Ela será fechada em 7 dias se não houver nova atividade.'
+          stale-pr-message: 'Este pull request está inativo há 60 dias. Ele será fechado em 7 dias se não houver nova atividade.'
+          days-before-stale: 60
+          days-before-close: 7
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          exempt-issue-labels: 'pinned,security'
+          exempt-pr-labels: 'pinned,security'

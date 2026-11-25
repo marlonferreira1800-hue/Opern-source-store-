@@ -1,0 +1,39 @@
+name: Feature request
+title: '[Feature]: '
+labels: [enhancement, triage]
+description: Sugira uma nova funcionalidade ou melhoria para o projeto.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado pela sugestão! Descreva a ideia abaixo.
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema que essa feature resolve
+      description: Qual dor ou necessidade ela atende?
+    validations:
+      required: true
+  - type: textarea
+    id: solucao
+    attributes:
+      label: Solução proposta
+      description: Como você imagina que isso funcionaria?
+    validations:
+      required: true
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas consideradas
+      description: Outras abordagens que você pensou?
+  - type: checkboxes
+    id: areas
+    attributes:
+      label: Área afetada
+      options:
+        - label: Frontend web (web/)
+        - label: Godot / GDScript (scripts/, scenes/)
+        - label: Backend Rust / Tauri (src/)
+        - label: Dados (data/, src/data/)
+        - label: Documentação
+        - label: CI / infraestrutura

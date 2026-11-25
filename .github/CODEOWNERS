@@ -1,0 +1,19 @@
+# Code owners for the Open Source Store project.
+# Every PR must be reviewed by at least one code owner.
+* @marlonferreira1800-hue
+
+# Frontend web (Vite + vanilla JS)
+/web/ @marlonferreira1800-hue
+
+# Godot game/app layer (GDScript + scenes)
+/scripts/ @marlonferreira1800-hue
+/scenes/ @marlonferreira1800-hue
+/project.godot @marlonferreira1800-hue
+
+# Rust / Tauri backend
+/src/ @marlonferreira1800-hue
+/Cargo.toml @marlonferreira1800-hue
+/tauri.conf.json @marlonferreira1800-hue
+
+# CI and community files
+/.github/ @marlonferreira1800-hue
