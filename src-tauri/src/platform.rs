@@ -35,9 +35,28 @@ fn asset_score(asset_name: &str) -> u32 {
 
     // Incompatíveis com a plataforma atual: pontua como 0
     let other_platforms = [
-        ("windows", vec!["windows", "win32", "win64", ".exe", ".msi", "-win", "_win", "win-"]),
-        ("linux", vec!["linux", ".appimage", ".deb", ".rpm", ".tar.gz", "-linux", "_linux"]),
-        ("macos", vec!["macos", "darwin", ".dmg", ".pkg", "-macos", "_macos", "osx"]),
+        (
+            "windows",
+            vec![
+                "windows", "win32", "win64", ".exe", ".msi", "-win", "_win", "win-",
+            ],
+        ),
+        (
+            "linux",
+            vec![
+                "linux",
+                ".appimage",
+                ".deb",
+                ".rpm",
+                ".tar.gz",
+                "-linux",
+                "_linux",
+            ],
+        ),
+        (
+            "macos",
+            vec!["macos", "darwin", ".dmg", ".pkg", "-macos", "_macos", "osx"],
+        ),
     ];
     for (plat, markers) in other_platforms {
         if plat != os && markers.iter().any(|m| n.contains(m)) {
@@ -141,11 +160,23 @@ mod tests {
         let chosen = choose_asset(&assets).expect("deveria escolher algum asset");
         let plat = current_platform();
         if plat.starts_with("windows") {
-            assert!(chosen.name.ends_with(".msi"), "esperava .msi, veio {}", chosen.name);
+            assert!(
+                chosen.name.ends_with(".msi"),
+                "esperava .msi, veio {}",
+                chosen.name
+            );
         } else if plat.starts_with("linux") {
-            assert!(chosen.name.ends_with(".AppImage"), "esperava .AppImage, veio {}", chosen.name);
+            assert!(
+                chosen.name.ends_with(".AppImage"),
+                "esperava .AppImage, veio {}",
+                chosen.name
+            );
         } else if plat.starts_with("macos") {
-            assert!(chosen.name.ends_with(".dmg"), "esperava .dmg, veio {}", chosen.name);
+            assert!(
+                chosen.name.ends_with(".dmg"),
+                "esperava .dmg, veio {}",
+                chosen.name
+            );
         }
     }
 
@@ -158,7 +189,10 @@ mod tests {
         let plat = current_platform();
         let chosen = choose_asset(&assets);
         if plat.starts_with("windows") {
-            assert!(chosen.is_none(), "não deveria escolher asset de outra plataforma");
+            assert!(
+                chosen.is_none(),
+                "não deveria escolher asset de outra plataforma"
+            );
         }
     }
 

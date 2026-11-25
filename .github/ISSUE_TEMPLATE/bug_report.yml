@@ -1,0 +1,37 @@
+name: Bug Report
+description: Relatar um erro ou comportamento inesperado na Open Source Store
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição do problema
+      description: Explique de forma clara o que aconteceu.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Como reproduzir
+      placeholder: |
+        1. Abra o aplicativo
+        2. Clique em...
+        3. Erro exibido...
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Sistema Operacional
+      options:
+        - Windows
+        - Linux
+        - macOS
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs ou mensagens de erro
+      render: shell

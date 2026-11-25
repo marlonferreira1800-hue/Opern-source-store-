@@ -23,9 +23,10 @@ pub async fn get_catalog(
     force_refresh: Option<bool>,
 ) -> Result<CatalogResponse, String> {
     let force = force_refresh.unwrap_or(false);
-    let (mut apps, from_cache, offline) = catalog::fetch_catalog(&state.store, token(&state).as_deref(), force)
-        .await
-        .map_err(|e| e.to_string())?;
+    let (mut apps, from_cache, offline) =
+        catalog::fetch_catalog(&state.store, token(&state).as_deref(), force)
+            .await
+            .map_err(|e| e.to_string())?;
     catalog::apply_local_state(&mut apps, &state.store);
     Ok(CatalogResponse {
         total: apps.len(),
@@ -63,7 +64,10 @@ pub fn get_categories() -> Vec<serde_json::Value> {
 
 /// Retorna um app específico pelo id ("owner/repo"), buscado no cache local ou via GitHub.
 #[tauri::command]
-pub async fn get_app_by_id(state: State<'_, AppState>, app_id: String) -> Result<Option<App>, String> {
+pub async fn get_app_by_id(
+    state: State<'_, AppState>,
+    app_id: String,
+) -> Result<Option<App>, String> {
     if let Ok(Some(cache)) = state.store.load_catalog_cache() {
         let mut apps = cache.apps;
         catalog::apply_local_state(&mut apps, &state.store);
@@ -173,7 +177,10 @@ pub async fn get_installed(state: State<'_, AppState>) -> Result<CatalogResponse
 /// Lista apps com atualização disponível.
 #[tauri::command]
 pub async fn get_apps_to_update(state: State<'_, AppState>) -> Result<CatalogResponse, String> {
-    let cache = state.store.load_catalog_cache().map_err(|e| e.to_string())?;
+    let cache = state
+        .store
+        .load_catalog_cache()
+        .map_err(|e| e.to_string())?;
     let mut apps = cache.map(|c| c.apps).unwrap_or_default();
     catalog::apply_local_state(&mut apps, &state.store);
     let updates = catalog::check_updates(&apps);
@@ -211,13 +218,20 @@ pub async fn open_installed(
 #[tauri::command]
 pub async fn open_url(app_handle: tauri::AppHandle, url: String) -> Result<(), String> {
     use tauri_plugin_opener::OpenerExt;
-    app_handle.opener().open_url(&url, None::<String>).map_err(|e| e.to_string())
+    app_handle
+        .opener()
+        .open_url(&url, None::<String>)
+        .map_err(|e| e.to_string())
 }
 
 /// Desinstala um app: remove o arquivo baixado e o registro local.
 #[tauri::command]
 pub async fn uninstall_app(state: State<'_, AppState>, app_id: String) -> Result<bool, String> {
-    if let Some(inst) = state.store.remove_installed(&app_id).map_err(|e| e.to_string())? {
+    if let Some(inst) = state
+        .store
+        .remove_installed(&app_id)
+        .map_err(|e| e.to_string())?
+    {
         if std::path::Path::new(&inst.file_path).exists() {
             let _ = std::fs::remove_file(&inst.file_path);
         }
@@ -235,8 +249,15 @@ pub async fn save_github_token(state: State<'_, AppState>, token: String) -> Res
             .map_err(|_| "Token contém caracteres inválidos para cabeçalho HTTP.".to_string())?;
     }
     let mut settings = state.store.load_settings();
-    settings.github_token = if trimmed.is_empty() { None } else { Some(trimmed.to_string()) };
-    state.store.save_settings(&settings).map_err(|e| e.to_string())
+    settings.github_token = if trimmed.is_empty() {
+        None
+    } else {
+        Some(trimmed.to_string())
+    };
+    state
+        .store
+        .save_settings(&settings)
+        .map_err(|e| e.to_string())
 }
 
 /// Retorna o caminho da pasta de downloads.

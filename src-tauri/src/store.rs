@@ -91,7 +91,10 @@ impl Store {
 
     // ---- settings ----
     pub fn load_settings(&self) -> Settings {
-        self.read_json("settings.json").ok().flatten().unwrap_or_default()
+        self.read_json("settings.json")
+            .ok()
+            .flatten()
+            .unwrap_or_default()
     }
 
     pub fn save_settings(&self, settings: &Settings) -> Result<()> {

@@ -1,40 +1,37 @@
-# Godot 4
-.godot/
+# Dependencies
+node_modules/
 
-# Monorepo
-*.translation
+# Frontend build output
+dist/
 
-# Imported textures and samples
-.import/
-
-# Mono-specific ignores
-.mono/
-data_*/
-mono_crash.*.json
-
-# Export templates
-*.pck
+# Rust / Tauri build & generated files
+target/
+src-tauri/target/
+src-tauri/gen/
 *.exe
-*.apk
-*.aab
+*.msi
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+*.pdb
 
-# IDE specific
+# Python
+__pycache__/
+*.py[cod]
+
+# Environment & logs
+.env
+.env.*
+*.log
+
+# IDE / Editors
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
-.vscode/
 
 # OS specific
 .DS_Store
 Thumbs.db
-
-# Downloads
-user://downloads/
-
-# Rust / Tauri
-target/
-src-tauri/target/
-src-tauri/gen/
-node_modules/
-dist/

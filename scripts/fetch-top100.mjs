@@ -23,7 +23,7 @@ const NICHES = [
   'remote desktop', 'sync tool', 'backup tool', 'vpn client', 'diagram tool',
   'mind map', 'whiteboard', 'presentation software', 'spreadsheet', 'game engine',
   'emulator', 'virtual machine', 'container tool', 'ebook reader', 'audio editor',
-  'screen recorder', 'streaming', '2d game', '3d modeling', 'cad', 'music production',
+  'streaming', '2d game', '3d modeling', 'cad', 'music production',
   'video player', 'subtitle editor', 'ocr tool', 'translator app', 'habit tracker',
 ];
 

@@ -1,0 +1,19 @@
+name: Sugerir Aplicativo Open Source
+description: Indicar um repositório open source para o catálogo curado
+title: "[App]: "
+labels: ["catalog"]
+body:
+  - type: input
+    id: repo
+    attributes:
+      label: Repositório no GitHub (owner/repo)
+      placeholder: "ex: sharkdp/bat"
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Por que esse app deveria entrar no catálogo?
+      description: Confirme se o repositório possui releases com binários para Windows/Linux/macOS.
+    validations:
+      required: true

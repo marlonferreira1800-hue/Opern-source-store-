@@ -6,7 +6,7 @@
 }
 
 :root {
-    /* Cores do tema escuro (ArtCraft style) */
+    /* Cores do tema escuro */
     --bg-primary: #0f0f0f;
     --bg-secondary: #1a1a1a;
     --bg-tertiary: #252525;
@@ -92,38 +92,6 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-tertiary);
-}
-
-/* ===== UPDATE BANNER ===== */
-.update-banner {
-    background-color: var(--bg-tertiary);
-    border-bottom: 1px solid var(--border-color);
-    padding: var(--spacing-md) var(--spacing-lg);
-    position: relative;
-}
-
-.banner-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-}
-
-.banner-icon {
-    font-size: var(--font-size-xl);
-    color: var(--accent-primary);
-}
-
-.banner-text {
-    flex: 1;
-    font-size: var(--font-size-md);
-    color: var(--text-primary);
-}
-
-.banner-actions {
-    display: flex;
-    gap: var(--spacing-sm);
 }
 
 /* ===== TOP BAR ===== */
@@ -289,21 +257,6 @@ body {
     width: 250px;
 }
 
-/* ===== NAV BAR ===== */
-.nav-bar {
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-    padding: var(--spacing-sm) var(--spacing-lg);
-}
-
-.nav-title {
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
 /* ===== MAIN CONTENT ===== */
 .main-content {
     padding: var(--spacing-xl);
@@ -353,13 +306,6 @@ body {
     flex-shrink: 0;
 }
 
-.app-header-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex: 1;
-}
-
 .app-version {
     font-size: var(--font-size-xs);
     color: var(--text-tertiary);
@@ -381,28 +327,6 @@ body {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-}
-
-.app-description {
-    font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
-    margin-bottom: var(--spacing-sm);
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.app-info {
-    font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
-    margin-bottom: var(--spacing-sm);
-}
-
-.app-download-size {
-    font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
-    margin-bottom: var(--spacing-md);
 }
 
 .app-actions {
@@ -578,30 +502,6 @@ body {
     margin-bottom: var(--spacing-lg);
 }
 
-.app-detail-section {
-    margin-bottom: var(--spacing-lg);
-}
-
-.app-detail-section h3 {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-md);
-}
-
-.screenshots-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-md);
-}
-
-.screenshot-img {
-    width: 100%;
-    border-radius: var(--border-radius);
-    object-fit: cover;
-    aspect-ratio: 16/9;
-}
-
 /* ===== DOWNLOAD PROGRESS ===== */
 .download-progress {
     width: 100%;
@@ -722,31 +622,6 @@ body {
     color: var(--text-tertiary);
 }
 
-/* ===== CATEGORY ITEM ===== */
-.category-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-.category-item:hover {
-    background-color: var(--bg-hover);
-}
-
-.category-icon {
-    width: 20px;
-    height: 20px;
-}
-
-.category-name {
-    font-size: var(--font-size-sm);
-    color: var(--text-primary);
-}
-
 /* ===== HIDDEN CLASS ===== */
 .hidden {
     display: none !important;
@@ -795,16 +670,6 @@ body {
     .top-bar-center {
         flex-direction: column;
         align-items: stretch;
-    }
-    
-    .banner-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .banner-actions {
-        width: 100%;
-        justify-content: center;
     }
 }
 
@@ -942,9 +807,4 @@ body {
     color: var(--text-tertiary);
     margin-top: var(--spacing-sm);
     word-break: break-all;
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }

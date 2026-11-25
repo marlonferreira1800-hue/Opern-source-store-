@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "catalog:update": "node scripts/fetch-top100.mjs",
+    "icons:generate": "python scripts/gen-icons.py"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0"

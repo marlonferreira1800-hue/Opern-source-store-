@@ -23,7 +23,9 @@ pub fn is_famous_and_active(repo: &GhRepo) -> bool {
     match &repo.pushed_at {
         Some(p) => match chrono::DateTime::parse_from_rfc3339(p) {
             Ok(t) => {
-                chrono::Utc::now().signed_duration_since(t.with_timezone(&chrono::Utc)).num_days()
+                chrono::Utc::now()
+                    .signed_duration_since(t.with_timezone(&chrono::Utc))
+                    .num_days()
                     <= MAX_INACTIVE_DAYS
             }
             Err(_) => false,
@@ -62,7 +64,9 @@ pub fn http_client(token: Option<&str>) -> Client {
         }
     }
     Client::builder()
-        .user_agent("open-source-store/0.1 (https://github.com/marlonferreira1800-hue/Opern-source-store-)")
+        .user_agent(
+            "open-source-store/0.1 (https://github.com/marlonferreira1800-hue/Opern-source-store-)",
+        )
         .timeout(Duration::from_secs(30))
         .default_headers(headers)
         .build()
@@ -71,7 +75,13 @@ pub fn http_client(token: Option<&str>) -> Client {
 
 async fn fetch_repo(client: &Client, full_name: &str) -> Result<GhRepo> {
     let url = format!("https://api.github.com/repos/{full_name}");
-    let repo = client.get(&url).send().await?.error_for_status()?.json::<GhRepo>().await?;
+    let repo = client
+        .get(&url)
+        .send()
+        .await?
+        .error_for_status()?
+        .json::<GhRepo>()
+        .await?;
     Ok(repo)
 }
 
@@ -93,15 +103,125 @@ fn infer_category(repo: &GhRepo) -> String {
         haystack.push_str(&desc.to_lowercase());
     }
     let rules: [(&str, &[&str]); 9] = [
-        ("Security", &["password", "security", "privacy", "encryption", "vpn", "auth", "vault", "keepass"]),
-        ("Games", &["game", "gaming", "emulator", "godot", "bevy", "engine", "minecraft"]),
-        ("Multimedia", &["video", "audio", "music", "media", "player", "stream", "obs", "ffmpeg", "podcast"]),
-        ("Graphics", &["image", "photo", "design", "draw", "whiteboard", "diagram", "3d", "cad", "svg", "canvas", "excalidraw", "tldraw"]),
-        ("Internet", &["browser", "mail", "email", "chat", "messenger", "torrent", "download", "http", "proxy", "remote-desktop", "desk"]),
-        ("Office", &["note", "notes", "markdown", "pdf", "spreadsheet", "office", "knowledge", "wiki", "notion", "joplin"]),
-        ("Science", &["science", "research", "math", "physics", "bio", "ml", "ai", "data"]),
-        ("Development", &["ide", "editor", "code", "git", "api", "database", "sql", "compiler", "rust", "typescript", "python", "devtools", "terminal", "shell"]),
-        ("Utilities", &["utility", "utilities", "cli", "monitor", "launcher", "clipboard", "backup", "sync", "file-manager", "system"]),
+        (
+            "Security",
+            &[
+                "password",
+                "security",
+                "privacy",
+                "encryption",
+                "vpn",
+                "auth",
+                "vault",
+                "keepass",
+            ],
+        ),
+        (
+            "Games",
+            &[
+                "game",
+                "gaming",
+                "emulator",
+                "godot",
+                "bevy",
+                "engine",
+                "minecraft",
+            ],
+        ),
+        (
+            "Multimedia",
+            &[
+                "video", "audio", "music", "media", "player", "stream", "obs", "ffmpeg", "podcast",
+            ],
+        ),
+        (
+            "Graphics",
+            &[
+                "image",
+                "photo",
+                "design",
+                "draw",
+                "whiteboard",
+                "diagram",
+                "3d",
+                "cad",
+                "svg",
+                "canvas",
+                "excalidraw",
+                "tldraw",
+            ],
+        ),
+        (
+            "Internet",
+            &[
+                "browser",
+                "mail",
+                "email",
+                "chat",
+                "messenger",
+                "torrent",
+                "download",
+                "http",
+                "proxy",
+                "remote-desktop",
+                "desk",
+            ],
+        ),
+        (
+            "Office",
+            &[
+                "note",
+                "notes",
+                "markdown",
+                "pdf",
+                "spreadsheet",
+                "office",
+                "knowledge",
+                "wiki",
+                "notion",
+                "joplin",
+            ],
+        ),
+        (
+            "Science",
+            &[
+                "science", "research", "math", "physics", "bio", "ml", "ai", "data",
+            ],
+        ),
+        (
+            "Development",
+            &[
+                "ide",
+                "editor",
+                "code",
+                "git",
+                "api",
+                "database",
+                "sql",
+                "compiler",
+                "rust",
+                "typescript",
+                "python",
+                "devtools",
+                "terminal",
+                "shell",
+            ],
+        ),
+        (
+            "Utilities",
+            &[
+                "utility",
+                "utilities",
+                "cli",
+                "monitor",
+                "launcher",
+                "clipboard",
+                "backup",
+                "sync",
+                "file-manager",
+                "system",
+            ],
+        ),
     ];
     for (cat, keywords) in rules {
         if keywords.iter().any(|k| haystack.contains(k)) {
@@ -155,7 +275,11 @@ fn build_app(repo: &GhRepo, release: Option<&GhRelease>, category_hint: &str) ->
         category,
         author: repo.owner.login.clone(),
         version,
-        license: repo.license.as_ref().map(|l| l.spdx_id.clone()).unwrap_or_else(|| "Unknown".into()),
+        license: repo
+            .license
+            .as_ref()
+            .map(|l| l.spdx_id.clone())
+            .unwrap_or_else(|| "Unknown".into()),
         stars: repo.stargazers_count,
         pushed_at: repo.pushed_at.clone().unwrap_or_default(),
         downloads,
@@ -210,7 +334,11 @@ fn offline_app(full_name: &str) -> App {
 
 /// Busca o catálogo: usa cache local se fresco (< 30 min), senão busca na API do GitHub.
 /// Se a API falhar (rate limit/rede), cai no fallback offline com os repos curados.
-pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bool) -> Result<(Vec<App>, bool, bool)> {
+pub async fn fetch_catalog(
+    store: &Store,
+    token: Option<&str>,
+    force_refresh: bool,
+) -> Result<(Vec<App>, bool, bool)> {
     const TTL_SECS: i64 = 30 * 60;
 
     if !force_refresh {
@@ -218,7 +346,11 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
             let fetched = chrono::DateTime::parse_from_rfc3339(&cache.fetched_at)
                 .map(|d| d.with_timezone(&chrono::Utc))
                 .unwrap_or_else(|_| chrono::DateTime::<chrono::Utc>::from_timestamp(0, 0).unwrap());
-            if chrono::Utc::now().signed_duration_since(fetched).num_seconds() < TTL_SECS {
+            if chrono::Utc::now()
+                .signed_duration_since(fetched)
+                .num_seconds()
+                < TTL_SECS
+            {
                 log::info!("catalog: usando cache local ({} apps)", cache.apps.len());
                 return Ok((cache.apps, true, false));
             }
@@ -229,8 +361,16 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
     let repos = curated_repos();
     // Sem token a API permite só 60 req/h por IP: limita a 25 repos (2 req cada) para não estourar.
     // Com token (5000 req/h) busca todos.
-    let limit = if token.is_some() { repos.len() } else { repos.len().min(25) };
-    log::info!("catalog: buscando {} de {} repos no GitHub", limit, repos.len());
+    let limit = if token.is_some() {
+        repos.len()
+    } else {
+        repos.len().min(25)
+    };
+    log::info!(
+        "catalog: buscando {} de {} repos no GitHub",
+        limit,
+        repos.len()
+    );
 
     use futures::stream::{self, StreamExt};
     // Cada item retorna (online_ok, Option<App>)
@@ -241,14 +381,27 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
                 match fetch_repo(&client, &full_name).await {
                     Ok(repo) => {
                         if !is_famous_and_active(&repo) {
-                            log::debug!("catalog: descartado {} (não atende critérios de fama/atividade)", full_name);
+                            log::debug!(
+                                "catalog: descartado {} (não atende critérios de fama/atividade)",
+                                full_name
+                            );
                             return (true, None);
                         }
-                        let release = fetch_latest_release(&client, &full_name).await.ok().flatten();
-                        if release.as_ref().map(|r| choose_asset(&r.assets).is_some()).unwrap_or(false) {
+                        let release = fetch_latest_release(&client, &full_name)
+                            .await
+                            .ok()
+                            .flatten();
+                        if release
+                            .as_ref()
+                            .map(|r| choose_asset(&r.assets).is_some())
+                            .unwrap_or(false)
+                        {
                             (true, Some(build_app(&repo, release.as_ref(), "")))
                         } else {
-                            log::debug!("catalog: pulando {} (sem asset para esta plataforma)", full_name);
+                            log::debug!(
+                                "catalog: pulando {} (sem asset para esta plataforma)",
+                                full_name
+                            );
                             (true, None)
                         }
                     }
@@ -276,13 +429,15 @@ pub async fn fetch_catalog(store: &Store, token: Option<&str>, force_refresh: bo
 
     // Fallback offline: se nada veio da API (rate limit, sem rede), lista os curados com dados mínimos
     if !online_ok {
-        log::warn!("catalog: API do GitHub indisponível (rate limit/rede). Usando fallback offline.");
+        log::warn!(
+            "catalog: API do GitHub indisponível (rate limit/rede). Usando fallback offline."
+        );
         let apps = repos.iter().map(|r| offline_app(r)).collect::<Vec<_>>();
         return Ok((apps, false, true));
     }
 
     // Ordenar por estrelas
-    apps.sort_by(|a, b| b.stars.cmp(&a.stars));
+    apps.sort_by_key(|a| std::cmp::Reverse(a.stars));
 
     if !apps.is_empty() {
         store.save_catalog_cache(&apps)?;
@@ -302,15 +457,19 @@ pub async fn fetch_single_app(full_name: &str, token: Option<&str>) -> Result<Ap
 pub async fn search_github(query: &str, token: Option<&str>, page: u32) -> Result<Vec<App>> {
     use futures::stream::{self, StreamExt};
     let client = Arc::new(http_client(token));
-    let q = format!(
-        "{query} in:name,description,readme fork:false archived:false"
-    );
+    let q = format!("{query} in:name,description,readme fork:false archived:false");
     let url = format!(
         "https://api.github.com/search/repositories?q={}&sort=stars&order=desc&per_page=20&page={}",
         urlencoding_encode(&q),
         page.max(1)
     );
-    let search = client.get(&url).send().await?.error_for_status()?.json::<GhSearch>().await?;
+    let search = client
+        .get(&url)
+        .send()
+        .await?
+        .error_for_status()?
+        .json::<GhSearch>()
+        .await?;
     log::info!("search: '{}' -> {} resultados", query, search.total_count);
 
     let candidates: Vec<GhRepo> = search
@@ -344,11 +503,32 @@ fn urlencoding_encode(s: &str) -> String {
     let mut out = String::new();
     for b in s.bytes() {
         match b {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => out.push(b as char),
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
+                out.push(b as char)
+            }
             _ => out.push_str(&format!("%{:02X}", b)),
         }
     }
     out
+}
+
+/// Aplica o estado local (instalados) sobre o catálogo.
+pub fn apply_local_state(apps: &mut [App], store: &Store) {
+    if let Ok(installed) = store.load_installed() {
+        for app in apps.iter_mut() {
+            if let Some(inst) = installed.iter().find(|i| i.id == app.id) {
+                app.installed = true;
+                app.installed_version = Some(inst.version.clone());
+                app.installed_path = Some(inst.file_path.clone());
+                app.has_update = !app.version.is_empty() && app.version != inst.version;
+            }
+        }
+    }
+}
+
+/// Verifica atualizações comparando versões instaladas com o catálogo.
+pub fn check_updates(apps: &[App]) -> Vec<App> {
+    apps.iter().filter(|a| a.has_update).cloned().collect()
 }
 
 #[cfg(test)]
@@ -366,8 +546,14 @@ mod tests {
             stargazers_count: stars,
             pushed_at: pushed_at.map(|s| s.to_string()),
             topics: vec![],
-            license: Some(GhLicense { spdx_id: "MIT".into(), name: "MIT".into() }),
-            owner: GhOwner { login: "a".into(), avatar_url: String::new() },
+            license: Some(GhLicense {
+                spdx_id: "MIT".into(),
+                name: "MIT".into(),
+            }),
+            owner: GhOwner {
+                login: "a".into(),
+                avatar_url: String::new(),
+            },
         }
     }
 
@@ -407,24 +593,3 @@ mod tests {
         assert_eq!(infer_category(&r), "Development");
     }
 }
-
-/// Aplica o estado local (instalados) sobre o catálogo.
-pub fn apply_local_state(apps: &mut [App], store: &Store) {
-    if let Ok(installed) = store.load_installed() {
-        for app in apps.iter_mut() {
-            if let Some(inst) = installed.iter().find(|i| i.id == app.id) {
-                app.installed = true;
-                app.installed_version = Some(inst.version.clone());
-                app.installed_path = Some(inst.file_path.clone());
-                app.has_update = !app.version.is_empty() && app.version != inst.version;
-            }
-        }
-    }
-}
-
-/// Verifica atualizações comparando versões instaladas com o catálogo.
-pub fn check_updates(apps: &[App]) -> Vec<App> {
-    apps.iter().filter(|a| a.has_update).cloned().collect()
-}
-
-

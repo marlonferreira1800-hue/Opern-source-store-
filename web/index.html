@@ -17,11 +17,11 @@
                 <span class="logo-sub">RUST + TAURI</span>
             </div>
             <div class="top-bar-center">
-                <button class="btn btn-secondary" id="update-all-btn" onclick="updateAll()">
+                <button class="btn btn-secondary" id="update-all-btn" data-action="update-all">
                     <span id="update-count">ATUALIZAR 0 APLICATIVOS</span>
                 </button>
-                <button class="btn btn-secondary" id="refresh-btn" onclick="refreshCatalog()" title="Buscar novamente no GitHub">&#8635; ATUALIZAR LOJA</button>
-                <select id="sort-select" class="sort-select" onchange="sortApps()">
+                <button class="btn btn-secondary" id="refresh-btn" data-action="refresh-catalog" title="Buscar novamente no GitHub">&#8635; ATUALIZAR LOJA</button>
+                <select id="sort-select" class="sort-select">
                     <option value="name_asc">Nome (A-Z)</option>
                     <option value="name_desc">Nome (Z-A)</option>
                     <option value="stars">Mais estrelas</option>
@@ -29,12 +29,12 @@
                     <option value="recent">Mais recentes</option>
                 </select>
                 <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Buscar no GitHub..." onkeyup="onSearchKey(event)">
-                    <button class="btn btn-icon" onclick="searchGitHub()">&#128269;</button>
+                    <input type="text" id="search-input" placeholder="Buscar no GitHub...">
+                    <button class="btn btn-icon" data-action="search-github">&#128269;</button>
                 </div>
             </div>
             <div class="top-bar-right">
-                <button class="btn btn-icon" onclick="toggleMenu()">&#9776;</button>
+                <button class="btn btn-icon" data-action="toggle-menu">&#9776;</button>
             </div>
         </header>
 
@@ -65,7 +65,7 @@
         <div id="app-detail-modal" class="modal modal-large hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="btn btn-icon btn-close" onclick="closeDetailModal()">&#10005;</button>
+                    <button class="btn btn-icon btn-close" data-action="close-detail-modal">&#10005;</button>
                 </div>
                 <div class="modal-body" id="app-detail-content"></div>
             </div>
@@ -76,7 +76,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 id="download-title">Baixando aplicativo...</h2>
-                    <button class="btn btn-icon btn-close" onclick="cancelDownload()">&#10005;</button>
+                    <button class="btn btn-icon btn-close" data-action="cancel-download">&#10005;</button>
                 </div>
                 <div class="modal-body">
                     <div class="download-progress">
@@ -94,12 +94,12 @@
         <div id="menu-sidebar" class="sidebar hidden">
             <div class="sidebar-header">
                 <h2>OPEN SOURCE STORE</h2>
-                <button class="btn btn-icon btn-close" onclick="toggleMenu()">&#10005;</button>
+                <button class="btn btn-icon btn-close" data-action="toggle-menu">&#10005;</button>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="sidebar-link active" onclick="showAllApps()"><span>&#127968; Todos os Apps</span></a>
-                <a href="#" class="sidebar-link" onclick="showInstalled()"><span>&#128230; Instalados</span></a>
-                <a href="#" class="sidebar-link" onclick="showUpdates()"><span>&#128260; Atualizações</span></a>
+                <a href="#" class="sidebar-link active" data-action="show-all-apps"><span>&#127968; Todos os Apps</span></a>
+                <a href="#" class="sidebar-link" data-action="show-installed"><span>&#128230; Instalados</span></a>
+                <a href="#" class="sidebar-link" data-action="show-updates"><span>&#128260; Atualizações</span></a>
                 <div class="sidebar-divider"></div>
                 <h3 class="sidebar-title">Categorias</h3>
                 <div id="sidebar-categories"></div>
@@ -109,7 +109,7 @@
                     <label class="settings-label">GitHub token (opcional, aumenta o limite da API)</label>
                     <div class="settings-row">
                         <input type="password" id="github-token-input" placeholder="ghp_..." class="settings-input">
-                        <button class="btn btn-secondary btn-small" onclick="saveToken()">Salvar</button>
+                        <button class="btn btn-secondary btn-small" data-action="save-token">Salvar</button>
                     </div>
                     <p class="settings-hint" id="downloads-path"></p>
                 </div>
@@ -120,7 +120,7 @@
         </div>
 
         <!-- Overlay -->
-        <div id="modal-overlay" class="modal-overlay hidden" onclick="closeAllModals()"></div>
+        <div id="modal-overlay" class="modal-overlay hidden" data-action="close-all-modals"></div>
     </div>
 
     <script type="module" src="src/main.js"></script>

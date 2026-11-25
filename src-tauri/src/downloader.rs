@@ -29,7 +29,9 @@ pub async fn download_app(
     if app.download_url.is_empty() {
         return Ok(DownloadResponse {
             success: false,
-            message: "Nenhum binário disponível para esta plataforma. Veja o repositório no GitHub.".into(),
+            message:
+                "Nenhum binário disponível para esta plataforma. Veja o repositório no GitHub."
+                    .into(),
             file_path: None,
         });
     }
@@ -41,22 +43,35 @@ pub async fn download_app(
     let (tx_cancel, rx_cancel) = watch::channel(false);
     downloads.lock().await.insert(app.id.clone(), tx_cancel);
 
-    let emit_progress = |app_id: &str, file_name: &str, downloaded: u64, total: Option<u64>, status: &str| {
-        let percent = total
-            .map(|t| if t > 0 { (downloaded as f32 / t as f32) * 100.0 } else { 0.0 })
-            .unwrap_or(0.0);
-        let payload = DownloadProgress {
-            app_id: app_id.to_string(),
-            file_name: file_name.to_string(),
-            downloaded_bytes: downloaded,
-            total_bytes: total,
-            percent,
-            status: status.to_string(),
+    let emit_progress =
+        |app_id: &str, file_name: &str, downloaded: u64, total: Option<u64>, status: &str| {
+            let percent = total
+                .map(|t| {
+                    if t > 0 {
+                        (downloaded as f32 / t as f32) * 100.0
+                    } else {
+                        0.0
+                    }
+                })
+                .unwrap_or(0.0);
+            let payload = DownloadProgress {
+                app_id: app_id.to_string(),
+                file_name: file_name.to_string(),
+                downloaded_bytes: downloaded,
+                total_bytes: total,
+                percent,
+                status: status.to_string(),
+            };
+            let _ = app_handle.emit("download-progress", payload);
         };
-        let _ = app_handle.emit("download-progress", payload);
-    };
 
-    emit_progress(&app.id, &app.file_name, 0, Some(app.size_bytes), "iniciando");
+    emit_progress(
+        &app.id,
+        &app.file_name,
+        0,
+        Some(app.size_bytes),
+        "iniciando",
+    );
 
     let client = reqwest::Client::builder()
         .user_agent("open-source-store/0.1")
@@ -101,7 +116,9 @@ pub async fn download_app(
         file.write_all(&chunk)?;
         hasher.update(&chunk);
         downloaded += chunk.len() as u64;
-        if downloaded % (1024 * 512) < chunk.len() as u64 || total.map(|t| downloaded >= t).unwrap_or(false) {
+        if downloaded % (1024 * 512) < chunk.len() as u64
+            || total.map(|t| downloaded >= t).unwrap_or(false)
+        {
             emit_progress(&app.id, &app.file_name, downloaded, total, "baixando");
         }
     }
@@ -115,10 +132,18 @@ pub async fn download_app(
         if !expected.eq_ignore_ascii_case(&actual) {
             let _ = std::fs::remove_file(&file_path);
             downloads.lock().await.remove(&app.id);
-            emit_progress(&app.id, &app.file_name, downloaded, total, "falha de verificação");
+            emit_progress(
+                &app.id,
+                &app.file_name,
+                downloaded,
+                total,
+                "falha de verificação",
+            );
             return Ok(DownloadResponse {
                 success: false,
-                message: format!("Checksum SHA256 não confere (esperado {expected}, obtido {actual})"),
+                message: format!(
+                    "Checksum SHA256 não confere (esperado {expected}, obtido {actual})"
+                ),
                 file_path: None,
             });
         }
@@ -159,8 +184,14 @@ fn unique_path(dir: &std::path::Path, file_name: &str) -> PathBuf {
     if !path.exists() {
         return path;
     }
-    let stem = path.file_stem().map(|s| s.to_string_lossy().into_owned()).unwrap_or_default();
-    let ext = path.extension().map(|s| s.to_string_lossy().into_owned()).unwrap_or_default();
+    let stem = path
+        .file_stem()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let ext = path
+        .extension()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_default();
     for i in 1..1000 {
         let name = if ext.is_empty() {
             format!("{stem} ({i})")
@@ -187,5 +218,3 @@ mod tests {
         assert_eq!(p.file_name().unwrap().to_str().unwrap(), "evil.exe");
     }
 }
-
-
