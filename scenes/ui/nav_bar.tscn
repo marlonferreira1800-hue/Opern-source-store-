@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/nav_bar.gd" id="1"]
+
+[node name="NavBar" type="Control"]
+constant_left = 0.0
+constant_right = 0.0
+constant_bottom = 0.0
+anchor_top = 1.0
+margin_top = -1.0
+custom_constants/margin_top = 50
+size_flags_vertical = 0
+custom_constants/height = 40
+script = ExtResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -1.0
+margin_top = -1.0
+margin_right = -1.0
+margin_bottom = -1.0
+custom_constants/margin_left = 20
+size_flags_horizontal = 0
+size_flags_vertical = 3
+text = "NÃO INSTALADOS"
+label_settings/font_size = 12
+label_settings/font_color = Color( 0.5, 0.5, 0.5 )
+horizontal_alignment = 0
