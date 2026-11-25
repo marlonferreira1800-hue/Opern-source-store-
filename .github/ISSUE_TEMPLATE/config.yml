@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Perguntas, dúvidas e ideias (Discussions)
+    url: https://github.com/marlonferreira1800-hue/Opern-source-store-/discussions
+    about: Use o Discussions para Q&A, ideias e mostrar seu uso do app
+  - name: Versão web no navegador (GitHub Pages)
+    url: https://marlonferreira1800-hue.github.io/Opern-source-store-/
+    about: Teste a loja sem instalar nada, direto no navegador
+  - name: Baixar o app desktop (Releases)
+    url: https://github.com/marlonferreira1800-hue/Opern-source-store-/releases/latest
+    about: Instaladores para Windows, Linux e macOS
+  - name: Reportar vulnerabilidade (privado)
+    url: https://github.com/marlonferreira1800-hue/Opern-source-store-/security/advisories/new
+    about: Reporte problemas de segurança de forma privada, não em issue pública

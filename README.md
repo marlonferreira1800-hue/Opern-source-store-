@@ -1,6 +1,12 @@
 # Open Source Store
 
-Uma loja centralizada de aplicativos **open source**: em vez de procurar repositório por repositório no GitHub, você busca, instala e atualiza tudo de um só lugar.
+[![CI](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/ci.yml/badge.svg)](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/ci.yml)
+[![Pages](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/pages.yml/badge.svg)](https://github.com/marlonferreira1800-hue/Opern-source-store-/actions/workflows/pages.yml)
+[![Release](https://img.shields.io/github/v/release/marlonferreira1800-hue/Opern-source-store-)](https://github.com/marlonferreira1800-hue/Opern-source-store-/releases/latest)
+[![Licença](https://img.shields.io/github/license/marlonferreira1800-hue/Opern-source-store-)](LICENSE)
+[![Web](https://img.shields.io/website?url=https%3A%2F%2Fmarlonferreira1800-hue.github.io%2FOpern-source-store-%2F&label=web)](https://marlonferreira1800-hue.github.io/Opern-source-store-/)
+
+Uma loja centralizada de aplicativos **open source** (app store alternativa): em vez de procurar repositório por repositório no GitHub, você busca, instala e atualiza tudo de um só lugar.
 
 **100% Rust no backend** com [Tauri 2.0](https://tauri.app) e interface modular em Vite + JavaScript vanilla.
 
@@ -34,14 +40,22 @@ Publicada automaticamente no **GitHub Pages** a cada push na `main` (workflow [`
 ```text
 open-source-store/
 ├── .github/
-│   ├── ISSUE_TEMPLATE/             # Templates de bug, feature e sugestão de app
-│   ├── workflows/ci.yml            # CI (Build Vite + cargo fmt/clippy/test)
-│   └── PULL_REQUEST_TEMPLATE.md
+│   ├── ISSUE_TEMPLATE/             # Templates de bug, feature, sugestão de app + config.yml
+│   ├── workflows/
+│   │   ├── ci.yml                  # CI (Build Vite + cargo fmt/clippy/test)
+│   │   └── pages.yml               # Deploy automático da versão web no GitHub Pages
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── SECURITY.md                 # Política de segurança e reporte privado
+│   ├── FUNDING.yml                 # Botão de sponsoring
+│   └── social-preview.png          # Imagem de pré-visualização social (Settings → Social preview)
 ├── data/
 │   ├── categories.json             # Categorias da loja
-│   └── curated.json                # Seed curada de repositórios (owner/repo)
+│   ├── curated.json                # Seed curada de repositórios (owner/repo)
+│   ├── catalog-seed.json           # Dados iniciais do catálogo
+│   └── curation-policy.json        # Política de curadoria (5 portões)
 ├── docs/
-│   └── ARCHITECTURE.md             # Visão detalhada da arquitetura
+│   ├── ARCHITECTURE.md             # Visão detalhada da arquitetura
+│   └── CATALOG_AUDIT.md            # Auditoria do catálogo
 ├── scripts/
 │   ├── copy-assets.mjs             # Copia web/assets/icons para dist/
 │   ├── fetch-top100.mjs            # Atualiza data/curated.json via GitHub Search API
@@ -71,6 +85,8 @@ open-source-store/
 │   └── index.html
 ├── .editorconfig
 ├── .gitignore
+├── CHANGELOG.md                    # Histórico de versões e mudanças
+├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── package.json

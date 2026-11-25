@@ -8,6 +8,8 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e ca
 
 ### Adicionado
 - **Versão web no GitHub Pages** — https://marlonferreira1800-hue.github.io/Opern-source-store-/ — publicada automaticamente a cada push na `main` pelo workflow `.github/workflows/pages.yml` (build Vite para `dist/` + `actions/deploy-pages`). No navegador, catálogo e busca ao vivo funcionam via API pública do GitHub, sem instalar o app desktop; instalar apps segue exclusivo do desktop
+- **Descoberta/destaque no GitHub**: 20 topics no repositório, descrição com palavras-chave de busca, **Discussions** habilitado (6 categorias padrão + post de boas-vindas), imagem de social preview em `.github/social-preview.png`, badges no README (CI, Pages, release, licença, web)
+- **Comunidade e segurança**: `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), `.github/SECURITY.md` + **Private Vulnerability Reporting** habilitado, `.github/FUNDING.yml` (botão de sponsoring), contact links em `.github/ISSUE_TEMPLATE/config.yml` (Discussions, web, releases, reporte privado)
 
 ## [0.1.0] - 2026-11-25
 
