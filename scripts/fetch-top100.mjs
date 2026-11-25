@@ -78,9 +78,8 @@ const FLAGSHIP_SEEDS = [
   'blender/blender', 'FreeCAD/FreeCAD', 'OpenSCAD/openscad', 'inkscape/inkscape',
   'KDE/krita', 'darktable-org/darktable', 'LMMS/lmms', 'OrcaSlicer/OrcaSlicer',
   'prusa3d/PrusaSlicer', 'bambulab/BambuStudio', 'jgraph/drawio-desktop', 'penpot/penpot-desktop',
-  // ArtCraft Suite
-  'storytold/craft-anything', 'storytold/effectcraft', 'storytold/filmcraft', 'storytold/wordcraft',
-  'storytold/anicraft', 'storytold/cadcraft', 'storytold/deckcraft', 'storytold/designcraft',
+  // Storytold tools
+  'storytold/craft-anything', 'storytold/anicraft', 'storytold/cadcraft', 'storytold/deckcraft',
   // Office & Productivity
   'laurent22/joplin', 'logseq/logseq', 'AppFlowy-IO/AppFlowy', 'siyuan-note/siyuan',
   'nocodb/nocodb', 'ONLYOFFICE/DesktopEditors', 'sumatrapdfreader/sumatrapdf',

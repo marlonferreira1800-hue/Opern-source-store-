@@ -2,7 +2,6 @@ import { esc, formatBytes, formatDatePtBr, safeUrl } from '../utils/format.js';
 import { getFilteredApps, getInstalledList, state } from '../state/store.js';
 
 const DEFAULT_ICON = 'assets/icons/app_default.png';
-const ACCENT_PALETTE = ['#8b5cf6', '#6366f1', '#3b82f6', '#06b6d4'];
 
 export const dom = {
     appsGrid: document.getElementById('apps-grid'),
@@ -39,22 +38,11 @@ export function showStatus(msg, ms = 4000) {
     showStatus._timer = setTimeout(() => dom.statusBar.classList.add('hidden'), ms);
 }
 
-function getCardAccent(app, index = 0) {
-    if (app.has_update) return '#e14d9f';
-    const seed = String(app.category || app.id || '');
-    let hash = index;
-    for (let i = 0; i < seed.length; i++) {
-        hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-    }
-    return ACCENT_PALETTE[hash % ACCENT_PALETTE.length];
-}
-
-function appCardHtml(app, index = 0) {
+function appCardHtml(app) {
     const dl = state.downloading[app.id];
     const isDl = Boolean(dl) && (dl.status === 'baixando' || dl.status === 'iniciando');
     const idAttr = esc(app.id);
     const ghHref = esc(safeUrl(app.github_url));
-    const accent = getCardAccent(app, index);
 
     const versionHtml = app.has_update
         ? `<span class="app-version version-upgrade">${esc(app.installed_version || '?')} &#8594; ${esc(app.version || '?')}</span>`
@@ -100,7 +88,7 @@ function appCardHtml(app, index = 0) {
     ].filter(Boolean).join(' ');
 
     return `
-        <div class="${cardClasses}" style="--card-accent: ${accent}" data-action="detail" data-app-id="${idAttr}">
+        <div class="${cardClasses}" data-action="detail" data-app-id="${idAttr}">
             <div class="app-card-top">
                 ${versionHtml}
                 <button class="github-link-btn" title="Ver no GitHub" data-action="open-url" data-url="${ghHref}">GITHUB &#8599;</button>

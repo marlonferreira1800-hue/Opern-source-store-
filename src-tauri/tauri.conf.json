@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Open Source Store",
+  "productName": "Asclepio",
   "version": "0.1.0",
   "identifier": "com.marlonferreira.open-source-store",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Open Source Store",
+        "title": "Asclepio",
         "width": 1280,
         "height": 760,
         "minWidth": 900,

@@ -171,6 +171,11 @@ function closeMenuIfOpen() {
     }
 }
 
+function openSettings() {
+    if (dom.menuSidebar.classList.contains('hidden')) toggleMenu();
+    setTimeout(() => dom.githubTokenInput.focus(), 50);
+}
+
 function filterByCategory(cat) {
     restoreCatalogView();
     state.currentFilter = cat;
@@ -343,6 +348,7 @@ function bindEvents() {
             case 'show-installed': showInstalled(true); break;
             case 'show-updates': showUpdates(); break;
             case 'toggle-menu': toggleMenu(); break;
+            case 'open-settings': openSettings(); break;
             case 'update-all': updateAll(); break;
             case 'refresh-catalog': refreshCatalog(); break;
             case 'search-github': searchGitHub(); break;

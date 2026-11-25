@@ -213,18 +213,6 @@
       "category": "Development"
     },
     {
-      "id": "storytold/effectcraft",
-      "category": "Multimedia"
-    },
-    {
-      "id": "storytold/filmcraft",
-      "category": "Multimedia"
-    },
-    {
-      "id": "storytold/wordcraft",
-      "category": "Office"
-    },
-    {
       "id": "storytold/anicraft",
       "category": "Graphics"
     },
@@ -235,10 +223,6 @@
     {
       "id": "storytold/deckcraft",
       "category": "Office"
-    },
-    {
-      "id": "storytold/designcraft",
-      "category": "Graphics"
     }
   ]
 }

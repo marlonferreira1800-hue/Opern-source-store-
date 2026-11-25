@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera icon.png (256), icon.ico e app_default.png (128) para o Open Source Store.
+"""Gera icon.png (256), icon.ico e app_default.png (128) da logo Asclepio.
 Sem dependências externas: monta o PNG manualmente com zlib.
 
 Uso:
@@ -9,6 +9,32 @@ import os
 import struct
 import zlib
 
+CYAN = (34, 211, 238)
+BLUE = (56, 189, 248)
+PURPLE = (139, 92, 246)
+DARK = (9, 9, 11)
+BORDER = (38, 38, 46)
+BG_IN = (23, 23, 30)
+BG_OUT = (9, 9, 11)
+
+
+def lerp(a, b, t):
+    return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
+
+
+def lerp_stops(stops, t):
+    t = max(0.0, min(1.0, t))
+    for i in range(len(stops) - 1):
+        p0, c0 = stops[i]
+        p1, c1 = stops[i + 1]
+        if p0 <= t <= p1:
+            f = 0 if p1 == p0 else (t - p0) / (p1 - p0)
+            return lerp(c0, c1, f)
+    return stops[-1][1]
+
+
+SNAKE_STOPS = [(0.0, CYAN), (0.45, BLUE), (1.0, PURPLE)]
+
 
 def chunk(tipo, data):
     c = struct.pack(">I", len(data)) + tipo + data
@@ -16,13 +42,13 @@ def chunk(tipo, data):
     return c
 
 
-def make_png(size, draw_fn):
+def make_png(size, paint_fn):
+    buf = bytearray(size * size * 4)
+    paint_fn(buf, size)
     raw = bytearray()
     for y in range(size):
         raw.append(0)  # filter: none
-        for x in range(size):
-            r, g, b, a = draw_fn(x, y, size)
-            raw += bytes((r, g, b, a))
+        raw += buf[y * size * 4:(y + 1) * size * 4]
     ihdr = struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0)
     return (
         b"\x89PNG\r\n\x1a\n"
@@ -40,37 +66,136 @@ def make_ico(png_bytes, size):
     return header + entry + png_bytes
 
 
-def store_icon(x, y, s):
-    bg = (13, 13, 13, 255)
-    blue = (77, 171, 255, 255)
-    dark_blue = (51, 154, 240, 255)
-    m = s * 0.22
-    cx0, cx1 = m, s - m
-    cy0, cy1 = m, s - m
-    if cx0 <= x < cx1 and cy0 <= y < cy1:
-        if y > s - m - (s * 0.08):
-            return dark_blue
-        return blue
-    return bg
+def inside_rr(x, y, x0, y0, x1, y1, r):
+    if x < x0 or x >= x1 or y < y0 or y >= y1:
+        return False
+    cx = min(max(x, x0 + r), x1 - r)
+    cy = min(max(y, y0 + r), y1 - r)
+    return (x - cx) ** 2 + (y - cy) ** 2 < r * r
 
 
-def default_icon(x, y, s):
-    bg = (45, 45, 45, 255)
-    fg = (179, 179, 179, 255)
-    m = s * 0.25
-    if m <= x < s - m and m <= y < s - m:
-        d = min(x - m, s - m - x, y - m, s - m - y)
-        if d < s * 0.07:
-            return fg
-        if s * 0.14 < d < s * 0.21:
-            return fg
-    return bg
+def inside_circle(x, y, cx, cy, r):
+    return (x - cx) ** 2 + (y - cy) ** 2 < r * r
+
+
+def set_px(buf, s, x, y, color, alpha=255):
+    if 0 <= x < s and 0 <= y < s:
+        i = (y * s + x) * 4
+        if alpha >= 255:
+            buf[i:i + 4] = bytes((color[0], color[1], color[2], 255))
+        else:
+            a = alpha / 255.0
+            buf[i] = int(color[0] * a + buf[i] * (1 - a))
+            buf[i + 1] = int(color[1] * a + buf[i + 1] * (1 - a))
+            buf[i + 2] = int(color[2] * a + buf[i + 2] * (1 - a))
+            buf[i + 3] = max(buf[i + 3], alpha)
+
+
+def disc(buf, s, cx, cy, r, color, alpha=255):
+    r2 = r * r
+    for yy in range(int(cy - r) - 1, int(cy + r) + 2):
+        for xx in range(int(cx - r) - 1, int(cx + r) + 2):
+            if (xx - cx) ** 2 + (yy - cy) ** 2 <= r2:
+                set_px(buf, s, xx, yy, color, alpha)
+
+
+def thick_line(buf, s, x0, y0, x1, y1, w, color, alpha=255):
+    steps = int(max(abs(x1 - x0), abs(y1 - y0))) * 2 + 1
+    r = w / 2.0
+    for i in range(steps + 1):
+        t = i / steps
+        disc(buf, s, x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, r, color, alpha)
+
+
+def rr_fill(buf, s, x0, y0, x1, y1, r, color_fn):
+    for yy in range(int(y0), int(y1)):
+        for xx in range(int(x0), int(x1)):
+            if inside_rr(xx + 0.5, yy + 0.5, x0, y0, x1, y1, r):
+                set_px(buf, s, xx, yy, color_fn(xx + 0.5, yy + 0.5))
+
+
+def bezier(p0, c0, c1, p1, t):
+    u = 1 - t
+    x = u**3 * p0[0] + 3 * u * u * t * c0[0] + 3 * u * t * t * c1[0] + t**3 * p1[0]
+    y = u**3 * p0[1] + 3 * u * u * t * c0[1] + 3 * u * t * t * c1[1] + t**3 * p1[1]
+    return x, y
+
+
+SNAKE_SEGS = [
+    ((318, 118), (226, 128), (196, 168), (250, 196)),
+    ((250, 196), (322, 232), (336, 262), (258, 288)),
+    ((258, 288), (186, 312), (190, 356), (254, 376)),
+    ((254, 376), (300, 390), (336, 398), (352, 412)),
+]
+
+
+def paint_logo(buf, s):
+    k = s / 512.0
+
+    # Background: radial gradient inside rounded rect, transparent outside
+    r_corner = 116 * k
+    m = 12 * k
+    cx_bg, cy_bg = 256 * k, 0.36 * s
+    for y in range(s):
+        for x in range(s):
+            if inside_rr(x + 0.5, y + 0.5, 0, 0, s, s, r_corner):
+                d = ((x + 0.5 - cx_bg) ** 2 + (y + 0.5 - cy_bg) ** 2) ** 0.5 / (0.8 * s)
+                c = lerp(BG_IN, BG_OUT, min(1.0, d))
+                set_px(buf, s, x, y, c)
+            # Border ring
+            if inside_rr(x + 0.5, y + 0.5, 0, 0, s, s, r_corner) and not inside_rr(
+                x + 0.5, y + 0.5, m, m, s - m, s - m, max(1.0, r_corner - m)
+            ):
+                set_px(buf, s, x, y, BORDER)
+
+    # Ground shadow
+    sh_cx, sh_cy = 256 * k, 440 * k
+    sh_rx, sh_ry = 88 * k, 12 * k
+    for y in range(s):
+        for x in range(s):
+            e = ((x + 0.5 - sh_cx) / sh_rx) ** 2 + ((y + 0.5 - sh_cy) / sh_ry) ** 2
+            if e <= 1.0:
+                set_px(buf, s, x, y, (0, 0, 0), int(115 * (1 - e * 0.5)))
+
+    # Snake body (behind staff): sampled beziers painted as discs with gradient by t
+    total = 0
+    seg_pts = []
+    for seg in SNAKE_SEGS:
+        n = 160
+        pts = [bezier(*seg, i / n) for i in range(n + 1)]
+        seg_pts.append(pts)
+        total += n
+    idx = 0
+    for pts in seg_pts:
+        for (px, py) in pts:
+            t = idx / total
+            idx += 1
+            disc(buf, s, px * k, py * k, 13 * k, lerp_stops(SNAKE_STOPS, t))
+
+    # Staff with diagonal gradient
+    def staff_color(px, py):
+        return lerp(CYAN, PURPLE, (px + py) / (2.0 * s))
+
+    rr_fill(buf, s, 247 * k, 96 * k, 265 * k, 426 * k, 9 * k, staff_color)
+    disc(buf, s, 256 * k, 82 * k, 24 * k, staff_color(256 * k, 82 * k))
+    rr_fill(buf, s, 234 * k, 416 * k, 278 * k, 430 * k, 7 * k, staff_color)
+
+    # Head
+    disc(buf, s, 320 * k, 110 * k, 21 * k, PURPLE)
+    disc(buf, s, 312 * k, 103 * k, 4.5 * k, DARK)
+    disc(buf, s, 328 * k, 103 * k, 4.5 * k, DARK)
+    # Forked tongue
+    thick_line(buf, s, 338 * k, 118 * k, 362 * k, 108 * k, 5 * k, CYAN)
+    thick_line(buf, s, 338 * k, 118 * k, 364 * k, 122 * k, 5 * k, CYAN)
+
+    # Terminal cursor tail
+    rr_fill(buf, s, 346 * k, 402 * k, 359 * k, 426 * k, 3 * k, lambda px, py: CYAN)
 
 
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    png256 = make_png(256, store_icon)
-    png128 = make_png(128, default_icon)
+    png256 = make_png(256, paint_logo)
+    png128 = make_png(128, paint_logo)
 
     paths = {
         os.path.join(root, "src-tauri", "icons", "icon.png"): png256,

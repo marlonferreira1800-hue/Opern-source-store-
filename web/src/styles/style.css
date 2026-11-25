@@ -1,4 +1,4 @@
-/* ===== ARTCRAFT / CRAFT APP SUITE — BRUTALIST DARK GRID ===== */
+/* ===== ASCLEPIO — OPEN SOURCE STORE — BRUTALIST DARK GRID ===== */
 
 *,
 *::before,
@@ -31,6 +31,7 @@
     /* Contrast & Accents */
     --contrast-bg: #ffffff;
     --contrast-fg: #09090b;
+    --accent-brand: #22d3ee;
     --accent-magenta: #e14d9f;
     --accent-amber: #f59e0b;
     --accent-blue: #3b82f6;
@@ -64,6 +65,11 @@ body {
 ::selection {
     background-color: var(--contrast-bg);
     color: var(--contrast-fg);
+}
+
+:focus-visible {
+    outline: 1px solid var(--contrast-bg);
+    outline-offset: 1px;
 }
 
 /* ===== SCROLLBAR ===== */
@@ -119,6 +125,12 @@ body {
     white-space: nowrap;
 }
 
+.brand-mark {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
 .brand-divider {
     width: 1px;
     height: 14px;
@@ -172,6 +184,12 @@ body {
     width: 6px;
     height: 6px;
     background-color: var(--accent-magenta);
+    animation: notif-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes notif-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(225, 77, 159, 0.45); }
+    50% { box-shadow: 0 0 0 4px rgba(225, 77, 159, 0); }
 }
 
 /* ===== ROW 2: CONTROLS TOOLBAR ===== */
@@ -468,10 +486,12 @@ body {
 
 /* ===== APP CARD ===== */
 .app-card {
+    position: relative;
+    overflow: hidden;
     background-color: var(--bg-surface);
     border-right: 1px solid var(--border-hairline);
     border-bottom: 1px solid var(--border-hairline);
-    border-top: 2px solid var(--card-accent, var(--border-strong));
+    border-top: 2px solid var(--card-accent, var(--accent-brand));
     padding: 16px;
     display: flex;
     flex-direction: column;
@@ -479,6 +499,32 @@ body {
     cursor: pointer;
     transition: background-color 0.12s ease;
     min-width: 0;
+}
+
+/* Brand sweep: faixa de luz que cruza a borda superior no hover */
+.app-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #cffafe 50%, transparent);
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+.app-card.has-update::after {
+    background: linear-gradient(90deg, transparent, #f9a8d4 50%, transparent);
+}
+
+.app-card:hover::after {
+    animation: card-sweep 0.55s ease;
+}
+
+@keyframes card-sweep {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
 }
 
 .app-card:hover {
@@ -937,7 +983,7 @@ body {
     width: 28px;
     height: 28px;
     border: 2px solid var(--border-hairline);
-    border-top-color: var(--contrast-bg);
+    border-top-color: var(--accent-brand);
     animation: spin 0.8s linear infinite;
 }
 
@@ -1167,7 +1213,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background-color: var(--contrast-bg);
+    background-color: var(--accent-brand);
     transition: width 0.2s ease;
 }
 
@@ -1204,8 +1250,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
     padding: 0 16px;
     border-bottom: 1px solid var(--border-hairline);
+}
+
+.sidebar-header h2 {
+    flex: 1;
+}
+
+.brand-mark-lg {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
 }
 
 .sidebar-header h2 {
