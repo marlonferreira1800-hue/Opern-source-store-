@@ -6,8 +6,19 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e ca
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-11-25
+
+### Adicionado
+- **Catálogo expandido para 204 aplicativos curados (+100 novos apps)** — `target_count` ampliado para `200` (mais allowlists manuais) em `data/curation-policy.json` e descoberta ampliada em `scripts/fetch-top100.mjs`, mantendo todos os 5 portões de segurança, licença OSI e binários desktop reais; `data/catalog-seed.json` embutido no app desktop atualizado com 204 entradas e `docs/CATALOG_AUDIT.md` regenerado
+- Screenshots reais da interface em `docs/screenshots/` integrados à seção Prévia do `README.md` — `9fcab3f`
+
 ### Alterado
-- **Nome do produto alterado de Asclepio para OpenStore** — `productName`/título da janela em `tauri.conf.json`, `identifier` para `com.marlonferreira.openstore`, título da página web, NOTICE e logo (prateleira de apps com seta de download, cor lima do próprio tema). O instalador Windows passa a ser `OpenStore_<versão>_x64-setup.exe` — nome descritivo que ranqueia melhor em buscas por "open source store" no GitHub
+- **Nome do produto alterado de Asclepio para OpenStore** — `productName`/título da janela em `tauri.conf.json`, `identifier` para `com.marlonferreira.openstore`, título da página web, NOTICE e logo (prateleira de apps com seta de download, cor lima do próprio tema). O instalador Windows passa a ser `OpenStore_<versão>_x64-setup.exe` — `4e47ebc`
+- Versão do app e rodapé atualizada para `v0.1.3` (`package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, `web/index.html`)
+
+### Corrigido
+- Versão web passa a carregar `data/catalog-seed.json` no catálogo inicial sem consumir rate limit da API do GitHub — `048e277`
+- Ajustes de `cargo fmt`, clippy e testes multiplataforma no backend Rust — `f7be915`, `10af10e`
 
 ## [0.1.2] - 2026-11-25
 
@@ -81,6 +92,7 @@ Primeira versão pública — loja desktop de aplicativos open source com backen
 2. Ao publicar uma versão, criamos a tag (ex.: `v0.1.0`) e uma **Release no GitHub** com as notas desta seção.
 3. O instalador (`.exe`/`.msi` para Windows, `.AppImage`/`.deb` para Linux, `.dmg` para macOS) é anexado como **asset** da Release — baixe em [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases).
 
+[0.1.3]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.3
 [0.1.2]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.2
 [0.1.1]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.1
 [0.1.0]: https://github.com/marlonferreira1800-hue/open-source-store/releases/tag/v0.1.0

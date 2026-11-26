@@ -13,7 +13,7 @@ use crate::store::Store;
 /// Política oficial de curadoria, segurança e qualidade (5 Portões).
 const POLICY_JSON: &str = include_str!("../../data/curation-policy.json");
 
-/// Snapshot pré-validado dos 100 aplicativos curados (seed offline/rápida).
+/// Snapshot pré-validado dos aplicativos curados (seed offline/rápida).
 const CATALOG_SEED_JSON: &str = include_str!("../../data/catalog-seed.json");
 
 /// Categorias fixas da loja.
@@ -940,8 +940,8 @@ async fn fetch_and_merge_seed(
 }
 
 /// Busca o catálogo:
-/// - Sem token: usa cache local fresco ou carrega os 100 apps validados de `catalog-seed.json`;
-///   com `force_refresh`, atualiza o top 25 ao vivo mesclando com os 100 do seed.
+/// - Sem token: usa cache local fresco ou carrega os apps validados de `catalog-seed.json`;
+///   com `force_refresh`, atualiza o top 25 ao vivo mesclando com o seed.
 /// - Com token: busca todos os curados ao vivo na API do GitHub com fallback para `SeedEntry`.
 pub async fn fetch_catalog(
     store: &Store,
@@ -1364,9 +1364,9 @@ mod tests {
     }
 
     #[test]
-    fn carrega_seed_completo_com_100_apps_validos() {
+    fn carrega_seed_completo_com_200_apps_validos() {
         let entries = seed_entries();
-        assert!(entries.len() >= 100);
+        assert!(entries.len() >= 200);
         let on_windows = crate::platform::current_platform().starts_with("windows");
         for entry in entries {
             assert!(
@@ -1403,7 +1403,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn fetch_catalog_sem_token_carrega_100_apps_do_seed() {
+    async fn fetch_catalog_sem_token_carrega_apps_do_seed() {
         let root = std::env::temp_dir().join(format!(
             "oss_catalog_test_{}_{}",
             std::process::id(),

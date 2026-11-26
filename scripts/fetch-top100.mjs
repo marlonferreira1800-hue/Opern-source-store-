@@ -46,66 +46,128 @@ const FLAGSHIP_SEEDS = [
   // Development & Terminals
   'zed-industries/zed', 'VSCodium/vscodium', 'alacritty/alacritty', 'wezterm/wezterm',
   'helix-editor/helix', 'lapce/lapce', 'neovim/neovim', 'micro-editor/micro',
-  'dbeaver/dbeaver', 'usebruno/bruno', 'Kong/insomnia', 'git-ecosystem/git-credential-manager',
-  'jesseduffield/lazygit', 'cli/cli', 'BurntSushi/ripgrep', 'sharkdp/bat',
-  'junegunn/fzf', 'starship/starship', 'cline/cline', 'gitbutlerapp/gitbutler',
-  'WerWolv/ImHex', 'rizinorg/cutter', 'sharkdp/fd', 'astral-sh/uv',
+  'notepad-plus-plus/notepad-plus-plus', 'pulsar-edit/pulsar', 'lite-xl/lite-xl',
+  'Eugeny/tabby', 'kovidgoyal/kitty', 'electerm/electerm', 'kingToolbox/WindTerm',
+  'dbeaver/dbeaver', 'beekeeper-studio/beekeeper-studio', 'dbgate/dbgate',
+  'sqlitebrowser/sqlitebrowser', 'pawelsalawa/sqlitestudio', 'antares-sql/antares',
+  'usebruno/bruno', 'Kong/insomnia', 'mountain-loop/yaak', 'mockoon/mockoon',
+  'hoppscotch/hoppscotch', 'altair-graphql/altair', 'emqx/MQTTX', 'thomasnordquist/MQTT-Explorer',
+  'git-ecosystem/git-credential-manager', 'jesseduffield/lazygit', 'gitbutlerapp/gitbutler',
+  'extrawurst/gitui', 'jesseduffield/lazydocker', 'derailed/k9s', 'cli/cli',
+  'BurntSushi/ripgrep', 'sharkdp/bat', 'sharkdp/fd', 'sharkdp/hyperfine',
+  'junegunn/fzf', 'starship/starship', 'atuinsh/atuin', 'astral-sh/uv', 'astral-sh/ruff',
+  'oven-sh/bun', 'denoland/deno', 'jqlang/jq', 'mikefarah/yq', 'casey/just',
+  'wagoodman/dive', 'dandavison/delta', 'charmbracelet/glow', 'charmbracelet/vhs',
+  'cline/cline', 'farion1231/cc-switch', 'stablyai/orca', 'DevToys-app/DevToys',
+  'tiny-rdm/TinyRDM', 'qishibo/AnotherRedisDesktopManager', 'hackjutsu/Lepton',
+  'massCodeIO/massCode', 'WerWolv/ImHex', 'rizinorg/cutter', 'NationalSecurityAgency/ghidra',
+  'x64dbg/x64dbg', 'dnSpyEx/dnSpy', 'skylot/jadx', 'jindrapetrik/jpexs-decompiler',
+  'WinMerge/winmerge', 'arduino/arduino-ide', 'serial-studio/Serial-Studio',
+  'mitmproxy/mitmproxy', 'caddyserver/caddy', 'goreleaser/goreleaser',
   // Utilities & System
   'microsoft/PowerToys', 'files-community/Files', 'Flow-Launcher/Flow.Launcher',
-  'localsend/localsend', 'syncthing/syncthing', 'rustdesk/rustdesk', 'sxyazi/yazi',
-  'yorukot/superfile', 'NickeManarin/ScreenToGif', 'ShareX/ShareX', 'flameshot-org/flameshot',
+  'oliverschwendener/ueli', 'localsend/localsend', 'syncthing/syncthing',
+  'Martchus/syncthingtray', 'rustdesk/rustdesk', 'sxyazi/yazi', 'yorukot/superfile',
+  'gokcehan/lf', 'doublecmd/doublecmd', 'spacedriveapp/spacedrive',
+  'NickeManarin/ScreenToGif', 'ShareX/ShareX', 'flameshot-org/flameshot',
   'hluk/CopyQ', 'ventoy/Ventoy', 'pbatard/rufus', 'balena-io/etcher',
-  'rclone/rclone', 'restic/restic', 'chocolatey/choco', 'Devolutions/UniGetUI',
-  'winsw/winsw', 'ajeetdsouza/zoxide', 'aristocratos/btop', 'espanso/espanso',
-  'fastfetch-cli/fastfetch', 'eza-community/eza',
+  'raspberrypi/rpi-imager', 'rclone/rclone', 'restic/restic', 'kopia/kopia',
+  'duplicati/duplicati', 'chocolatey/choco', 'Devolutions/UniGetUI',
+  'peazip/PeaZip', 'M2Team/NanaZip', 'bleachbit/bleachbit', 'windirstat/windirstat',
+  'winsw/winsw', 'ajeetdsouza/zoxide', 'aristocratos/btop', 'ClementTsang/bottom',
+  'Abdenasser/neohtop', 'espanso/espanso', 'fastfetch-cli/fastfetch', 'eza-community/eza',
+  'lsd-rs/lsd', 'bootandy/dust', 'Byron/dua-cli', 'ouch-org/ouch', 'muesli/duf',
+  'LongSoft/UEFITool', 'Molunerfinn/PicGo', 'deskflow/deskflow', 'input-leap/input-leap',
+  'AutoHotkey/AutoHotkey', 'emoacht/Monitorian', 'TranslucentTB/TranslucentTB',
+  'rocksdanister/lively', 'LibreHardwareMonitor/LibreHardwareMonitor', 'GyulyVGC/sniffnet',
   // Security & Privacy
   'bitwarden/clients', 'keepassxreboot/keepassxc', 'cryptomator/cryptomator',
   'veracrypt/VeraCrypt', 'tailscale/tailscale', 'rust-lang/rustup',
   'StandardNotes/app', '2fast-team/2fast', 'gopasspw/gopass',
-  'FiloSottile/age', 'sigstore/cosign',
+  'FiloSottile/age', 'sigstore/cosign', 'ente-io/ente', 'ente-io/auth',
+  'safing/portmaster', 'amnezia-vpn/amnezia-client', 'aquasecurity/trivy',
+  'zricethezav/gitleaks', 'trufflesecurity/trufflehog',
   // Internet & Communication
-  'qbittorrent/qBittorrent', 'agalwood/Motrix', 'GopeedLab/gopeed',
+  'qbittorrent/qBittorrent', 'transmission/transmission', 'c0re100/qBittorrent-Enhanced-Edition',
+  'agalwood/Motrix', 'GopeedLab/gopeed', 'amir1376/ab-download-manager',
+  'AnInsomniacy/rayburst', 'aria2/aria2', 'yt-dlp/yt-dlp', 'filezilla-project/filezilla',
   'element-hq/element-desktop', 'zulip/zulip-desktop', 'RocketChat/Rocket.Chat.Electron',
-  'aria2/aria2', 'yt-dlp/yt-dlp', 'filezilla-project/filezilla',
-  'zen-browser/desktop', 'Floorp-Projects/Floorp', 'minbrowser/min',
-  'telegramdesktop/tdesktop', 'nicotine-plus/nicotine-plus',
+  'signalapp/Signal-Desktop', 'deltachat/deltachat-desktop', 'Mattermost/desktop',
+  'Vendicated/Vencord', 'Legcord/Legcord', 'telegramdesktop/tdesktop',
+  'nicotine-plus/nicotine-plus', 'zen-browser/desktop', 'Floorp-Projects/Floorp',
+  'minbrowser/min', 'qutebrowser/qutebrowser', 'Foundry376/Mailspring',
+  'martinrotter/rssguard', 'yang991178/fluent-reader', 'RSSNext/Folo',
+  'iterate-ch/cyberduck', 'mRemoteNG/mRemoteNG',
   // Multimedia
   'obsproject/obs-studio', 'mifi/lossless-cut', 'mpv-player/mpv', 'HandBrake/HandBrake',
-  'audacity/audacity', 'mltframework/shotcut', 'olive-editor/olive', 'xbmc/xbmc',
-  'jellyfin/jellyfin-desktop', 'foobar2000/foobar2000', 'MusicBrainz/picard',
-  'clementine-player/Clementine', 'strawberrymusicplayer/strawberry',
+  'audacity/audacity', 'tenacityteam/tenacity', 'mltframework/shotcut',
+  'olive-editor/olive', 'xbmc/xbmc', 'jellyfin/jellyfin-desktop', 'jellyfin/jellyfin-media-player',
+  'MusicBrainz/picard', 'clementine-player/Clementine', 'strawberrymusicplayer/strawberry',
+  'qier222/YesPlayMusic', 'nukeop/nuclear', 'jeffvli/feishin', 'clsid2/mpc-hc',
+  'clsid2/mpc-be', 'mpc-qt/mpc-qt', 'mixxxdj/mixxx', 'LMMS/lmms',
+  'BespokeSynth/BespokeSynth', 'surge-synthesizer/surge', 'musescore/MuseScore',
+  'NatronGitHub/Natron', 'SubtitleEdit/subtitleedit', 'staxrip/staxrip',
+  'upscayl/upscayl', 'k4yt3x/video2x', 'MediaElch/MediaElch',
   // Graphics & 3D
   'blender/blender', 'FreeCAD/FreeCAD', 'OpenSCAD/openscad', 'inkscape/inkscape',
-  'KDE/krita', 'darktable-org/darktable', 'LMMS/lmms', 'OrcaSlicer/OrcaSlicer',
-  'prusa3d/PrusaSlicer', 'bambulab/BambuStudio', 'jgraph/drawio-desktop', 'penpot/penpot-desktop',
+  'KDE/krita', 'darktable-org/darktable', 'CyberTimon/RapidRAW', 'OrcaSlicer/OrcaSlicer',
+  'prusa3d/PrusaSlicer', 'bambulab/BambuStudio', 'supermerill/SuperSlicer',
+  'Ultimaker/Cura', 'jgraph/drawio-desktop', 'penpot/penpot-desktop',
+  'JannisX11/blockbench', 'RodZill4/material-maker', 'LibreSprite/LibreSprite',
+  'orama-interactive/Pixelorama', 'GraphiteEditor/Graphite', 'Pencil2D/pencil',
+  'opentoonz/opentoonz', 'tahoma2d/tahoma2d', 'cnr-isti-vclab/meshlab',
+  'CloudCompare/CloudCompare', 'f3d-app/f3d', 'Lymphatus/caesium-image-compressor',
+  'ImageGlass/ImageGlass', 'nomacs/nomacs', 'jurplel/qView', 'fontforge/fontforge',
+  'ImageMagick/ImageMagick',
   // Storytold tools
   'storytold/craft-anything', 'storytold/anicraft', 'storytold/cadcraft', 'storytold/deckcraft',
   // Office & Productivity
   'laurent22/joplin', 'logseq/logseq', 'AppFlowy-IO/AppFlowy', 'siyuan-note/siyuan',
-  'nocodb/nocodb', 'ONLYOFFICE/DesktopEditors', 'sumatrapdfreader/sumatrapdf',
-  'okular-kde/okular', 'kovidgoyal/calibre', 'Stirling-Tools/Stirling-PDF',
+  'TriliumNext/Trilium', 'toeverything/AFFiNE', 'anyproto/anytype-ts', 'streetwriters/notesnook',
+  'pbek/QOwnNotes', 'marktext/marktext', 'Zettlr/Zettlr', 'ONLYOFFICE/DesktopEditors',
+  'sumatrapdfreader/sumatrapdf', 'ahrm/sioyek', 'pdfarranger/pdfarranger',
+  'Stirling-Tools/Stirling-PDF', 'kovidgoyal/calibre', 'readest/readest',
+  'koodo-reader/koodo-reader', 'edrlab/thorium-reader', 'YACReader/yacreader',
   'zotero/zotero', 'jabref/jabref', 'ankitects/anki', 'xournalpp/xournalpp',
   'typst/typst', 'super-productivity/super-productivity', 'ActivityWatch/activitywatch',
+  'wealthfolio/wealthfolio', 'Gnucash/gnucash', 'moneymanagerex/moneymanagerex',
+  'freeplane/freeplane', 'roldanjr/pomatez',
   // Games & Emulation
-  'godotengine/godot', '4ian/GDevelop', 'shadps4-emu/shadPS4', 'libretro/RetroArch',
-  'PCSX2/pcsx2', 'dolphin-emu/dolphin', 'RPCS3/rpcs3', 'ryujinx/ryujinx',
-  'PrismLauncher/PrismLauncher', 'Heroic-Games-Launcher/HeroicGamesLauncher',
-  'Playnite/Playnite', 'SunshineStream/Sunshine',
+  'godotengine/godot', 'Redot-Engine/redot-engine', '4ian/GDevelop', 'defold/defold',
+  'mapeditor/tiled', 'deepnight/ldtk', 'shadps4-emu/shadPS4', 'libretro/RetroArch',
+  'PCSX2/pcsx2', 'dolphin-emu/dolphin', 'RPCS3/rpcs3', 'hrydgard/ppsspp',
+  'stenzek/duckstation', 'melonDS-emu/melonDS', 'mGBA-emu/mgba', 'Cemu-project/Cemu',
+  'Vita3K/Vita3K', 'azahar-emu/azahar', 'xenia-project/xenia', 'scummvm/scummvm',
+  'dosbox-staging/dosbox-staging', '86Box/86Box', 'PrismLauncher/PrismLauncher',
+  'Heroic-Games-Launcher/HeroicGamesLauncher', 'Playnite/Playnite', 'SunshineStream/Sunshine',
+  'moonlight-stream/moonlight-qt', 'OpenMW/openmw', 'vcmi/vcmi', 'luanti-org/luanti',
+  'Anuken/Mindustry', 'OpenRA/OpenRA', 'supertuxkart/stk-code', 'endless-sky/endless-sky',
+  'CleverRaven/Cataclysm-DDA', 'ModOrganizer2/modorganizer',
   // Science & AI Desktop
-  'ollama/ollama', 'ggml-org/llama.cpp', 'janhq/jan',
-  'rstudio/rstudio', 'posit-dev/positron',
-  'qgis/QGIS', 'Stellarium/stellarium', 'gephi/gephi', 'scilab/scilab',
+  'ollama/ollama', 'ggml-org/llama.cpp', 'janhq/jan', 'nomic-ai/gpt4all',
+  'Mintplex-Labs/anything-llm', 'cherryhq/cherry-studio', 'chatboxai/chatbox',
+  'rstudio/rstudio', 'posit-dev/positron', 'qgis/QGIS', 'Stellarium/stellarium',
+  'gephi/gephi', 'scilab/scilab', 'JuliaLang/julia', 'spyder-ide/spyder',
+  'napari/napari', 'Slicer/Slicer', 'qupath/qupath', 'jamovi/jamovi',
+  'jasp-stats/jasp-desktop', 'qalculate/qalculate-qt', 'OpenChemistry/avogadrolibs',
+  // Other
+  'ayangweb/BongoCat',
 ];
 
 const NICHES = [
-  'topic:desktop-app', 'topic:tauri-app', 'topic:electron-app',
-  'password manager', 'note taking app', 'terminal emulator', 'file manager',
-  'video editor', 'screen recorder', 'media player', 'audio editor',
-  'image editor', '3d modeling', 'cad software', 'diagram editor',
-  'database client', 'api client', 'git client', 'torrent client',
-  'download manager', 'remote desktop', 'backup tool', 'sync tool',
-  'game engine', 'emulator', 'pdf reader', 'ebook reader',
+  'topic:desktop-app', 'topic:tauri-app', 'topic:electron-app', 'topic:qt',
+  'topic:avalonia', 'topic:wpf', 'topic:flutter-desktop', 'topic:desktop',
+  'password manager', 'note taking app', 'markdown editor', 'terminal emulator',
+  'file manager', 'video editor', 'screen recorder', 'media player',
+  'music player', 'audio editor', 'image editor', 'image viewer',
+  '3d modeling', 'cad software', 'diagram editor', 'whiteboard',
+  'database client', 'sql client', 'api client', 'git client',
+  'torrent client', 'download manager', 'remote desktop', 'backup tool',
+  'sync tool', 'game engine', 'emulator', 'pdf reader', 'ebook reader',
   'system monitor', 'clipboard manager', 'launcher app', 'office suite',
+  'rss reader', 'email client', 'chat client', 'personal finance',
+  'time tracker', 'pixel art', '3d printer slicer', 'ai desktop client',
+  'local llm', 'astronomy', 'scientific software', 'disk analyzer',
 ];
 
 async function ghFetch(url, allowNotFound = false) {
@@ -130,8 +192,8 @@ async function ghFetch(url, allowNotFound = false) {
   throw new Error(`Falha após retentativas em ${url}`);
 }
 
-async function searchRepos(q, perPage = 30) {
-  const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=${perPage}`;
+async function searchRepos(q, perPage = 30, page = 1) {
+  const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=${perPage}&page=${page}`;
   const data = await ghFetch(url);
   return data.items || [];
 }
@@ -470,6 +532,23 @@ function inferCategory(repo) {
       ['regex', 3],
       ['snippet management', 5],
       ['gists', 4],
+      ['linter', 6],
+      ['code formatter', 6],
+      ['static analysis', 5],
+      ['command runner', 6],
+      ['javascript runtime', 7],
+      ['typescript', 4],
+      ['redis', 6],
+      ['redis gui', 7],
+      ['redis desktop manager', 8],
+      ['release automation', 6],
+      ['kubernetes', 6],
+      ['podman', 7],
+      ['containers', 5],
+      ['docker', 5],
+      ['electron', 4],
+      ['fullstack app framework', 6],
+      ['desktop apps in python', 6],
     ],
     Utilities: [
       ['system monitor', 7],
@@ -477,16 +556,29 @@ function inferCategory(repo) {
       ['system information', 6],
       ['process monitor', 7],
       ['disk usage', 7],
+      ['version of du', 7],
       ['disk cleanup', 7],
       ['system cleaner', 7],
       ['disk cleaner', 7],
       ['file manager', 7],
       ['file explorer', 7],
       ['clipboard manager', 7],
+      ['clipboard syncing', 8],
       ['package manager', 7],
       ['text expander', 7],
       ['application launcher', 7],
       ['keyboard launcher', 7],
+      ['keyboard and mouse', 8],
+      ['keyboard emulation', 8],
+      ['mouse emulation', 8],
+      ['deskflow', 9],
+      ['shell history', 7],
+      ['atuin', 7],
+      ['scrcpy', 7],
+      ['display control software', 7],
+      ['theme switch', 7],
+      ['darkmode', 7],
+      ['auto night mode', 8],
       ['bootable usb', 7],
       ['bootable drives', 7],
       ['usb formatting', 7],
@@ -577,6 +669,10 @@ function inferCategory(repo) {
       ['game launcher', 8],
       ['game streaming', 8],
       ['game stream', 8],
+      ['gamestream', 8],
+      ['moonlight', 7],
+      ['steam link', 6],
+      ['steam', 5],
       ['playstation', 6],
       ['ps4', 6],
       ['godot', 5],
@@ -628,6 +724,11 @@ function inferCategory(repo) {
       ['player', 3],
       ['podcast', 5],
       ['transcoder', 5],
+      ['transcribe', 6],
+      ['whisper', 6],
+      ['live record', 6],
+      ['bililiverecorder', 8],
+      ['boxplayer', 8],
       ['ffmpeg', 4],
       ['lyrics', 3],
     ],
@@ -649,6 +750,8 @@ function inferCategory(repo) {
       ['3d model painting', 9],
       ['low poly', 6],
       ['pixel art', 6],
+      ['pixiv', 7],
+      ['pixeval', 8],
       ['color grading', 6],
       ['whiteboard', 6],
       ['cad', 5],
@@ -705,6 +808,9 @@ function inferCategory(repo) {
       ['teamviewer', 5],
       ['email', 4],
       ['imap', 4],
+      ['rss', 7],
+      ['rss reader', 8],
+      ['fluent reader', 8],
       ['browser', 5],
       ['chat', 4],
       ['messenger', 5],
@@ -784,6 +890,10 @@ function inferCategory(repo) {
       ['rstudio', 7],
       ['positron', 7],
       ['scilab', 7],
+      ['drone', 6],
+      ['mavlink', 8],
+      ['ardupilot', 7],
+      ['qgroundcontrol', 8],
     ],
   };
 
@@ -828,19 +938,37 @@ async function getOwnerAgeDays(login) {
   }
 }
 
-async function evaluateCandidate(fullName) {
-  const repo = await ghFetch(`https://api.github.com/repos/${fullName}`, true);
+function isWindowsX64Compatible(name) {
+  const n = name.toLowerCase();
+  if (policy.dangerous_asset_extensions.some(ext => n.endsWith(ext))) return false;
+  if (META_EXT_RE.test(n)) return false;
+  if (n.endsWith('.gz') && !n.endsWith('.tar.gz')) return false;
+  if (UNSUPPORTED_OS_RE.test(n)) return false;
+  if (SOURCE_ARCHIVE_RE.test(n) && ARCHIVE_EXT_RE.test(n)) return false;
+  if (/\.(snap|flatpak|txz|tar\.xz|bz2|7z)$/i.test(n)) return false;
+  const isMac = /macos|darwin|\.dmg|\.pkg|osx|-mac\.|-mac-|_mac\.|_mac_/i.test(n);
+  const isLinux = /linux|\.appimage|\.deb|\.rpm|\.snap|\.flatpak|\.txz|\.tar\.xz/i.test(n) || (n.includes('.tar.gz') && !isMac);
+  if (isLinux || isMac) return false;
+  if (/(?:arm64|aarch64|armv8)/i.test(n)) return false;
+  return n.endsWith('.msi') || n.endsWith('.exe') || (hasWinMarker(n) && n.endsWith('.zip'));
+}
+
+async function evaluateCandidate(fullName, prefetchedRepo = null) {
+  const override = (policy.manual_allowlist_overrides || []).find(
+    o => o.id?.toLowerCase() === fullName.toLowerCase(),
+  );
+  const repo = prefetchedRepo || (await ghFetch(`https://api.github.com/repos/${fullName}`, true));
   if (!repo) return { ok: false, id: fullName, reason: 'not_found' };
 
   // Portão 2 (flags básicas) + Portão 1 (estrelas & idade)
   if (repo.fork || repo.archived || repo.disabled) {
     return { ok: false, id: repo.full_name, reason: 'fork_archived_or_disabled' };
   }
-  if ((repo.stargazers_count || 0) < T.min_stars) {
+  if (!override && (repo.stargazers_count || 0) < T.min_stars) {
     return { ok: false, id: repo.full_name, reason: `low_stars:${repo.stargazers_count}` };
   }
   const repoAgeDays = daysSince(repo.created_at);
-  if (repoAgeDays < T.min_repo_age_days) {
+  if (!override && repoAgeDays < T.min_repo_age_days) {
     return { ok: false, id: repo.full_name, reason: `too_young:${Math.round(repoAgeDays)}d` };
   }
   const pushAgeDays = daysSince(repo.pushed_at);
@@ -853,9 +981,6 @@ async function evaluateCandidate(fullName) {
   if (blockReason) {
     return { ok: false, id: repo.full_name, reason: blockReason };
   }
-  const override = (policy.manual_allowlist_overrides || []).find(
-    o => o.id?.toLowerCase() === repo.full_name.toLowerCase(),
-  );
   const spdx = repo.license?.spdx_id || '';
   if (!override && !policy.allowed_licenses.includes(spdx)) {
     return { ok: false, id: repo.full_name, reason: `untrusted_license:${spdx || 'NONE'}` };
@@ -869,7 +994,8 @@ async function evaluateCandidate(fullName) {
   const stableReleases = releases.filter(
     r => !r.draft && !r.prerelease && !isPrereleaseLabel(r.tag_name || '') && !isPrereleaseLabel(r.name || ''),
   );
-  if (stableReleases.length < T.min_release_count) {
+  const minReleases = override ? 1 : T.min_release_count;
+  if (stableReleases.length < minReleases) {
     return { ok: false, id: repo.full_name, reason: `few_stable_releases:${stableReleases.length}` };
   }
 
@@ -888,7 +1014,7 @@ async function evaluateCandidate(fullName) {
     .reduce((acc, rel) => acc + (rel.assets || []).reduce((s, a) => s + (a.download_count || 0), 0), 0);
   const latestDownloads = (latest.assets || []).reduce((s, a) => s + (a.download_count || 0), 0);
 
-  if (recentDownloads < T.min_release_downloads) {
+  if (!override && recentDownloads < T.min_release_downloads) {
     return { ok: false, id: repo.full_name, reason: `low_downloads:${recentDownloads}` };
   }
 
@@ -903,8 +1029,22 @@ async function evaluateCandidate(fullName) {
 
   // Verificação adicional de maturidade do dono & SECURITY.md
   const ownerAgeDays = await getOwnerAgeDays(repo.owner.login);
-  if (ownerAgeDays < T.min_owner_age_days) {
+  if (!override && ownerAgeDays < T.min_owner_age_days) {
     return { ok: false, id: repo.full_name, reason: `young_owner:${Math.round(ownerAgeDays)}d` };
+  }
+
+  // Priorizar instaladores desktop (Windows/macOS/Linux) e filtrar artefatos não-desktop/beta
+  const safeAssets = prioritizeSafeAssets(latest.assets || []);
+  if (safeAssets.length === 0) {
+    return { ok: false, id: repo.full_name, reason: 'no_safe_assets' };
+  }
+  if (T.require_windows_asset && !safeAssets.some(a => isWindowsX64Compatible(a.name))) {
+    return { ok: false, id: repo.full_name, reason: 'no_windows_x64_installer' };
+  }
+  const safeLatestDownloads = safeAssets.reduce((s, a) => s + (a.download_count || 0), 0);
+  const liveT = policy.thresholds.live_search;
+  if (releaseAgeDays > liveT.grace_new_release_days && safeLatestDownloads < liveT.min_release_downloads) {
+    return { ok: false, id: repo.full_name, reason: `low_safe_latest_downloads:${safeLatestDownloads}` };
   }
 
   let hasSecurityPolicy = false;
@@ -912,7 +1052,7 @@ async function evaluateCandidate(fullName) {
   if (community?.files?.security) hasSecurityPolicy = true;
 
   // Portão 5: cálculo do Score Composto (0..100)
-  const starsPts = Math.min(15, Math.max(0, Math.round((Math.log10(repo.stargazers_count) - 3.0) * 7.5)));
+  const starsPts = Math.min(15, Math.max(0, Math.round((Math.log10(Math.max(repo.stargazers_count, 10)) - 3.0) * 7.5)));
   const dlPts = Math.min(15, Math.max(0, Math.round((Math.log10(Math.max(recentDownloads, 1)) - 3.5) * 4.5)));
   const licensePts = 10;
   const checksumPts = hasChecksum ? 10 : 0;
@@ -936,12 +1076,10 @@ async function evaluateCandidate(fullName) {
 
   const category = override?.category || inferCategory(repo);
 
-  // Priorizar instaladores desktop (Windows/macOS/Linux) e filtrar artefatos não-desktop/beta
-  const safeAssets = prioritizeSafeAssets(latest.assets || []);
-
   return {
     ok: true,
     id: repo.full_name,
+    isOverride: Boolean(override),
     category,
     trustScore,
     securityFlags,
@@ -985,24 +1123,55 @@ async function evaluateCandidate(fullName) {
   };
 }
 
-function selectBalancedTop100(approved) {
-  // Ordena por Score Composto desc, depois estrelas desc
-  const ranked = [...approved].sort((a, b) => b.trustScore - a.trustScore || b.seedEntry.repo.stargazers_count - a.seedEntry.repo.stargazers_count);
+function selectBalancedCatalog(approved, existingIdsSet) {
+  const byScoreDesc = (a, b) =>
+    b.trustScore - a.trustScore || b.seedEntry.repo.stargazers_count - a.seedEntry.repo.stargazers_count;
+  const organic = approved.filter(item => !item.isOverride).sort(byScoreDesc);
+  const overrides = approved.filter(item => item.isOverride);
+
+  // Preserva todos os apps orgânicos que já faziam parte do catálogo anterior (e ainda passam nos 5 portões)
   const selected = [];
-  const overflow = [];
+  const selectedKeys = new Set();
   const catCounts = new Map();
 
-  for (const item of ranked) {
+  for (const item of organic) {
+    if (selected.length >= T.target_count) break;
+    if (existingIdsSet.has(item.id.toLowerCase())) {
+      selected.push(item);
+      selectedKeys.add(item.id.toLowerCase());
+      catCounts.set(item.category, (catCounts.get(item.category) || 0) + 1);
+    }
+  }
+
+  const overflow = [];
+  for (const item of organic) {
+    const key = item.id.toLowerCase();
+    if (selectedKeys.has(key)) continue;
     const count = catCounts.get(item.category) || 0;
     if (count < T.max_per_category && selected.length < T.target_count) {
       selected.push(item);
+      selectedKeys.add(key);
       catCounts.set(item.category, count + 1);
     } else {
       overflow.push(item);
     }
   }
   while (selected.length < T.target_count && overflow.length > 0) {
-    selected.push(overflow.shift());
+    const next = overflow.shift();
+    if (!selectedKeys.has(next.id.toLowerCase())) {
+      selected.push(next);
+      selectedKeys.add(next.id.toLowerCase());
+    }
+  }
+
+  selected.sort(byScoreDesc);
+
+  // Mantém os allowlists manuais aprovados ao final (ou na ordem definida na política)
+  for (const ov of overrides) {
+    if (!selectedKeys.has(ov.id.toLowerCase())) {
+      selected.push(ov);
+      selectedKeys.add(ov.id.toLowerCase());
+    }
   }
   return selected;
 }
@@ -1019,7 +1188,7 @@ function buildAuditMarkdown(selected, rejected, totalCandidates) {
   }
 
   const lines = [
-    '# Auditoria Oficial do Catálogo — Top 100 Open Source Store',
+    `# Auditoria Oficial do Catálogo — Top ${T.target_count} Open Source Store`,
     '',
     `- **Gerado em:** ${new Date().toISOString().slice(0, 10)}`,
     `- **Política:** \`data/curation-policy.json\` (v${policy.version})`,
@@ -1039,7 +1208,7 @@ function buildAuditMarkdown(selected, rejected, totalCandidates) {
     '| :--- | ---: |',
     ...[...rejectSummary.entries()].sort((a, b) => b[1] - a[1]).map(([m, n]) => `| \`${m}\` | ${n} |`),
     '',
-    '## Top 100 Softwares Selecionados',
+    `## Top ${T.target_count} Softwares Selecionados`,
     '',
     '| # | Repositório | Categoria | Score | Estrelas | Downloads (3 rel.) | Idade | Licença | SHA-256 | Plataformas |',
     '| ---: | :--- | :--- | ---: | ---: | ---: | ---: | :--- | :---: | :--- |',
@@ -1061,30 +1230,57 @@ let approvedTotal = 0;
 
 async function main() {
   console.log(`Iniciando curadoria Top ${T.target_count} (token=${Boolean(TOKEN)})...`);
-  const candidates = new Set(FLAGSHIP_SEEDS);
-
-  // 1. Top geral filtrado
+  let existingCurated = [];
   try {
-    const geral = await searchRepos(
-      `stars:>=${T.min_stars} pushed:>=${SINCE_PUSH} fork:false archived:false -awesome -tutorial -course -roadmap -interview -handbook in:name,description`,
-      100,
-    );
-    for (const it of geral) candidates.add(it.full_name);
-    console.log(`Top geral: ${candidates.size} candidatos acumulados`);
-  } catch (e) {
-    console.log(`Aviso busca geral: ${e.message}`);
+    existingCurated = JSON.parse(readFileSync(resolve(root, 'data/curated.json'), 'utf8'));
+  } catch {
+    existingCurated = [];
   }
+  const existingIdsSet = new Set(existingCurated.map(id => String(id).toLowerCase()));
+
+  const candidates = new Set([
+    ...existingCurated,
+    ...(policy.manual_allowlist_overrides || []).map(o => o.id).filter(Boolean),
+    ...FLAGSHIP_SEEDS,
+  ]);
+  const repoCache = new Map();
+
+  // 1. Top geral filtrado (múltiplas páginas e faixas de estrelas)
+  const generalQueries = [
+    `stars:>=${T.min_stars} pushed:>=${SINCE_PUSH} fork:false archived:false -awesome -tutorial -course -roadmap -interview -handbook in:name,description`,
+    `stars:3000..12000 pushed:>=${SINCE_PUSH} fork:false archived:false -awesome -tutorial -course -roadmap -interview -handbook in:name,description`,
+  ];
+  for (const gq of generalQueries) {
+    for (let page = 1; page <= 3; page++) {
+      try {
+        const items = await searchRepos(gq, 100, page);
+        for (const it of items) {
+          candidates.add(it.full_name);
+          repoCache.set(it.full_name.toLowerCase(), it);
+        }
+        if (items.length < 100) break;
+      } catch (e) {
+        console.log(`Aviso busca geral p${page}: ${e.message}`);
+        break;
+      }
+      await sleep(TOKEN ? 2100 : 6500);
+    }
+  }
+  console.log(`Top geral: ${candidates.size} candidatos acumulados`);
 
   // 2. Buscas por nichos/tópicos
   for (const niche of NICHES) {
     const q = `${niche} stars:>=${T.min_stars} pushed:>=${SINCE_PUSH} fork:false archived:false`;
     try {
-      const items = await searchRepos(q, 25);
-      for (const it of items) candidates.add(it.full_name);
+      const items = await searchRepos(q, 50, 1);
+      for (const it of items) {
+        candidates.add(it.full_name);
+        repoCache.set(it.full_name.toLowerCase(), it);
+      }
     } catch (e) {
       console.log(`Aviso nicho "${niche}": ${e.message}`);
     }
-    await sleep(TOKEN ? 400 : 6500);
+    await sleep(TOKEN ? 2100 : 6500);
   }
 
   // Deduplica case-insensitive mantendo forma canônica
@@ -1101,13 +1297,13 @@ async function main() {
   const seenCanonical = new Set();
 
   // Avalia em lotes concorrentes pequenos para respeitar API
-  const BATCH = TOKEN ? 8 : 2;
+  const BATCH = TOKEN ? 10 : 2;
   for (let i = 0; i < candidateList.length; i += BATCH) {
     const slice = candidateList.slice(i, i + BATCH);
     const results = await Promise.all(
       slice.map(async id => {
         try {
-          return await evaluateCandidate(id);
+          return await evaluateCandidate(id, repoCache.get(id.toLowerCase()) || null);
         } catch (e) {
           return { ok: false, id, reason: `error:${e.message}` };
         }
@@ -1123,11 +1319,11 @@ async function main() {
     if ((i / BATCH) % 10 === 0) {
       console.log(`Progresso: ${Math.min(i + BATCH, candidateList.length)}/${candidateList.length} | aprovados=${approved.length} rejeitados=${rejected.length}`);
     }
-    await sleep(TOKEN ? 150 : 2000);
+    await sleep(TOKEN ? 100 : 2000);
   }
 
   approvedTotal = approved.length;
-  const selected = selectBalancedTop100(approved);
+  const selected = selectBalancedCatalog(approved, existingIdsSet);
 
   writeFileSync(
     resolve(root, 'data/curated.json'),

@@ -3,7 +3,7 @@
   "description": "Política oficial de curadoria, segurança e qualidade da Open Source Store (5 Portões).",
   "thresholds": {
     "curated": {
-      "target_count": 100,
+      "target_count": 200,
       "min_stars": 3000,
       "min_repo_age_days": 180,
       "min_owner_age_days": 365,
@@ -11,7 +11,7 @@
       "min_release_count": 3,
       "max_inactive_push_days": 180,
       "max_inactive_release_days": 365,
-      "max_per_category": 24,
+      "max_per_category": 48,
       "require_windows_asset": true
     },
     "live_search": {
@@ -77,7 +77,8 @@
     "usememos/memos",
     "mudler/LocalAI",
     "pear-devs/pear-desktop",
-    "colbymchenry/codegraph"
+    "colbymchenry/codegraph",
+    "dyang886/Game-Cheats-Manager"
   ],
   "blocked_keywords": [
     "crack",

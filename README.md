@@ -40,7 +40,7 @@ Baixe o instalador na página de [Releases](https://github.com/marlonferreira180
 
 | Plataforma | Arquivo |
 |---|---|
-| Windows (x64) | [`OpenStore_0.1.2_x64-setup.exe`](https://github.com/marlonferreira1800-hue/open-source-store/releases/download/v0.1.2/OpenStore_0.1.2_x64-setup.exe) (2,3 MB) |
+| Windows (x64) | [`OpenStore_0.1.3_x64-setup.exe`](https://github.com/marlonferreira1800-hue/open-source-store/releases/download/v0.1.3/OpenStore_0.1.3_x64-setup.exe) (2,4 MB) |
 
 O histórico completo de versões e suas mudanças está em [`CHANGELOG.md`](CHANGELOG.md) e na página de [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases).
 
@@ -137,7 +137,7 @@ npm run tauri:build    # Gera executável e instaladores
 | `npm run build` | Compila o frontend em `dist/` e copia os assets |
 | `npm run tauri:dev` | Inicia o app desktop completo em modo desenvolvimento |
 | `npm run tauri:build` | Gera build de produção e instaladores |
-| `npm run catalog:update` | Atualiza `data/curated.json` com os top 100 apps ativos |
+| `npm run catalog:update` | Atualiza `data/curated.json` e `data/catalog-seed.json` com o catálogo curado (top 200+) |
 | `npm run icons:generate` | Regenera `icon.png`, `icon.ico` e `app_default.png` |
 
 ### Testes do Backend Rust
