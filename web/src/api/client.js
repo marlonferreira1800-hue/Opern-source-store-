@@ -48,12 +48,75 @@ function isSafeDemoRepo(it) {
     return true;
 }
 
+function seedCatalogUrl() {
+    // No GitHub Pages (<user>.github.io/<repo>/), deriva o dono/repo do próprio endereço.
+    const m = location.hostname.match(/^([^.]+)\.github\.io$/);
+    const repo = m && location.pathname.split('/')[1];
+    if (m && repo) return `https://raw.githubusercontent.com/${m[1]}/${repo}/main/data/catalog-seed.json`;
+    return 'https://raw.githubusercontent.com/marlonferreira1800-hue/open-source-store/main/data/catalog-seed.json';
+}
+
+function seedEntryToApp(e) {
+    const repo = e.repo || {};
+    const rel = e.release || {};
+    const asset = (rel.assets || [])[0] || {};
+    return {
+        id: repo.full_name,
+        name: repo.name,
+        tagline: repo.description || '',
+        description: repo.description || '',
+        category: e.category || (repo.topics && repo.topics[0]) || 'Other',
+        author: repo.owner?.login || '',
+        version: rel.tag_name || '',
+        license: repo.license ? repo.license.spdx_id : 'Unknown',
+        stars: repo.stargazers_count || 0,
+        pushed_at: repo.pushed_at || '',
+        downloads: 0,
+        icon_url: repo.owner?.avatar_url || '',
+        github_url: repo.html_url || '',
+        homepage: repo.homepage || '',
+        release_url: rel.html_url || ((repo.html_url || '') + '/releases'),
+        download_url: asset.browser_download_url || '',
+        file_name: asset.name || '',
+        size_bytes: asset.size || 0,
+        sha256: asset.digest || null,
+        published_at: rel.published_at || '',
+        tags: repo.topics || [],
+        trust_score: e.trust_score || 0,
+        security_flags: e.security_flags || ['osi-license'],
+        warnings: asset.digest ? [] : ['no-sha256-digest'],
+        installed: false,
+        installed_version: null,
+        has_update: false,
+        installed_path: null,
+    };
+}
+
+async function fetchSeedCatalog() {
+    try {
+        const r = await fetch(seedCatalogUrl());
+        if (!r.ok) return null;
+        const seed = await r.json();
+        const apps = (Array.isArray(seed) ? seed : []).map(seedEntryToApp).filter(a => a.id);
+        if (!apps.length) return null;
+        return { apps, total: apps.length, from_cache: false, from_seed: true, offline: false, fetched_at: new Date().toISOString() };
+    } catch {
+        return null;
+    }
+}
+
 async function webCall(cmd, args) {
     if (cmd === 'get_catalog' || cmd === 'search_apps') {
+        // Catálogo padrão (sem busca): usa o snapshot curado do próprio repositório,
+        // que não consome rate limit da API e traz apps validados com releases reais.
+        if (!args.query) {
+            const seed = await fetchSeedCatalog();
+            if (seed) return seed;
+        }
         const since = new Date(Date.now() - 180 * 86400_000).toISOString().slice(0, 10);
         const q = args.query
             ? `${args.query} stars:>=1000 pushed:>=${since} fork:false archived:false in:name,description,readme`
-            : `stars:>=3000 pushed:>=${since} fork:false archived:false -awesome -tutorial -course -books -roadmap -interview -primer -handbook -notes -checklist -learning -algorithms in:name,description`;
+            : `stars:>=2000 pushed:>=${since} fork:false archived:false`;
         const r = await fetch(
             `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=30`,
             { headers: { Accept: 'application/vnd.github+json' } },

@@ -55,6 +55,8 @@ async function loadCatalog(forceRefresh) {
     state.apps = [...state.catalogApps];
     if (res.offline) {
         showStatus('API do GitHub indisponível (limite de requisições ou sem rede). Modo offline: abra o menu ☰ → Configurações e cole seu token do GitHub para carregar tudo.', 12000);
+    } else if (res.from_seed) {
+        showStatus(`Catálogo curado carregado: ${res.total} apps (use a busca para pesquisar ao vivo no GitHub)`);
     } else if (res.from_cache) {
         showStatus('Catálogo carregado do cache local');
     } else {

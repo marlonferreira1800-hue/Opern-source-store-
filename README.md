@@ -14,9 +14,9 @@ Uma loja centralizada de aplicativos **open source** (app store alternativa): em
 
 Screenshots reais da interface — dá para ver como é o projeto **sem instalar nada**. Foram capturados da versão web (`npm run dev`, servida em `localhost:1420`) com o catálogo ao vivo consultando a API pública do GitHub. As imagens ficam em [`docs/screenshots/`](docs/screenshots/).
 
-![Catálogo com busca ao vivo](docs/screenshots/01-catalogo-busca.png)
+![Catálogo de apps da OpenStore](docs/screenshots/01-catalogo-busca.png)
 
-**Busca ao vivo no GitHub**: a barra de busca consulta a API do GitHub em tempo real e exibe cards com ícone, autor, tagline, status ("DISPONÍVEL PARA INSTALAR"), última atualização e score de segurança de cada repositório.
+**Catálogo de apps**: a página inicial traz os apps curados (yt-dlp, uv, LocalSend, Logseq, Ollama...) com versão da release, tamanho do download, status "DISPONÍVEL PARA INSTALAR" e score de segurança. A barra de busca consulta a **API pública do GitHub em tempo real** para pesquisar qualquer outro repositório open source.
 
 ![Detalhes do aplicativo](docs/screenshots/02-detalhes-app.png)
 
@@ -48,7 +48,7 @@ O histórico completo de versões e suas mudanças está em [`CHANGELOG.md`](CHA
 
 Abra direto no navegador: **https://marlonferreira1800-hue.github.io/open-source-store/**
 
-Publicada automaticamente no **GitHub Pages** a cada push na `main` (workflow [`pages.yml`](.github/workflows/pages.yml)). No modo web, o catálogo e a busca ao vivo funcionam direto pela **API pública do GitHub** — sem baixar o app desktop. Instalar/atualizar apps continua exigindo o [app desktop](#download), e a interface avisa quando um recurso é exclusivo do desktop.
+Publicada automaticamente no **GitHub Pages** a cada push na `main` (workflow [`pages.yml`](.github/workflows/pages.yml)). No modo web, o catálogo inicial vem do snapshot curado [`data/catalog-seed.json`](data/catalog-seed.json) (não consome rate limit) e a busca ao vivo funciona direto pela **API pública do GitHub** — sem baixar o app desktop. Instalar/atualizar apps continua exigindo o [app desktop](#download), e a interface avisa quando um recurso é exclusivo do desktop.
 
 ## Como funciona
 
