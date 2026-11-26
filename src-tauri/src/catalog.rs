@@ -137,7 +137,10 @@ pub fn is_blocked_repo_id(full_name: &str) -> bool {
     if lower.is_empty() {
         return true;
     }
-    if p.blocked_repos.iter().any(|b| b.eq_ignore_ascii_case(&lower)) {
+    if p.blocked_repos
+        .iter()
+        .any(|b| b.eq_ignore_ascii_case(&lower))
+    {
         return true;
     }
     contains_any_keyword(&lower, &p.blocked_keywords)
@@ -268,7 +271,9 @@ fn is_dangerous_extension(name: &str) -> bool {
 fn choose_safe_asset(assets: &[GhAsset]) -> Option<GhAsset> {
     let safe: Vec<GhAsset> = assets
         .iter()
-        .filter(|a| !is_dangerous_extension(&a.name) && is_allowed_download_url(&a.browser_download_url))
+        .filter(|a| {
+            !is_dangerous_extension(&a.name) && is_allowed_download_url(&a.browser_download_url)
+        })
         .cloned()
         .collect();
     choose_asset(&safe)
@@ -820,7 +825,7 @@ fn load_seed_apps() -> Vec<App> {
 }
 
 enum RefreshOutcome {
-    Updated(App),
+    Updated(Box<App>),
     Rejected,
     TransientError,
 }
@@ -830,16 +835,21 @@ async fn refresh_seed_entry(client: &Client, entry: &SeedEntry) -> (bool, Refres
     match fetch_repo(client, full_name).await {
         Ok(Some(repo)) => {
             if !is_famous_and_active(&repo) {
-                log::debug!("catalog: descartado {full_name} (não passou nos portões de curadoria)");
+                log::debug!(
+                    "catalog: descartado {full_name} (não passou nos portões de curadoria)"
+                );
                 return (true, RefreshOutcome::Rejected);
             }
             match fetch_latest_release(client, full_name).await {
                 Ok(Some(release))
-                    if is_safe_release(&release) && choose_safe_asset(&release.assets).is_some() =>
+                    if is_safe_release(&release)
+                        && choose_safe_asset(&release.assets).is_some() =>
                 {
                     (
                         true,
-                        RefreshOutcome::Updated(build_refreshed_seed_app(&repo, &release, entry)),
+                        RefreshOutcome::Updated(Box::new(build_refreshed_seed_app(
+                            &repo, &release, entry,
+                        ))),
                     )
                 }
                 Ok(_) => {
@@ -878,19 +888,18 @@ async fn fetch_and_merge_seed(
         seeds.len()
     );
 
-    let results: Vec<(String, bool, RefreshOutcome)> =
-        stream::iter(seeds[..limit].iter().cloned())
-            .map(|entry| {
-                let client = Arc::clone(&client);
-                async move {
-                    let id = entry.repo.full_name.clone();
-                    let (ok, outcome) = refresh_seed_entry(&client, &entry).await;
-                    (id, ok, outcome)
-                }
-            })
-            .buffer_unordered(8)
-            .collect()
-            .await;
+    let results: Vec<(String, bool, RefreshOutcome)> = stream::iter(seeds[..limit].iter().cloned())
+        .map(|entry| {
+            let client = Arc::clone(&client);
+            async move {
+                let id = entry.repo.full_name.clone();
+                let (ok, outcome) = refresh_seed_entry(&client, &entry).await;
+                (id, ok, outcome)
+            }
+        })
+        .buffer_unordered(8)
+        .collect()
+        .await;
 
     let mut online_ok = false;
     let mut refreshed = HashMap::with_capacity(limit);
@@ -917,7 +926,7 @@ async fn fetch_and_merge_seed(
         }
         let key = entry.repo.full_name.to_ascii_lowercase();
         match refreshed.remove(&key) {
-            Some(RefreshOutcome::Updated(app)) => apps.push(app),
+            Some(RefreshOutcome::Updated(app)) => apps.push(*app),
             Some(RefreshOutcome::Rejected) => {}
             Some(RefreshOutcome::TransientError) | None => apps.push(build_app_from_seed(entry)),
         }
@@ -957,7 +966,9 @@ pub async fn fetch_catalog(
                     .apps
                     .into_iter()
                     .filter(|a| !is_blocked_repo_id(&a.id))
-                    .filter(|a| a.download_url.is_empty() || is_allowed_download_url(&a.download_url))
+                    .filter(|a| {
+                        a.download_url.is_empty() || is_allowed_download_url(&a.download_url)
+                    })
                     .collect();
                 let has_legacy_zero_score = apps.iter().any(|a| a.trust_score == 0);
                 let is_incomplete = apps.len() < seed_entries().len();
@@ -1008,7 +1019,10 @@ pub async fn fetch_single_app(full_name: &str, token: Option<&str>) -> Result<Ap
         bail!("Repositório não encontrado: {full_name}");
     };
     if is_blocked_repo_metadata(&repo) {
-        bail!("Repositório bloqueado pela política de segurança da loja: {}", repo.full_name);
+        bail!(
+            "Repositório bloqueado pela política de segurança da loja: {}",
+            repo.full_name
+        );
     }
     let release = fetch_latest_release(&client, full_name)
         .await?
@@ -1304,7 +1318,9 @@ mod tests {
             "http://github.com/zed-industries/zed/releases/download/v1.0/Zed.exe"
         ));
         assert!(!is_allowed_download_url("https://evil.com/Zed.exe"));
-        assert!(!is_allowed_download_url("https://github.com.evil.com/Zed.exe"));
+        assert!(!is_allowed_download_url(
+            "https://github.com.evil.com/Zed.exe"
+        ));
         assert!(!is_allowed_download_url("https://user@github.com/Zed.exe"));
         assert!(!is_allowed_download_url(""));
     }
@@ -1318,15 +1334,23 @@ mod tests {
         let rel_no_sha = safe_release(10, 25_000, None);
         let app_no_sha = build_app(&r, Some(&rel_no_sha), "");
         assert!(app_no_sha.trust_score >= 60);
-        assert!(app_no_sha.security_flags.contains(&"osi-license".to_string()));
-        assert!(app_no_sha.security_flags.contains(&"mature-repo".to_string()));
-        assert!(!app_no_sha.security_flags.contains(&"sha256-verified".to_string()));
+        assert!(app_no_sha
+            .security_flags
+            .contains(&"osi-license".to_string()));
+        assert!(app_no_sha
+            .security_flags
+            .contains(&"mature-repo".to_string()));
+        assert!(!app_no_sha
+            .security_flags
+            .contains(&"sha256-verified".to_string()));
         assert_eq!(app_no_sha.warnings, vec!["no-sha256-digest".to_string()]);
 
         let rel_with_sha = safe_release(10, 25_000, Some("sha256:deadbeef"));
         let app_with_sha = build_app(&r, Some(&rel_with_sha), "");
         assert!(app_with_sha.trust_score > app_no_sha.trust_score);
-        assert!(app_with_sha.security_flags.contains(&"sha256-verified".to_string()));
+        assert!(app_with_sha
+            .security_flags
+            .contains(&"sha256-verified".to_string()));
         assert!(app_with_sha.warnings.is_empty());
     }
 
@@ -1436,7 +1460,12 @@ mod tests {
 
         let mut material = repo(5000, None);
         material.name = "material-maker".into();
-        material.topics = vec!["3d".into(), "shader".into(), "textures".into(), "godot".into()];
+        material.topics = vec![
+            "3d".into(),
+            "shader".into(),
+            "textures".into(),
+            "godot".into(),
+        ];
         material.description = Some("Procedural texture authoring tool".into());
         assert_eq!(infer_category(&material), "Graphics");
 

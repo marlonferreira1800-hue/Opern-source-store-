@@ -187,7 +187,9 @@ fn asset_score(asset_name: &str) -> u32 {
     // Arquitetura
     let is_arm = cfg!(target_arch = "aarch64");
     let arch_markers_arm = ["arm64", "aarch64", "armv8"];
-    let arch_markers_x64 = ["x86_64", "x64", "amd64", "win64", "x86-64", "64bit", "64-bit"];
+    let arch_markers_x64 = [
+        "x86_64", "x64", "amd64", "win64", "x86-64", "64bit", "64-bit",
+    ];
     if arch_markers_arm.iter().any(|m| n.contains(m)) {
         score = if is_arm { score + 40 } else { return 0 };
     } else if arch_markers_x64.iter().any(|m| n.contains(m)) {
