@@ -10,6 +10,30 @@ Uma loja centralizada de aplicativos **open source** (app store alternativa): em
 
 **100% Rust no backend** com [Tauri 2.0](https://tauri.app) e interface modular em Vite + JavaScript vanilla.
 
+## Prévia (screenshots)
+
+Screenshots reais da interface — dá para ver como é o projeto **sem instalar nada**. Foram capturados da versão web (`npm run dev`, servida em `localhost:1420`) com o catálogo ao vivo consultando a API pública do GitHub. As imagens ficam em [`docs/screenshots/`](docs/screenshots/).
+
+![Catálogo com busca ao vivo](docs/screenshots/01-catalogo-busca.png)
+
+**Busca ao vivo no GitHub**: a barra de busca consulta a API do GitHub em tempo real e exibe cards com ícone, autor, tagline, status ("DISPONÍVEL PARA INSTALAR"), última atualização e score de segurança de cada repositório.
+
+![Detalhes do aplicativo](docs/screenshots/02-detalhes-app.png)
+
+**Página de detalhes**: modal com os metadados completos do app — versão, tamanho, licença, autor, estrelas, score de segurança, verificação de integridade (SHA-256), flags de segurança, tags e as ações (instalar no desktop, abrir no GitHub, site oficial).
+
+![Menu lateral com categorias](docs/screenshots/03-menu-categorias.png)
+
+**Menu lateral**: navegação por categorias (Development, Utilities, Internet, Multimedia etc.) e a configuração opcional de um token do GitHub para ampliar o limite de requisições da API.
+
+![Aba Instalados](docs/screenshots/04-aba-instalados.png)
+
+**Aba INSTALADOS**: no app desktop, lista os apps instalados com ações de ABRIR / ATUALIZAR / Desinstalar. Na versão web (só navegador) ela fica vazia, porque instalar exige o app desktop — e a interface avisa isso.
+
+![Versão mobile](docs/screenshots/05-mobile.png)
+
+**Responsivo**: a mesma interface se adapta a telas de celular (viewport de 390px), com tabs, busca e cards em coluna única.
+
 ## Download
 
 Baixe o instalador na página de [Releases](https://github.com/marlonferreira1800-hue/open-source-store/releases/latest):
@@ -55,7 +79,8 @@ open-source-store/
 │   └── curation-policy.json        # Política de curadoria (5 portões)
 ├── docs/
 │   ├── ARCHITECTURE.md             # Visão detalhada da arquitetura
-│   └── CATALOG_AUDIT.md            # Auditoria do catálogo
+│   ├── CATALOG_AUDIT.md            # Auditoria do catálogo
+│   └── screenshots/                # Prints reais da interface (embutidos na seção "Prévia" do README)
 ├── scripts/
 │   ├── copy-assets.mjs             # Copia web/assets/icons para dist/
 │   ├── fetch-top100.mjs            # Atualiza data/curated.json via GitHub Search API
