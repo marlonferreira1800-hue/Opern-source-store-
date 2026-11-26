@@ -10,6 +10,17 @@ Uma loja centralizada de aplicativos **open source** (app store alternativa): em
 
 **100% Rust no backend** com [Tauri 2.0](https://tauri.app) e interface modular em Vite + JavaScript vanilla.
 
+
+## Demo em vídeo
+
+<video src="https://raw.githubusercontent.com/marlonferreira1800-hue/open-source-store/main/brag/brag-hq-1080p.mp4" controls muted loop width="960" poster="docs/assets/demo-cover.png">
+  Seu navegador não suporta vídeo HTML5 — <a href="brag/brag-hq-1080p.mp4">baixe o MP4</a>.
+</video>
+
+![Demo do Open Source Store em vídeo](docs/assets/demo.gif)
+
+**Vídeos completos** (60fps): [1080p](brag/brag-hq-1080p.mp4) · [1440p](brag/brag-hq-1440p.mp4) · [vertical 9:16](brag/brag-hq-vertical.mp4) — na pasta [brag/](brag/).
+
 ## Prévia (screenshots)
 
 Screenshots reais da interface — dá para ver como é o projeto **sem instalar nada**. Foram capturados da versão web (`npm run dev`, servida em `localhost:1420`) com o catálogo ao vivo consultando a API pública do GitHub. As imagens ficam em [`docs/screenshots/`](docs/screenshots/).
