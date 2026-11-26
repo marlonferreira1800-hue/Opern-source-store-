@@ -1158,6 +1158,15 @@ mod tests {
     }
 
     fn safe_release(days_old: i64, downloads: u64, digest: Option<&str>) -> GhRelease {
+        // Asset com marcador da plataforma atual para o choose_asset selecionar
+        // em qualquer SO (CI roda em Linux, dev local pode ser Windows/macOS).
+        let asset_name = if cfg!(windows) {
+            "safe-app-windows-x64.msi"
+        } else if cfg!(target_os = "macos") {
+            "safe-app-macos-arm64.dmg"
+        } else {
+            "safe-app-linux-x64.AppImage"
+        };
         GhRelease {
             tag_name: "v1.0.0".into(),
             name: Some("v1.0.0".into()),
@@ -1166,7 +1175,7 @@ mod tests {
             published_at: Some(days_ago(days_old)),
             draft: false,
             prerelease: false,
-            assets: vec![safe_asset("safe-app-windows-x64.msi", downloads, digest)],
+            assets: vec![safe_asset(asset_name, downloads, digest)],
         }
     }
 
