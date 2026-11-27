@@ -1,16 +1,14 @@
-## O que este PR faz?
+## Descrição da Mudança
+<!-- Descreva com clareza o que foi alterado e o motivo desta mudança (mínimo 20 caracteres). -->
 
-<!-- Descreva brevemente as alterações realizadas -->
+## Tipo de Mudança
+- [ ] Correção de bug (Bug fix)
+- [ ] Nova funcionalidade (Feature)
+- [ ] Refatoração / Melhoria
+- [ ] Documentação
 
-## Tipo de mudança
-
-- [ ] Correção de bug
-- [ ] Nova funcionalidade
-- [ ] Atualização do catálogo (`data/curated.json`)
-- [ ] Refatoração / Organização / Documentação
-
-## Checklist
-
-- [ ] `npm run build` passou sem erros
-- [ ] `cd src-tauri && cargo test` passou sem erros
-- [ ] Não foram incluídos arquivos temporários ou binários desnecessários
+## Checklist de Rigor
+- [ ] Li e entendi o escopo do repositório.
+- [ ] Testei minhas alterações localmente.
+- [ ] Esta mudança não introduz segredos, credenciais ou código quebrado.
+- [ ] Estou ciente do limite máximo de 5 Pull Requests (abertos + mergeados) por conta do GitHub neste repositório.
